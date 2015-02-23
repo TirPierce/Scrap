@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
+using GameStateManagement;
 #endregion
 
 namespace Scrap
@@ -18,12 +19,41 @@ namespace Scrap
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        ScreenManager screenManager;
+
+
+        static readonly string[] preloadAssets =
+        {
+            //"gradient",
+        };
+
+
+
 
         public Game1()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+
+
+            graphics.PreferredBackBufferWidth = 1000;
+            graphics.PreferredBackBufferHeight =600;
+            //graphics.IsFullScreen = true;
+            // Create the screen manager component.
+            screenManager = new ScreenManager(this);
+
+            Components.Add(screenManager);
+
+            // Activate the first screens.
+            screenManager.AddScreen(new BackgroundScreen(), null);
+            screenManager.AddScreen(new MainMenuScreen(), null);
+            //this.TargetElapsedTime = System.TimeSpan.FromTicks(333333);
+            IsFixedTimeStep = true;
+            TargetElapsedTime = System.TimeSpan.FromMilliseconds(20); //System.TimeSpan.FromTicks(333333);
+
+            this.IsMouseVisible = true;
         }
 
         /// <summary>
@@ -49,6 +79,10 @@ namespace Scrap
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            foreach (string asset in preloadAssets)
+            {
+                Content.Load<object>(asset);
+            }
         }
 
         /// <summary>
