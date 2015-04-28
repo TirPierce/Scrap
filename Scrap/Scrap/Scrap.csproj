@@ -73,7 +73,6 @@
     <Compile Include="UserInterface\BaseScreen.cs" />
     <Compile Include="UserInterface\Button.cs" />
     <Compile Include="UserInterface\Camera.cs" />
-    <Compile Include="UserInterface\EditorScreen.cs" />
     <Compile Include="UserInterface\GUI.cs" />
     <Compile Include="UserInterface\IControl.cs" />
     <Compile Include="UserInterface\IGUI.cs" />
