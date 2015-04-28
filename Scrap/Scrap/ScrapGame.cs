@@ -10,7 +10,7 @@ namespace Scrap
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Game
+    public class ScrapGame : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -25,7 +25,7 @@ namespace Scrap
 
 
 
-        public Game1()
+        public ScrapGame()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);

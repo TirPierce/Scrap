@@ -7,6 +7,7 @@ using System;
 using Scrap.UserInterface;
 //using Triangulator;
 using Microsoft.Xna.Framework.Input;
+using Scrap.GameState;
 
 namespace Scrap.GameWorld
 {
@@ -23,7 +24,7 @@ namespace Scrap.GameWorld
         Vector2[] targetVertices;
         int[] sourceIndices;
         RenderTarget2D renderTarget;
-        Camera camera;
+        
         Texture2D texture;
 
 
@@ -50,7 +51,7 @@ namespace Scrap.GameWorld
         {
             texture = mGame.Content.Load<Texture2D>("soil");
             selectTex = mGame.Content.Load<Texture2D>("rotationPointer");
-            camera = (Camera)(mGame.Services.GetService(typeof(ICameraService)));
+            
             GenerateVerts();
             TriangulateVerts();
             CreateGeometry();
@@ -232,12 +233,12 @@ namespace Scrap.GameWorld
 
 
 
-            effect.View = Matrix.CreateLookAt(new Vector3(camera.hubWorld.X, camera.hubWorld.Y, -10), new Vector3(camera.hubWorld.X, camera.hubWorld.Y, 10), Vector3.Down);
-            //effect.World = Matrix.CreateScale(camera.Magnification , camera.Magnification , 0f);
+            //effect.View = Matrix.CreateLookAt(new Vector3(PlayerMatch.mCamera.hubWorld.X, PlayerMatch.mCamera.hubWorld.Y, -10), new Vector3(PlayerMatch.mCamera.hubWorld.X, PlayerMatch.mCamera.hubWorld.Y, 10), Vector3.Down);
+            ////effect.World = Matrix.CreateScale(camera.Magnification , camera.Magnification , 0f);
 
-            effect.Projection = Matrix.CreateOrthographic(mGame.GraphicsDevice.Viewport.Width/camera.Magnification,
-                mGame.GraphicsDevice.Viewport.Height/camera.Magnification,
-                .1f, 10f);
+            //effect.Projection = Matrix.CreateOrthographic(mGame.GraphicsDevice.Viewport.Width / PlayerMatch.mCamera.Magnification,
+            //    mGame.GraphicsDevice.Viewport.Height / PlayerMatch.mCamera.Magnification,
+            //    .1f, 10f);
 
             
             //mGame.GraphicsDevice.Clear(Color.Transparent);
@@ -308,12 +309,12 @@ namespace Scrap.GameWorld
 
         public void Draw(SpriteBatch batch)
         {
-            
-           
 
 
-            //batch.Draw((Texture2D)renderTarget, new Rectangle(mGame.GraphicsDevice.Viewport.Width / 2 - 5*(int)camera.Magnification, mGame.GraphicsDevice.Viewport.Height / 2 - 5*(int)camera.Magnification, 10*(int)camera.Magnification, 10*(int)camera.Magnification),
-            //    new Rectangle(mGame.GraphicsDevice.Viewport.Width/2-5*(int)camera.Magnification, mGame.GraphicsDevice.Viewport.Height/2-5*(int)camera.Magnification,10*(int)camera.Magnification,10*(int)camera.Magnification), new Color(255, 255, 255, 60));
+
+
+            batch.Draw((Texture2D)renderTarget, new Rectangle(mGame.GraphicsDevice.Viewport.Width / 2 - 5 * (int)TerrainPlayerMatch.mCamera.Magnification, mGame.GraphicsDevice.Viewport.Height / 2 - 5 * (int)TerrainPlayerMatch.mCamera.Magnification, 10 * (int)TerrainPlayerMatch.mCamera.Magnification, 10 * (int)TerrainPlayerMatch.mCamera.Magnification),
+                new Rectangle(mGame.GraphicsDevice.Viewport.Width / 2 - 5 * (int)TerrainPlayerMatch.mCamera.Magnification, mGame.GraphicsDevice.Viewport.Height / 2 - 5 * (int)TerrainPlayerMatch.mCamera.Magnification, 10 * (int)TerrainPlayerMatch.mCamera.Magnification, 10 * (int)TerrainPlayerMatch.mCamera.Magnification), new Color(255, 255, 255, 60));
             batch.Draw((Texture2D)renderTarget, Vector2.Zero, Color.White);
             //batch.Draw((Texture2D)renderTarget, new Vector2(v.X, v.Y + 3), null, Color.White, 0, Vector2.Zero, .02f, SpriteEffects.None, 0);
             if (selectDraw != null)

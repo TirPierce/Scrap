@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Scrap.UserInterface
 {
-    class Camera:ICameraService
+    public class Camera
     {
         float MaxMagnification;
         float MinMagnification;
@@ -59,7 +59,7 @@ namespace Scrap.UserInterface
         {
             game = _game;
 
-            game.Services.AddService(typeof(ICameraService), this);//registers this as the camera
+
             rotation = 0;
             transformation = Matrix.Identity;
             magnification = 40f;

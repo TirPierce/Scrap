@@ -59,8 +59,8 @@ namespace GameStateManagement
 
         }
 
-            
-        
+
+
         /// <summary>
         /// Load graphics content for the game.
         /// </summary>

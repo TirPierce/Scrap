@@ -47,7 +47,7 @@
     <Compile Include="Entities\IAutomotive.cs" />
     <Compile Include="Entities\JetEngine.cs" />
     <Compile Include="Entities\WheelEngine.cs" />
-    <Compile Include="Game1.cs" />
+    <Compile Include="ScrapGame.cs" />
     <Compile Include="GameState\Invention.cs" />
     <Compile Include="GameState\PlayerMatch.cs" />
     <Compile Include="GameState\TerrainPlayerMatch.cs" />
@@ -74,9 +74,7 @@
     <Compile Include="UserInterface\Button.cs" />
     <Compile Include="UserInterface\Camera.cs" />
     <Compile Include="UserInterface\EditorScreen.cs" />
-    <Compile Include="UserInterface\GameplayScreen.cs" />
     <Compile Include="UserInterface\GUI.cs" />
-    <Compile Include="UserInterface\ICameraService.cs" />
     <Compile Include="UserInterface\IControl.cs" />
     <Compile Include="UserInterface\IGUI.cs" />
     <Compile Include="UserInterface\Menu.cs" />

@@ -22,7 +22,7 @@ namespace Scrap.GameState
         Hub hub;
         Girder girder, girder2, girder3, girder4;
         FreeWheel wheel, wheel2, wheel3, wheel4;
-        Camera mCamera;
+        //public static Camera mCamera;
         //Physics.PhysicsEngineMain mPhysics;
 
         Texture2D goalTexture;
@@ -32,18 +32,18 @@ namespace Scrap.GameState
         SoundEffectInstance eerie;
         public List<Entity> worldEntityList;
         KeyboardState keyLast;
-        internal Camera MCamera
-        {
-            get { return mCamera; }
-            set { mCamera = value; }
-        }
+        //internal Camera MCamera
+        //{
+        //    get { return mCamera; }
+        //    set { mCamera = value; }
+        //}
         
         public PlayerMatch(Game game)
             : base(game)
         {
 
             mTerrain = new GameWorld.Terrain(game);
-            mCamera = new Camera(game);
+            TerrainPlayerMatch.mCamera = new Camera(game);
             //mPhysics = new Physics.PhysicsEngineMain(game);
             jet = new JetEngine(game);
             wheel = new FreeWheel(game);
@@ -164,7 +164,7 @@ namespace Scrap.GameState
             goalTexture = Game.Content.Load<Texture2D>("Goal");
             
 
-            mCamera.SetBackground(Game.Content.Load<Texture2D>("Background/nearback"), Game.Content.Load<Texture2D>("Background/sky"));
+            //mCamera.SetBackground(Game.Content.Load<Texture2D>("Background/nearback"), Game.Content.Load<Texture2D>("Background/sky"));
            
             //tension = Game.Content.Load<SoundEffect>("Sound/tension").CreateInstance();
             //eerie = Game.Content.Load<SoundEffect>("Sound/tension").CreateInstance();
@@ -187,9 +187,9 @@ namespace Scrap.GameState
                         null,
                         null,
                         null,
-                        mCamera.Transformation);
+                        TerrainPlayerMatch.mCamera.Transformation);
 
-            mCamera.DrawBackground(batch);
+            TerrainPlayerMatch.mCamera.DrawBackground(batch);
 
             
 
@@ -213,12 +213,12 @@ namespace Scrap.GameState
             girder3.Draw(batch);
             girder4.Draw(batch);
 
-            //Vector2 difference =new Vector2(goalRectangle.Center.X, goalRectangle.Center.Y)- hub.PhysicsBody.GetWorldCenter()  ;
-            //float rot = (float)Math.Atan2(difference.Y, difference.X);
-            //batch.Draw(mObjectArrow,new Vector2(hub.PhysicsBody.GetWorldCenter().X ,hub.PhysicsBody.GetWorldCenter().Y-5), null,
-            //    Color.White,
-            //    rot,
-            //    new Vector2(mObjectArrow.Width / 2, mObjectArrow.Height / 2), .003f, SpriteEffects.None, 0);
+            Vector2 difference = new Vector2(goalRectangle.Center.X, goalRectangle.Center.Y);
+            float rot = (float)Math.Atan2(difference.Y, difference.X);
+            batch.Draw(mObjectArrow, new Vector2(0, 0 ), null,
+                Color.White,
+                rot,
+                new Vector2(mObjectArrow.Width / 2, mObjectArrow.Height / 2), .003f, SpriteEffects.None, 0);
 
             batch.Draw(goalTexture, goalRectangle, Color.White);
             batch.End();
@@ -230,7 +230,7 @@ namespace Scrap.GameState
         {
 
 
-            mTerrain.Update(mCamera);
+            //mTerrain.Update(mCamera);
             jet.Update(gameTime);
             jet2.Update(gameTime);
             jet3.Update(gameTime);
@@ -282,13 +282,13 @@ namespace Scrap.GameState
 
             
             //mCamera.Position = gman.mPosition;
-            mCamera.Position = new Vector2(hub.mPosition.X,hub.mPosition.Y+2);
+            //mCamera.Position = new Vector2(hub.mPosition.X,hub.mPosition.Y+2);
             //mCamera.Rotation = gman.Rotation;
 
             ((GUI)(this.Game.Services.GetService(typeof(IGUI)))).SetObjectiveLocation(new Vector2(goalRectangle.Center.X, goalRectangle.Center.Y));
 
 
-            mCamera.Update();
+            //mCamera.Update();
             //mPhysics.Update(gameTime);
             int win;
             //if (goalRectangle.Contains(new Point((int)hub.PhysicsBody.GetWorldCenter().X,(int)hub.PhysicsBody.GetWorldCenter().Y)))

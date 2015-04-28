@@ -25,7 +25,7 @@ namespace Scrap.GameState
         FreeWheel wheel, wheel2, wheel3, wheel4;
         Balloon balloon1, balloon2, balloon3, balloon4;
         WheelEngine wheelEngine1, wheelEngine2;
-        Camera mCamera;
+        public static Camera mCamera;
         //Physics.PhysicsEngineMain mPhysics;
 
         Texture2D goalTexture;
@@ -342,7 +342,7 @@ namespace Scrap.GameState
             }
             
             //mCamera.Position = gman.mPosition;
-            mCamera.Position = new Vector2(hub.mPosition.X,hub.mPosition.Y);
+            //mCamera.Position = new Vector2(hub.mPosition.X,hub.mPosition.Y);
             //mCamera.hubWorld = hub.PhysicsBody.GetWorldCenter(); 
             //mCamera.Rotation = gman.Rotation;
 
