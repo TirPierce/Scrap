@@ -1,62 +1,25 @@
-﻿#region Using Statements
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using GameStateManagement;
-#endregion
 
 namespace Scrap
 {
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
     public class ScrapGame : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        ScreenManager screenManager;
-
-
-        static readonly string[] preloadAssets =
-        {
-            //"gradient",
-        };
-
-
-
-
+        private Camera camera;
+        private Texture2D background;
+        InputManager inputManager;
         public ScrapGame()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
-
-
-            graphics.PreferredBackBufferWidth = 1000;
-            graphics.PreferredBackBufferHeight =600;
-            //graphics.IsFullScreen = true;
-            // Create the screen manager component.
-            screenManager = new ScreenManager(this);
-
-            Components.Add(screenManager);
-
-            // Activate the first screens.
-            screenManager.AddScreen(new BackgroundScreen(), null);
-            screenManager.AddScreen(new MainMenuScreen(), null);
-            //this.TargetElapsedTime = System.TimeSpan.FromTicks(333333);
-            IsFixedTimeStep = true;
-            TargetElapsedTime = System.TimeSpan.FromMilliseconds(20); //System.TimeSpan.FromTicks(333333);
-
-            this.IsMouseVisible = true;
+            camera = new Camera(this); 
+            inputManager = new InputManager();
         }
-
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
+        
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
@@ -64,54 +27,67 @@ namespace Scrap
             base.Initialize();
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
+
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            background = Content.Load<Texture2D>("sky");
 
-            // TODO: use this.Content to load your game content here
-            foreach (string asset in preloadAssets)
-            {
-                Content.Load<object>(asset);
-            }
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
+
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
         }
-
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-            // TODO: Add your update logic here
-
+            inputManager.Update();
+            
+            if(inputManager.WasKeyReleased(Keys.Q))
+            {
+                camera.Rotate(- .005f);
+            }
+            if( inputManager.WasKeyReleased(Keys.E))
+            {
+                camera.Rotate(+.005f);
+            }
+            if (inputManager.WasKeyReleased(Keys.D))
+            {
+                camera.Position += new Vector2(1f,0f);
+            }
+            if (inputManager.WasKeyReleased(Keys.A))
+            {
+                camera.Position += new Vector2(-1f, 0f);
+            }
+            if (inputManager.WasKeyReleased(Keys.W))
+            {
+                camera.Position += new Vector2(0f, -1f);
+            }
+            if (inputManager.WasKeyReleased(Keys.S))
+            {
+                camera.Position += new Vector2(0f, 1f);
+            }
+            if (inputManager.WasKeyReleased(Keys.Space))
+            {
+                camera.Position = new Vector2(0f, 0f);
+            }
+            camera.Zoom(inputManager.ScroleWheelDelta()*.01f);//eehhh
+            
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+
+            spriteBatch.Begin(SpriteSortMode.Texture, BlendState.Additive, null, null, null, null, camera.Transformation);
+
+            spriteBatch.Draw(background, new Rectangle(0, 0, 800, 480), Color.White);
+
+            spriteBatch.End();
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
