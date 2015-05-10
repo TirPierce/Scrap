@@ -22,14 +22,14 @@ namespace Scrap
         public World world;
         DebugViewXNA debugView;
 
-
+        Level level;
         public ScrapGame()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             inputManager = new InputManager();
-
+            level = new Level(this);
 
             
         }
@@ -47,13 +47,15 @@ namespace Scrap
             spriteBatch = new SpriteBatch(GraphicsDevice);
             background = Content.Load<Texture2D>("sky");
             world = new World(new Vector2(0, 1f));
+
             debugView = new DebugViewXNA(world);
             camera = new Camera(this);
+            camera.Position = new Vector2(0,20);
             debugView.LoadContent(GraphicsDevice, Content);
             entityList.Add(new Crate(this, new Vector2(0, 0)));
-
-            
-
+            entityList.Add(new Crate(this, new Vector2(.5f, 10)));
+            entityList.Add(new Crate(this, new Vector2(0, 15)));
+            level.CreateGround(world);
 
         }
 
