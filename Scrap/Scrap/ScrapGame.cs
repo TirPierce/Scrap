@@ -30,8 +30,9 @@ namespace Scrap
             Content.RootDirectory = "Content";
             inputManager = new InputManager();
             level = new Level(this);
+            FarseerPhysics.Settings.PositionIterations = 10;
+            FarseerPhysics.Settings.VelocityIterations = 10;
 
-            
         }
         
         protected override void Initialize()
@@ -52,8 +53,9 @@ namespace Scrap
             camera = new Camera(this);
             camera.Position = new Vector2(0,20);
             debugView.LoadContent(GraphicsDevice, Content);
-            entityList.Add(new Crate(this, new Vector2(0, 0)));
-            entityList.Add(new Crate(this, new Vector2(.5f, 10)));
+            entityList.Add(new Crate(this, new Vector2(0, 8)));
+            entityList.Add(new Wheel(this, new Vector2(-.55f, 10)));
+            entityList.Add(new Wheel(this, new Vector2(.55f, 10)));
             entityList.Add(new Crate(this, new Vector2(0, 15)));
             level.CreateGround(world);
 
