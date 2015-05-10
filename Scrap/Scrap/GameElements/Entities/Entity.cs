@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace GameElements.Entities 
+namespace Scrap.GameElements.Entities 
 {
 
     public abstract class Entity
@@ -16,7 +16,7 @@ namespace GameElements.Entities
         protected float restitution;
         protected float friction;
         public string objectType;
-
+        private Game game;
 
         public Vector2 Position { get { return position; } }
         public float Rotation
@@ -26,35 +26,25 @@ namespace GameElements.Entities
         }
 
         public Entity(Game game)
-        {}
-
-        public virtual void Initialize()
-        {}
+        {
+            this.game = game;
+        }
 
         public virtual void Update(GameTime gameTime)
         {
-
         }
-        public virtual void LoadContent()
-        { }
-
         public float Density
         {
             get { return density; }
-
         }
         public float Restitution
         {
             get { return restitution; }
-
         }
         public float Friction
         {
             get { return friction; }
-
         }
-
-
         public virtual void Draw(SpriteBatch batch)
         {
             batch.Draw(texture, position, null, Color.White);

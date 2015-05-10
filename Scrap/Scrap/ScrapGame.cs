@@ -1,23 +1,37 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FarseerPhysics.DebugView;
+using FarseerPhysics.Dynamics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Scrap.GameElements.Entities;
+using Scrap.GameElements.Level;
+using System.Collections.Generic;
 
 namespace Scrap
 {
     public class ScrapGame : Game
     {
+        //Add any useful objects here puplicly. Entity derivitives hold a reference to this. Downcast the Game reference to ScrapGame.
+        
+        List<Entity> entityList = new List<Entity>();
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        private Camera camera;
+        public Camera camera;
         private Texture2D background;
         InputManager inputManager;
+        public World world;
+        DebugViewXNA debugView;
+
+
         public ScrapGame()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            camera = new Camera(this); 
             inputManager = new InputManager();
+
+
+            
         }
         
         protected override void Initialize()
@@ -32,6 +46,14 @@ namespace Scrap
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             background = Content.Load<Texture2D>("sky");
+            world = new World(new Vector2(0, 1f));
+            debugView = new DebugViewXNA(world);
+            camera = new Camera(this);
+            debugView.LoadContent(GraphicsDevice, Content);
+            entityList.Add(new Crate(this, new Vector2(0, 0)));
+
+            
+
 
         }
 
@@ -74,20 +96,37 @@ namespace Scrap
                 camera.Position = new Vector2(0f, 0f);
             }
             camera.Zoom(inputManager.ScroleWheelDelta()*.01f);//eehhh
+
+            foreach (Entity item in entityList)
+            {
+                item.Update(gameTime);
+            }
+
             
+            world.Step(1f / 33f);
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
+
+
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
 
-            spriteBatch.Begin(SpriteSortMode.Texture, BlendState.Additive, null, null, null, null, camera.Transformation);
+            spriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend, null, null, null, null, camera.Transformation);
 
             spriteBatch.Draw(background, new Rectangle(0, 0, 800, 480), Color.White);
+            
 
+            foreach (Entity item in entityList)
+            {
+                item.Draw(spriteBatch);
+            }
             spriteBatch.End();
+
+            
+            debugView.RenderDebugData(camera.Projection, camera.Transformation);
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
