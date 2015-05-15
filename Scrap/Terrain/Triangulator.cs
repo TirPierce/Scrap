@@ -56,6 +56,7 @@ namespace Triangulator
             //if (DetermineWindingOrder(inputVertices) == WindingOrder.Clockwise)
            // {
                outputVertices = ReverseWindingOrder(inputVertices);
+               
             //    System.Console.WriteLine(WindingOrder.Clockwise.ToString());
            // }
            // else

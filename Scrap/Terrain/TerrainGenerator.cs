@@ -10,7 +10,7 @@ using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Common;
 
-namespace Terrain
+namespace TerrainGeneration
 {
     class TerrainGenerator
     {

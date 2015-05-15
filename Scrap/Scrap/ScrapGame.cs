@@ -4,8 +4,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Scrap.GameElements.Entities;
-using Scrap.GameElements.Level;
+using Scrap.GameElements;
 using System.Collections.Generic;
+using GameElements.GameWorld;
 
 namespace Scrap
 {
@@ -22,16 +23,17 @@ namespace Scrap
         public World world;
         DebugViewXNA debugView;
 
-        Level level;
+        Terrain terrain;
         public ScrapGame()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             inputManager = new InputManager();
-            level = new Level(this);
+            terrain = new Terrain(this);
             FarseerPhysics.Settings.PositionIterations = 10;
             FarseerPhysics.Settings.VelocityIterations = 10;
+            FarseerPhysics.Settings.MaxPolygonVertices = 1000;
 
         }
         
@@ -57,8 +59,9 @@ namespace Scrap
             entityList.Add(new Wheel(this, new Vector2(-.55f, 10)));
             entityList.Add(new Wheel(this, new Vector2(.55f, 10)));
             entityList.Add(new Crate(this, new Vector2(0, 15)));
-            level.CreateGround(world);
-
+            terrain.CreateGround(world);
+            terrain.LoadContent();
+            terrain.CreateGround(world);
         }
 
 
@@ -70,7 +73,7 @@ namespace Scrap
         protected override void Update(GameTime gameTime)
         {
             inputManager.Update();
-            
+
             if(inputManager.WasKeyReleased(Keys.Q))
             {
                 camera.Rotate(- .005f);
@@ -115,13 +118,14 @@ namespace Scrap
         {
 
 
+            terrain.RenderTerrain();
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            
 
-
-            spriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend, null, null, null, null, camera.Transformation);
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, camera.Transformation);
 
             spriteBatch.Draw(background, new Rectangle(0, 0, 800, 480), Color.White);
-            
+            terrain.Draw(spriteBatch);
 
             foreach (Entity item in entityList)
             {
@@ -131,7 +135,7 @@ namespace Scrap
 
             
             debugView.RenderDebugData(camera.Projection, camera.Transformation);
-            // TODO: Add your drawing code here
+            
 
             base.Draw(gameTime);
         }
