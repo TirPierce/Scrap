@@ -29,12 +29,12 @@
 //        public Level(Game game)
 //        {
 //            this.game = game;
-            
-            
+
+
 //        }
 //        public void LoadContent()
 //        {
-            
+
 //        }
 //        public void CreateGround(World world)
 //        {
@@ -92,7 +92,7 @@
 
 
 
-        
+
 //    }
 //}
 
@@ -139,7 +139,7 @@ namespace GameElements.GameWorld
             CullMode = CullMode.None,
             FillMode = FillMode.WireFrame
         };
-        
+
         Game game;
         Vector2 WorldLimits = new Vector2(50000, 400);//world limits should be set by the terrain max. 
 
@@ -159,7 +159,7 @@ namespace GameElements.GameWorld
 
             effect = new BasicEffect(game.GraphicsDevice);
             effect.World = Matrix.Identity;
-           
+
             effect.Projection = Matrix.CreateOrthographic(
 
     game.GraphicsDevice.Viewport.Width,
@@ -170,7 +170,7 @@ namespace GameElements.GameWorld
             effect.Texture = texture;
 
             renderTarget = new RenderTarget2D(game.GraphicsDevice, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height, true, game.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
-            
+
         }
         public void CreateGround(World world)
         {
@@ -179,21 +179,21 @@ namespace GameElements.GameWorld
             //List<Vertices> vertList = new List<Vertices>();
             //vertList.Add(new Vertices(sourceVertices));
             //Body groundBody = BodyFactory.CreatePolygon(world, new Vertices(sourceVertices), 1f, null);
-            List<Vertices> vertList =FarseerPhysics.Common.Decomposition.Triangulate.ConvexPartition(new Vertices(sourceVertices), FarseerPhysics.Common.Decomposition.TriangulationAlgorithm.Bayazit);
+            List<Vertices> vertList = FarseerPhysics.Common.Decomposition.Triangulate.ConvexPartition(new Vertices(sourceVertices), FarseerPhysics.Common.Decomposition.TriangulationAlgorithm.Bayazit);
             Body groundBody = BodyFactory.CreateCompoundPolygon(world, vertList, 1f, null);
-            
+
             //Body groundBody = BodyFactory.CreateEdge(world, new Vector2(-200, 20), new Vector2(200,20));
             groundBody.BodyType = BodyType.Static;
             groundBody.IgnoreGravity = true;
 
         }
 
-        
+
         private void GenerateVerts()
         {
 
-            
-            sourceVertices[0] = new Vector2(10f, 50f );
+
+            sourceVertices[0] = new Vector2(10f, 50f);
             sourceVertices[1] = new Vector2(10f, 100f);
             sourceVertices[2] = new Vector2(500f, 100f);
             sourceVertices[3] = new Vector2(500f, 50f);
@@ -234,7 +234,7 @@ namespace GameElements.GameWorld
             VertexPositionNormalTexture[] verts = new VertexPositionNormalTexture[targetVertices.Length];
             for (int i = 0; i < targetVertices.Length; i++)
                 verts[i] = new VertexPositionNormalTexture(new Vector3(targetVertices[i], 0f), Vector3.Backward,
-                    new Vector2(targetVertices[i].X, targetVertices[i].Y));
+                    new Vector2(targetVertices[i].X / 100f, targetVertices[i].Y / 100f));
             vertBuffer = new VertexBuffer(
                 game.GraphicsDevice,
                 typeof(VertexPositionNormalTexture),
@@ -284,13 +284,13 @@ namespace GameElements.GameWorld
             effect.World = Matrix.Identity;
             effect.Projection = camera.Projection;
 
-            game.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+            game.GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
             game.GraphicsDevice.BlendState = BlendState.AlphaBlend;
             game.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            game.GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
+            game.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
             game.GraphicsDevice.SetVertexBuffer(vertBuffer);
             game.GraphicsDevice.Indices = indexBuffer;
-           
+
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
