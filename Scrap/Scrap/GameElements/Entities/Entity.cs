@@ -16,7 +16,7 @@ namespace Scrap.GameElements.Entities
         protected float restitution;
         protected float friction;
         public string objectType;
-        private Game game;
+        private ScrapGame game;
 
         public Vector2 Position { get { return position; } }
         public float Rotation
@@ -25,7 +25,7 @@ namespace Scrap.GameElements.Entities
             set { rotation = value; }
         }
 
-        public Entity(Game game)
+        public Entity(ScrapGame game)
         {
             this.game = game;
         }

@@ -43,6 +43,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="GameElements\Entities\Construct.cs" />
     <Compile Include="GameElements\Entities\Crate.cs" />
     <Compile Include="GameElements\Entities\Entity.cs" />
     <Compile Include="GameElements\Entities\Wheel.cs" />

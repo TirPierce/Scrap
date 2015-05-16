@@ -140,49 +140,31 @@ namespace GameElements.GameWorld
             FillMode = FillMode.WireFrame
         };
 
-        Game game;
+        ScrapGame game;
         Vector2 WorldLimits = new Vector2(50000, 400);//world limits should be set by the terrain max. 
 
-        public Terrain(Game game)
+        public Terrain(ScrapGame game)
         {
             this.game = game;
         }
         public void LoadContent()
         {
             texture = game.Content.Load<Texture2D>("soil");
-
-
             this.camera = ((ScrapGame)game).camera;
-            GenerateVerts();
-            TriangulateVerts();
-            CreateGeometry();
-
+            
             effect = new BasicEffect(game.GraphicsDevice);
-            effect.World = Matrix.Identity;
-
-            effect.Projection = Matrix.CreateOrthographic(
-
-    game.GraphicsDevice.Viewport.Width,
-
-    game.GraphicsDevice.Viewport.Height,
-    .1f, 10f);
             effect.TextureEnabled = true;
             effect.Texture = texture;
-
             renderTarget = new RenderTarget2D(game.GraphicsDevice, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height, true, game.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
 
         }
         public void CreateGround(World world)
         {
-
             GenerateVerts();
-            //List<Vertices> vertList = new List<Vertices>();
-            //vertList.Add(new Vertices(sourceVertices));
-            //Body groundBody = BodyFactory.CreatePolygon(world, new Vertices(sourceVertices), 1f, null);
+            TriangulateVerts();
+            CreateGeometry();
             List<Vertices> vertList = FarseerPhysics.Common.Decomposition.Triangulate.ConvexPartition(new Vertices(sourceVertices), FarseerPhysics.Common.Decomposition.TriangulationAlgorithm.Bayazit);
             Body groundBody = BodyFactory.CreateCompoundPolygon(world, vertList, 1f, null);
-
-            //Body groundBody = BodyFactory.CreateEdge(world, new Vector2(-200, 20), new Vector2(200,20));
             groundBody.BodyType = BodyType.Static;
             groundBody.IgnoreGravity = true;
 
@@ -193,8 +175,8 @@ namespace GameElements.GameWorld
         {
 
 
-            sourceVertices[0] = new Vector2(10f, 50f);
-            sourceVertices[1] = new Vector2(10f, 100f);
+            sourceVertices[0] = new Vector2(0f, 50f);
+            sourceVertices[1] = new Vector2(0f, 100f);
             sourceVertices[2] = new Vector2(500f, 100f);
             sourceVertices[3] = new Vector2(500f, 50f);
             sourceVertices[4] = new Vector2(400f, 20f);
@@ -268,13 +250,7 @@ namespace GameElements.GameWorld
             vertDecl = VertexPositionNormalTexture.VertexDeclaration;
         }
 
-        private void GenerateTerrain()
-        {
-            GenerateVerts();
-            TriangulateVerts();
-            CreateGeometry();
 
-        }
 
         public void RenderTerrain()
         {

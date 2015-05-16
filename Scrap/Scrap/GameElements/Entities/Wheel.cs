@@ -13,7 +13,7 @@ namespace Scrap.GameElements.Entities
     class Wheel : Entity
     {
         Body body;
-        public Wheel(Game game)
+        public Wheel(ScrapGame game)
             : base(game)
         {
             texture = game.Content.Load<Texture2D>("wheel");
@@ -21,12 +21,12 @@ namespace Scrap.GameElements.Entities
 
         }
 
-        public Wheel(Game game, Vector2 position)
+        public Wheel(ScrapGame game, Vector2 position)
             : base(game)
         {
             texture = game.Content.Load<Texture2D>("wheel");
-
-            body = BodyFactory.CreateCircle(((ScrapGame)game).world, .5f, 1f);
+            
+            body = BodyFactory.CreateCircle(game.world, .5f, 1f);
             body.BodyType = BodyType.Dynamic;
             body.Position = this.position = position;
         }

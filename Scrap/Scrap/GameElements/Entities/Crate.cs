@@ -13,7 +13,7 @@ namespace Scrap.GameElements.Entities
     class Crate:Entity
     {
         Body body;
-        public Crate(Game game)
+        public Crate(ScrapGame game)
             : base(game)
         {
             texture = game.Content.Load<Texture2D>("Crate");
@@ -21,11 +21,12 @@ namespace Scrap.GameElements.Entities
             
         }
 
-        public Crate(Game game, Vector2 position):base(game)
+        public Crate(ScrapGame game, Vector2 position)
+            : base(game)
         {
             texture = game.Content.Load<Texture2D>("Crate");
 
-            body = BodyFactory.CreateRectangle(((ScrapGame)game).world, 1f, 1f, 1f);
+            body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world,1f,1f,.2f,.2f,5,1f);
             body.BodyType = BodyType.Dynamic;
             body.Position = this.position = position;
         }

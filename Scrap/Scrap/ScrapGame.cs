@@ -53,13 +53,13 @@ namespace Scrap
 
             debugView = new DebugViewXNA(world);
             camera = new Camera(this);
-            camera.Position = new Vector2(0,20);
+            camera.Position = new Vector2(22,20);
             debugView.LoadContent(GraphicsDevice, Content);
-            entityList.Add(new Crate(this, new Vector2(0, 8)));
-            entityList.Add(new Wheel(this, new Vector2(-.55f, 10)));
-            entityList.Add(new Wheel(this, new Vector2(.55f, 10)));
-            entityList.Add(new Crate(this, new Vector2(0, 15)));
-            terrain.CreateGround(world);
+            entityList.Add(new Crate(this, new Vector2(22, 8)));
+            entityList.Add(new Wheel(this, new Vector2(21.55f, 10)));
+            entityList.Add(new Wheel(this, new Vector2(22.55f, 10)));
+            entityList.Add(new Crate(this, new Vector2(22, 15)));
+            //Body groundBody = BodyFactory.CreateEdge(world, new Vector2(-200, 20), new Vector2(200,20));
             terrain.LoadContent();
             terrain.CreateGround(world);
         }
@@ -134,7 +134,7 @@ namespace Scrap
             spriteBatch.End();
 
             
-            //debugView.RenderDebugData(camera.Projection, camera.Transformation);
+            debugView.RenderDebugData(camera.Projection, camera.Transformation);
             
 
             base.Draw(gameTime);
