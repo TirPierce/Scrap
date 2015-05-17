@@ -16,7 +16,7 @@ namespace Scrap.GameElements.Entities
         protected string objectType;
         protected ScrapGame game;
 
-        public Vector2 Position { get { return position; } }
+        public virtual Vector2 Position { get { return position; } }
         public virtual float Rotation
         {
             get { return rotation; }
@@ -26,6 +26,7 @@ namespace Scrap.GameElements.Entities
         public Entity(ScrapGame game)
         {
             this.game = game;
+            game.entityList.Add(this);
         }
 
         public virtual void Update(GameTime gameTime)
@@ -34,7 +35,8 @@ namespace Scrap.GameElements.Entities
 
         public virtual void Draw(SpriteBatch batch)
         {
-            batch.Draw(texture, position, null, Color.White);
+            batch.Draw(texture, position, null, Color.White, rotation, new Vector2(texture.Width / 2f, texture.Height / 2f), .01f * (100f / (float)texture.Width), SpriteEffects.None, 0);
+
         }
     }
 }

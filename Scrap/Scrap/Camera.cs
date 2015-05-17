@@ -8,16 +8,20 @@ namespace Scrap
 {
     public class Camera
     {
-        float maxMagnification;
-        float minMagnification;
-        private Entity targetToFollow;//ToDo: Implement function to follow target and woble when vehicle stops suddenly. https://docs.google.com/document/d/1iNSQIyNpVGHeak6isbP6AHdHD50gs8MNXF1GCf08efg/pub
+        enum CameraMode { FixedFollow, SmoothFollow, Manual}
+
+
+        CameraMode cameraMode = CameraMode.Manual;
+        float maxMagnification = 10000f;
+        float minMagnification=.00001f;
+        private Entity entityToFollow;//ToDo: Implement function to follow target and woble when vehicle stops suddenly. https://docs.google.com/document/d/1iNSQIyNpVGHeak6isbP6AHdHD50gs8MNXF1GCf08efg/pub
         private Game game;
         private float magnification;
 
         public float Magnification
         {
             get { return magnification; }
-            set { magnification = value; }
+            set { magnification =MathHelper.Clamp(value, minMagnification, maxMagnification); }
         }
         private Vector2 position;
         Matrix projection;
@@ -38,7 +42,7 @@ namespace Scrap
         
         public Matrix Transformation
         {
-            get { UpdateTransform();  return transformation; }
+            get {return transformation; }
         }
         
         public double Rotation
@@ -76,6 +80,25 @@ namespace Scrap
                              Matrix.CreateRotationZ((float)rotation) *
                              Matrix.CreateScale(new Vector3(Magnification, Magnification, 1)) *
                              Matrix.CreateTranslation(new Vector3(game.GraphicsDevice.Viewport.Width * 0.5f, game.GraphicsDevice.Viewport.Height * 0.5f, 0));
+        }
+        public void Update(GameTime gametime)
+        {
+            if (cameraMode == CameraMode.FixedFollow)
+            {
+                Position = entityToFollow.Position;
+                
+            }
+            UpdateTransform();
+        }
+        public void Shake(float strength, float duration)
+        {
+
+        }
+        public void Follow(Entity entity, float magnification)
+        {
+            cameraMode = CameraMode.FixedFollow;
+            entityToFollow = entity;
+            Magnification = magnification;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Scrap
     {
         //Add any useful objects here puplicly. Entity derivitives hold a reference to this. Downcast the Game reference to ScrapGame.
         
-        List<Entity> entityList = new List<Entity>();
+        public List<Entity> entityList = new List<Entity>();
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         public Camera camera;
@@ -55,10 +55,13 @@ namespace Scrap
             camera = new Camera(this);
             camera.Position = new Vector2(22,20);
             debugView.LoadContent(GraphicsDevice, Content);
-            entityList.Add(new Crate(this, new Vector2(22, 8)));
-            entityList.Add(new Wheel(this, new Vector2(21.55f, 10)));
-            entityList.Add(new Wheel(this, new Vector2(22.55f, 10)));
-            entityList.Add(new Crate(this, new Vector2(22, 15)));
+
+            Crate crate1 =new Crate(this, new Vector2(22, 8));
+            Crate crate2 =new Crate(this, new Vector2(22, 15));
+            Wheel wheel1=new Wheel(this, new Vector2(21.55f, 10));
+            Wheel wheel2 = new Wheel(this, new Vector2(22.55f, 10));
+
+            camera.Follow(wheel1, camera.Magnification);
             //Body groundBody = BodyFactory.CreateEdge(world, new Vector2(-200, 20), new Vector2(200,20));
             terrain.LoadContent();
             terrain.CreateGround(world);
@@ -102,15 +105,17 @@ namespace Scrap
             {
                 camera.Position = new Vector2(0f, 0f);
             }
-            camera.Zoom(inputManager.ScroleWheelDelta()*.01f);//eehhh
-
+            camera.Zoom(inputManager.ScroleWheelDelta()*.01f);//ToDo: Camera Controls need to be changed
+            
             foreach (Entity item in entityList)
             {
                 item.Update(gameTime);
             }
 
-            
             world.Step(1f / 33f);
+
+            camera.Update(gameTime);
+
             base.Update(gameTime);
         }
 

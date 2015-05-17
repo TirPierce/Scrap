@@ -10,9 +10,8 @@ using System.Threading.Tasks;
 
 namespace Scrap.GameElements.Entities
 {
-    class Nozzle : Entity
+    class Nozzle : PhysicalEntity
     {
-        Body body;
         public Nozzle(ScrapGame game)
             : base(game)
         {
@@ -28,7 +27,7 @@ namespace Scrap.GameElements.Entities
 
             body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 1f);
             body.BodyType = BodyType.Dynamic;
-            body.Position = this.position = position;
+            body.Position = position;
         }
         public override void Update(GameTime gameTime)
         {

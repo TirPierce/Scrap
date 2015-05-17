@@ -12,7 +12,7 @@ namespace Scrap.GameElements.Entities
 {
     class DriveWheel : PhysicalEntity
     {
-        Body body;
+
         public DriveWheel(ScrapGame game)
             : base(game)
         {
@@ -28,7 +28,7 @@ namespace Scrap.GameElements.Entities
 
             body = BodyFactory.CreateCircle(game.world, .5f, 1f);
             body.BodyType = BodyType.Dynamic;
-            body.Position = this.position = position;
+            body.Position =  position;
         }
         public override void Update(GameTime gameTime)
         {

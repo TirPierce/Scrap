@@ -17,13 +17,16 @@ namespace Scrap.GameElements.Entities
         {
 
         }
-        public virtual void Update(GameTime gameTime)
+
+        public override Vector2 Position { get { return body.Position; } }
+        public override void Update(GameTime gameTime)
         {
+            
         }
-        public virtual float Rotation
+        public override float Rotation
         {
-            get { return rotation; }
-            set { body.Rotation = rotation = value; }
+            get { return body.Rotation; }
+            set { body.Rotation = value; }
         }
         public float Density
         {
@@ -37,6 +40,7 @@ namespace Scrap.GameElements.Entities
         {
             get { return friction; }
         }
+
         //public virtual Joint Join(Body body)
         //{
 
