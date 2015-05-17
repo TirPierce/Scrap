@@ -36,11 +36,6 @@ namespace Scrap.GameElements.Entities
         }
 
 
-        public override void Draw(SpriteBatch batch)
-        {
-            batch.Draw(texture, body.WorldCenter, null, Color.White, body.Rotation, new Vector2(texture.Width / 2f, texture.Height / 2f), .01f * (100f / (float)texture.Width), SpriteEffects.None, 0);
 
-            //batch.Draw(texture, body.Position, null, Color.White);
-        }
     }
 }

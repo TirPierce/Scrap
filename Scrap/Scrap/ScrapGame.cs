@@ -12,18 +12,19 @@ namespace Scrap
 {
     public class ScrapGame : Game
     {
-        //Add any useful objects here puplicly. Entity derivitives hold a reference to this. Downcast the Game reference to ScrapGame.
-        
+        //Add any useful objects here puplicly. Entity derivitives hold a reference to this.
+        public InputManager inputManager;
+        public World world;
+        public Camera camera;
         public List<Entity> entityList = new List<Entity>();
+
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        public Camera camera;
-        private Texture2D background;
-        InputManager inputManager;
-        public World world;
+        Texture2D background;
         DebugViewXNA debugView;
-
         Terrain terrain;
+
         public ScrapGame()
             : base()
         {
@@ -56,10 +57,10 @@ namespace Scrap
             camera.Position = new Vector2(22,20);
             debugView.LoadContent(GraphicsDevice, Content);
 
-            Crate crate1 =new Crate(this, new Vector2(22, 8));
-            Crate crate2 =new Crate(this, new Vector2(22, 15));
-            Wheel wheel1=new Wheel(this, new Vector2(21.55f, 10));
-            Wheel wheel2 = new Wheel(this, new Vector2(22.55f, 10));
+            Crate crate1 =new Crate(this, new Vector2(22, -8));
+            Crate crate2 =new Crate(this, new Vector2(22, -15));
+            Wheel wheel1=new Wheel(this, new Vector2(21.55f, -10));
+            Wheel wheel2 = new Wheel(this, new Vector2(22.55f, -10));
 
             camera.Follow(wheel1, camera.Magnification);
             //Body groundBody = BodyFactory.CreateEdge(world, new Vector2(-200, 20), new Vector2(200,20));

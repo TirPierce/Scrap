@@ -12,7 +12,7 @@ namespace Scrap.GameElements.Entities
 {
     class Crate : PhysicalEntity
     {
-        Body body;
+
         public Crate(ScrapGame game)
             : base(game)
         {
@@ -29,6 +29,8 @@ namespace Scrap.GameElements.Entities
             body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world,1f,1f,.2f,.2f,5,1f);
             body.BodyType = BodyType.Dynamic;
             body.Position = position;
+            body.Restitution = .1f;
+            body.Friction = .9f;
         }
         public override void Update(GameTime gameTime)
         {
@@ -36,11 +38,6 @@ namespace Scrap.GameElements.Entities
         }
 
 
-        public override void Draw(SpriteBatch batch)
-        {
-            batch.Draw(texture, body.WorldCenter, null, Color.White, body.Rotation, new Vector2(texture.Width / 2f, texture.Height / 2f), .01f * (100f / (float)texture.Width), SpriteEffects.None, 0);
-            
-            //batch.Draw(texture, body.Position, null, Color.White);
-        }
+
     }
 }

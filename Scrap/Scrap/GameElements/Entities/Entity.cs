@@ -11,8 +11,8 @@ namespace Scrap.GameElements.Entities
 
         protected Texture2D texture;
 
-        protected Vector2 position;
-        protected float rotation;
+        private Vector2 position;
+        private float rotation;
         protected string objectType;
         protected ScrapGame game;
 
