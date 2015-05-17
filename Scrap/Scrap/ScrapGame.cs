@@ -133,7 +133,6 @@ namespace Scrap
             }
             spriteBatch.End();
 
-            
             debugView.RenderDebugData(camera.Projection, camera.Transformation);
             
 

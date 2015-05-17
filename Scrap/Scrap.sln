@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Farseer Physics MonoGame", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugView MonoGame", "Farseer Physics DebugView 3.5\DebugView MonoGame.csproj", "{566F1803-90B5-4947-8730-57F092FBB002}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TerrainGeneration", "Terrain\TerrainGeneration.csproj", "{DE44F390-57FC-4142-8440-73B8599949A3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triangulator", "Terrain\Triangulator.csproj", "{DE44F390-57FC-4142-8440-73B8599949A3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scrap", "Scrap\Scrap.csproj", "{51B23732-E3D4-4FFD-94A3-54FA6526EB10}"
 EndProject

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Scrap.GameElements.Entities
 {
-    class Crate:Entity
+    class Crate : PhysicalEntity
     {
         Body body;
         public Crate(ScrapGame game)

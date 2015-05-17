@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Scrap.GameElements.Entities
 {
-    abstract class Construct
+    public abstract class Construct
     {
-        List<Joint> joints;
-        List<Entity> entities;
-        ScrapGame game;
+        protected List<Joint> joints;
+        protected List<Entity> entities;
+        protected ScrapGame game;
         public Construct(ScrapGame game)
         {
             this.game = game;

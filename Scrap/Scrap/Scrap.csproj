@@ -45,7 +45,11 @@
     <Compile Include="Camera.cs" />
     <Compile Include="GameElements\Entities\Construct.cs" />
     <Compile Include="GameElements\Entities\Crate.cs" />
+    <Compile Include="GameElements\Entities\DriveWheel.cs" />
     <Compile Include="GameElements\Entities\Entity.cs" />
+    <Compile Include="GameElements\Entities\Nozzle.cs" />
+    <Compile Include="GameElements\Entities\PhysicalEntity.cs" />
+    <Compile Include="GameElements\Entities\ScrapBadger.cs" />
     <Compile Include="GameElements\Entities\Wheel.cs" />
     <Compile Include="GameElements\World\Terrain.cs" />
     <Compile Include="InputManager.cs" />
@@ -82,13 +86,16 @@
       <Project>{0aad36e3-51a5-4a07-ab60-5c8a66bd38b7}</Project>
       <Name>Farseer Physics MonoGame</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Terrain\TerrainGeneration.csproj">
+    <ProjectReference Include="..\Terrain\Triangulator.csproj">
       <Project>{de44f390-57fc-4142-8440-73b8599949a3}</Project>
-      <Name>TerrainGeneration</Name>
+      <Name>Triangulator</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\Levels\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

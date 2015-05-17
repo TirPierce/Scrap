@@ -10,23 +10,23 @@ using System.Threading.Tasks;
 
 namespace Scrap.GameElements.Entities
 {
-    class Wheel : PhysicalEntity
+    class Nozzle : Entity
     {
         Body body;
-        public Wheel(ScrapGame game)
+        public Nozzle(ScrapGame game)
             : base(game)
         {
-            texture = game.Content.Load<Texture2D>("wheel");
+            texture = game.Content.Load<Texture2D>("Crate");
 
 
         }
 
-        public Wheel(ScrapGame game, Vector2 position)
+        public Nozzle(ScrapGame game, Vector2 position)
             : base(game)
         {
-            texture = game.Content.Load<Texture2D>("wheel");
-            
-            body = BodyFactory.CreateCircle(game.world, .5f, 1f);
+            texture = game.Content.Load<Texture2D>("Crate");
+
+            body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 1f);
             body.BodyType = BodyType.Dynamic;
             body.Position = this.position = position;
         }

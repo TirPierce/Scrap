@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace Scrap.GameElements.Entities
 {
-    class Wheel : PhysicalEntity
+    class DriveWheel : PhysicalEntity
     {
         Body body;
-        public Wheel(ScrapGame game)
+        public DriveWheel(ScrapGame game)
             : base(game)
         {
             texture = game.Content.Load<Texture2D>("wheel");
@@ -21,11 +21,11 @@ namespace Scrap.GameElements.Entities
 
         }
 
-        public Wheel(ScrapGame game, Vector2 position)
+        public DriveWheel(ScrapGame game, Vector2 position)
             : base(game)
         {
             texture = game.Content.Load<Texture2D>("wheel");
-            
+
             body = BodyFactory.CreateCircle(game.world, .5f, 1f);
             body.BodyType = BodyType.Dynamic;
             body.Position = this.position = position;

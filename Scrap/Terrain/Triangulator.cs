@@ -53,17 +53,17 @@ namespace Triangulator
 			List<Triangle> triangles = new List<Triangle>();
 
 			//make sure we have our vertices wound properly
-            //if (DetermineWindingOrder(inputVertices) == WindingOrder.Clockwise)
-           // {
-               outputVertices = ReverseWindingOrder(inputVertices);
-               
-            //    System.Console.WriteLine(WindingOrder.Clockwise.ToString());
-           // }
-           // else
-           // {
-              //  outputVertices = (Vector2[])inputVertices.Clone();
-           //     System.Console.WriteLine(WindingOrder.CounterClockwise.ToString());
-           // }
+            if (DetermineWindingOrder(inputVertices) == WindingOrder.Clockwise)
+            {
+                outputVertices = ReverseWindingOrder(inputVertices);
+
+                System.Console.WriteLine(WindingOrder.Clockwise.ToString());
+            }
+            else
+            {
+                outputVertices = (Vector2[])inputVertices.Clone();
+                System.Console.WriteLine(WindingOrder.CounterClockwise.ToString());
+            }
 			//clear all of the lists
 			polygonVertices.Clear();
 			earVertices.Clear();
