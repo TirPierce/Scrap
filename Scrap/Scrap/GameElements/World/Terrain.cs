@@ -58,10 +58,7 @@ namespace GameElements.GameWorld
             effect = new BasicEffect(game.GraphicsDevice);
             effect.TextureEnabled = true;
             effect.Texture = texture;
-
-
-            //ToDo: Rendertarget is oversized to increase resolution on terrain render
-            renderTarget = new RenderTarget2D(game.GraphicsDevice, game.GraphicsDevice.Viewport.Width*10, game.GraphicsDevice.Viewport.Height*10, false, SurfaceFormat.RgbPvrtc4Bpp, DepthFormat.Depth24Stencil8); //game.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
+            renderTarget = new RenderTarget2D(game.GraphicsDevice, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height, false, SurfaceFormat.RgbPvrtc4Bpp, DepthFormat.Depth24Stencil8); //game.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
 
         }
         public void CreateGround(World world)
@@ -79,23 +76,6 @@ namespace GameElements.GameWorld
 
         private void GenerateVerts()
         {
-            Random r = new Random();
-
-            //sourceVertices[13] = new Vector2(0, 40);
-            //sourceVertices[12] = new Vector2(10, 40);
-            //sourceVertices[11] = new Vector2(40, 50);
-            //sourceVertices[10] = new Vector2(60, 60);
-            //sourceVertices[9] = new Vector2(80, 70);
-            //sourceVertices[8] = new Vector2(130, 70);
-            //sourceVertices[7] = new Vector2(230, 60);
-            //sourceVertices[6] = new Vector2(280, 50);
-            //sourceVertices[5] = new Vector2(200, 40);
-            //sourceVertices[4] = new Vector2(130, 40);
-            //sourceVertices[3] = new Vector2(120, 50);
-            //sourceVertices[2] = new Vector2(115, 30);
-            //sourceVertices[1] = new Vector2(115, 100);
-            //sourceVertices[0] = new Vector2(0, 100);
-
 
 
             sourceVertices[0] = new Vector2(0f, 50f);
@@ -176,7 +156,7 @@ namespace GameElements.GameWorld
         {
             game.GraphicsDevice.SetRenderTarget(renderTarget);
             game.GraphicsDevice.Clear(Color.Transparent);
-            effect.View = Matrix.Identity;//camera.Transformation;
+            effect.View = camera.Transformation;
             effect.World = Matrix.Identity;
             effect.Projection = camera.Projection;
 
@@ -210,7 +190,7 @@ namespace GameElements.GameWorld
 
         public void Draw(SpriteBatch batch)
         {
-            batch.Draw((Texture2D)renderTarget, Vector2.Zero, null, null,null, 0f,new Vector2(.1f,.1f),null, SpriteEffects.None, 0);
+            batch.Draw((Texture2D)renderTarget, Vector2.Zero, Color.White);
         }
 
     }

@@ -120,13 +120,12 @@ namespace Scrap
 
             terrain.RenderTerrain();
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            
-
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, camera.Transformation);
-
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null,null);
             spriteBatch.Draw(background, new Rectangle(0, 0, 800, 480), Color.White);
             terrain.Draw(spriteBatch);
+            spriteBatch.End();
 
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, camera.Transformation);
             foreach (Entity item in entityList)
             {
                 item.Draw(spriteBatch);
