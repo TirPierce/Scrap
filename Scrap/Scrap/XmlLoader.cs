@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Scrap.GameElements;
 using Scrap.GameElements.Entities;
 using Microsoft.Xna.Framework;
-using GameElements.GameWorld;
+using Scrap.GameElements.GameWorld;
 
 namespace Scrap
 {
