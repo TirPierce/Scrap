@@ -10,12 +10,26 @@ using System.Threading.Tasks;
 
 namespace Scrap.GameElements.Entities
 {
-    class Wheel : PhysicalEntity
+    [Serializable]
+    public class Wheel : PhysicalEntity
     {
-        
+
+        public Wheel()
+        {
+
+        }
+
         public Wheel(ScrapGame game)
             : base(game)
         {
+            texture = game.Content.Load<Texture2D>("wheel");
+
+
+        }
+
+        public override void Init(ScrapGame game)
+        {
+            base.Init(game);
             texture = game.Content.Load<Texture2D>("wheel");
 
 

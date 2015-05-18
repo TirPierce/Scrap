@@ -2,10 +2,13 @@
 using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace Scrap.GameElements.Entities
 {
+    [Serializable]
     public abstract class PhysicalEntity : Entity
     {
         protected float density;
@@ -13,9 +16,19 @@ namespace Scrap.GameElements.Entities
         protected float friction;
         protected Body body;
 
+        public PhysicalEntity():base()
+        {
+
+        }
+
         public PhysicalEntity(ScrapGame game):base(game)
         {
 
+        }
+
+        public override void Init(ScrapGame game)
+        {
+            base.Init(game);
         }
 
         public override Vector2 Position { get { return body.Position; } }
@@ -23,7 +36,7 @@ namespace Scrap.GameElements.Entities
         {
             
         }
-        public override float Rotation
+        public override float Rotation//here //when loading there is no instance of body
         {
             get { return body.Rotation; }
             set { body.Rotation = value; }

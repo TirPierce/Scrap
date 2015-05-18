@@ -7,18 +7,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Scrap.GameElements.Entities
 {
-    class Crate : PhysicalEntity
+    [Serializable]
+    public class Crate : PhysicalEntity
     {
+
+        public Crate() : base()
+        {
+
+        }
 
         public Crate(ScrapGame game)
             : base(game)
         {
             texture = game.Content.Load<Texture2D>("Crate");
-            
-            
+
+
+        }
+
+        public override void Init(ScrapGame game)
+        {
+            base.Init(game);
+            texture = game.Content.Load<Texture2D>("Crate");
+
         }
 
         public Crate(ScrapGame game, Vector2 position)
@@ -32,6 +46,7 @@ namespace Scrap.GameElements.Entities
             body.Restitution = .1f;
             body.Friction = .9f;
         }
+
         public override void Update(GameTime gameTime)
         {
 

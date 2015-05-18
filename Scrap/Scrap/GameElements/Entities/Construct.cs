@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Scrap.GameElements.Entities
 {
+    [Serializable]
     public abstract class Construct
     {
         protected List<Joint> joints;

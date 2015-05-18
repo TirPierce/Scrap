@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Scrap.GameElements.Entities
 {
+    [Serializable]
     class ScrapBadger:Construct
     {
         DriveWheel backWheel;
