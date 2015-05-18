@@ -16,7 +16,7 @@ using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Factories;
 
-namespace GameElements.GameWorld
+namespace Scrap.GameElements.GameWorld
 {
     class Terrain
     {

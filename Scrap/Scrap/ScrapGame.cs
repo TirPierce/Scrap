@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using Scrap.GameElements.Entities;
 using Scrap.GameElements;
 using System.Collections.Generic;
-using GameElements.GameWorld;
+using Scrap.GameElements.GameWorld;
 
 namespace Scrap
 {
