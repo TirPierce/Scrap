@@ -36,6 +36,7 @@ namespace Scrap
             FarseerPhysics.Settings.VelocityIterations = 10;
             FarseerPhysics.Settings.MaxPolygonVertices = 1000;
 
+            //XmlLoader loadLevel = new XmlLoader(this);
         }
         
         protected override void Initialize()
@@ -57,17 +58,30 @@ namespace Scrap
             camera.Position = new Vector2(22,20);
             debugView.LoadContent(GraphicsDevice, Content);
 
-            Crate crate1 =new Crate(this, new Vector2(22, -8));
-            Crate crate2 =new Crate(this, new Vector2(22, -15));
-            Wheel wheel1=new Wheel(this, new Vector2(21.55f, -10));
+            Crate crate1 = new Crate(this, new Vector2(22, -8));
+            Crate crate2 = new Crate(this, new Vector2(22, -15));
+            Wheel wheel1 = new Wheel(this, new Vector2(21.55f, -10));
             Wheel wheel2 = new Wheel(this, new Vector2(22.55f, -10));
 
+            //XmlLoader loader = new XmlLoader();
+            //loader.LoadLevel(ref entityList);
+
             camera.Follow(wheel1, camera.Magnification);
+            //camera.Follow(entityList[0], camera.Magnification);
             //Body groundBody = BodyFactory.CreateEdge(world, new Vector2(-200, 20), new Vector2(200,20));
             terrain.LoadContent();
             terrain.CreateGround(world);
+
+            //Init();
         }
 
+        //void Init()
+        //{
+        //    foreach(Entity current in entityList)
+        //    {
+        //        current.Init(this);
+        //    }
+        //}
 
         protected override void UnloadContent()
         {
@@ -118,6 +132,19 @@ namespace Scrap
             camera.Update(gameTime);
 
             base.Update(gameTime);
+
+
+            if (inputManager.WasKeyReleased(Keys.P))
+            {
+                XmlLoader loader = new XmlLoader();
+                loader.SaveLevel(entityList);
+            }
+
+            if (inputManager.WasKeyReleased(Keys.L))
+            {
+                XmlLoader loader = new XmlLoader();
+                loader.LoadLevel(ref entityList, this);
+            }
         }
 
         protected override void Draw(GameTime gameTime)
