@@ -48,6 +48,7 @@
     <Compile Include="GameElements\Entities\DriveWheel.cs" />
     <Compile Include="GameElements\Entities\Entity.cs" />
     <Compile Include="GameElements\Entities\Nozzle.cs" />
+    <Compile Include="GameElements\Entities\Rocket.cs" />
     <Compile Include="GameElements\Entities\ScrapBadger.cs" />
     <Compile Include="GameElements\Entities\Wheel.cs" />
     <Compile Include="GameElements\Joints\PowerJoint.cs" />
@@ -69,6 +70,7 @@
   <ItemGroup>
     <Content Include="Content\background.png" />
     <Content Include="Content\crate.png" />
+    <Content Include="Content\rocket.png" />
     <Content Include="Content\sky.png" />
     <Content Include="Content\soil.png" />
     <Content Include="Content\wheel.png" />

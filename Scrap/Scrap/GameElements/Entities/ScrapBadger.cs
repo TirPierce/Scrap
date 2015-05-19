@@ -15,6 +15,7 @@ namespace Scrap.GameElements.Entities
         Crate torsoBack;
         Crate torsoMiddle;
         Crate torsoFront;
+        Rocket rocket1;
         Nozzle face;
 
         public ScrapBadger(ScrapGame game, Vector2 pos):base(game)
@@ -24,11 +25,13 @@ namespace Scrap.GameElements.Entities
             torsoFront = new Crate(game, pos + new Vector2(1, 0));
             backWheel = new DriveWheel(game, pos + new Vector2(-1, 1));
             frontWheel = new DriveWheel(game, pos + new Vector2(1, 1));
-            
+            rocket1 = new Rocket(game, pos + new Vector2(0, -1));
+
             JoinEntities(torsoBack, torsoMiddle, Entity.Direction.Right);
             JoinEntities(torsoMiddle, torsoFront, Entity.Direction.Right);
             JoinEntities(torsoBack, backWheel, Entity.Direction.Down);
             JoinEntities(torsoFront, frontWheel, Entity.Direction.Down);
+            JoinEntities(rocket1, torsoMiddle, Entity.Direction.Down);
 
             game.camera.Follow(torsoMiddle, game.camera.Magnification);
             KeyObject = torsoMiddle;
