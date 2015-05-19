@@ -12,6 +12,8 @@ namespace Scrap.GameElements.Entities
     [Serializable]
     public abstract class Construct
     {
+        public Entity KeyObject { get; set; }
+
         protected List<Joint> joints;
         protected List<Entity> entities;
         protected ScrapGame game;
@@ -26,6 +28,17 @@ namespace Scrap.GameElements.Entities
         {
         }
         protected void JoinEntities(Entity entityA, Entity entityB, Scrap.GameElements.Entities.Entity.Direction direction){
+            if (entityA.Container != this)
+            {
+                entityA.Container = this;
+                entities.Add(entityA);
+            }
+            if (entityB.Container != this)
+            {
+                entityB.Container = this;
+                entities.Add(entityB);
+            }
+
             switch (direction)
             {
                 case Entity.Direction.Right:
@@ -44,6 +57,51 @@ namespace Scrap.GameElements.Entities
                     break;
             }
             
+        }
+
+        public void Rotate(float rot)
+        {
+            foreach (Entity current in entities)
+            {
+                current.Rotation += rot;
+                if (current != KeyObject)
+                {
+                    current.Position -= KeyObject.Position;
+                    float cos = (float)Math.Cos(rot);
+                    float sin = (float)Math.Sin(rot);
+                    Vector2 rotationVector = current.Position;
+                    rotationVector = new Vector2(current.Position.X * cos - current.Position.Y * sin, current.Position.X * sin + current.Position.Y * cos);
+                    current.Position = rotationVector + KeyObject.Position;
+                }
+            }
+        }
+
+        public void Rotate(float rot, Vector2 pos, bool useWorldCoordinates)
+        {//TODO: test this function (I think it has bugs)
+            foreach (Entity current in entities)
+            {
+                current.Rotation += rot;
+                if(!useWorldCoordinates)
+                {
+                    pos += KeyObject.Position;
+                }
+                current.Position -= pos;
+                float cos = (float)Math.Cos(rot);
+                float sin = (float)Math.Sin(rot);
+                Vector2 rotationVector = current.Position;
+                rotationVector = new Vector2(current.Position.X * cos - current.Position.Y * sin, current.Position.X * sin + current.Position.Y * cos);
+                current.Position = rotationVector + pos;
+            }
+        }
+
+        public void SetRotation(float rot)
+        {
+            Rotate(rot - KeyObject.Rotation);
+        }
+
+        public void SetRotation(float rot, Vector2 pos, bool useWorldCoordinates)
+        {
+            Rotate(rot - KeyObject.Rotation, pos, useWorldCoordinates);
         }
     }
 }

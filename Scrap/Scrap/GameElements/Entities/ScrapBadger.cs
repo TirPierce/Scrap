@@ -11,27 +11,27 @@ namespace Scrap.GameElements.Entities
     class ScrapBadger:Construct
     {
         DriveWheel backWheel;
-        Wheel frontWheel;
+        DriveWheel frontWheel;
         Crate torsoBack;
         Crate torsoMiddle;
         Crate torsoFront;
         Nozzle face;
 
-        public ScrapBadger(ScrapGame game):base(game)
+        public ScrapBadger(ScrapGame game, Vector2 pos):base(game)
         {
-            torsoBack = new Crate(game, new Vector2(22, -8));
-            torsoMiddle = new Crate(game, new Vector2(23, -8));
-            torsoFront = new Crate(game, new Vector2(24, -8));
-            backWheel = new DriveWheel(game, new Vector2(22, -7));
-            frontWheel = new Wheel(game, new Vector2(24, -7));
-
+            torsoBack = new Crate(game, pos + new Vector2(-1,0));
+            torsoMiddle = new Crate(game, pos);
+            torsoFront = new Crate(game, pos + new Vector2(1, 0));
+            backWheel = new DriveWheel(game, pos + new Vector2(-1, 1));
+            frontWheel = new DriveWheel(game, pos + new Vector2(1, 1));
+            
             JoinEntities(torsoBack, torsoMiddle, Entity.Direction.Right);
             JoinEntities(torsoMiddle, torsoFront, Entity.Direction.Right);
             JoinEntities(torsoBack, backWheel, Entity.Direction.Down);
             JoinEntities(torsoFront, frontWheel, Entity.Direction.Down);
 
             game.camera.Follow(torsoMiddle, game.camera.Magnification);
-
+            KeyObject = torsoMiddle;
         }
     }
 }

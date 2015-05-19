@@ -70,7 +70,8 @@ namespace Scrap.GameElements.GameWorld
             Body groundBody = BodyFactory.CreateCompoundPolygon(world, vertList, 1f, null);
             groundBody.BodyType = BodyType.Static;
             groundBody.IgnoreGravity = true;
-
+            groundBody.Restitution = .5f;
+            groundBody.Friction = .9f;
         }
 
 

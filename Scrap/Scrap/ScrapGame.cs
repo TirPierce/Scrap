@@ -60,7 +60,8 @@ namespace Scrap
             debugView.LoadContent(GraphicsDevice, Content);
 
 
-            badger = new ScrapBadger(this);
+            badger = new ScrapBadger(this, new Vector2(23, 4));
+            badger.Rotate(-45f * 0.0174532925f);
 
             //XmlLoader loader = new XmlLoader();
             //loader.LoadLevel(ref entityList);
@@ -145,6 +146,11 @@ namespace Scrap
             {
                 XmlLoader loader = new XmlLoader();
                 loader.LoadLevel(ref entityList, this);
+            }
+
+            if (inputManager.WasKeyReleased(Keys.O))
+            {
+                badger.Rotate(1f * .0174532925f, new Vector2(-1, -1), false);
             }
         }
 

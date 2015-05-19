@@ -18,7 +18,7 @@ namespace Scrap.GameElements.Entities
         protected string objectType;
         protected ScrapGame game;
         public Body body;
-
+        public Construct Container { get; set; }
 
         public virtual Vector2 Position
         {
