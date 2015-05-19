@@ -13,7 +13,7 @@ namespace Scrap.GameElements.Entities
 {
     class Rocket : Entity
     {
-        public float force = 6f;
+        public float force = 100f;
 
         public Rocket(ScrapGame game)
             : base(game)
@@ -37,14 +37,12 @@ namespace Scrap.GameElements.Entities
         {
             //ToDo:control hack
             if (game.inputManager.WasKeyReleased(Microsoft.Xna.Framework.Input.Keys.Up) && gameTime.TotalGameTime.Milliseconds % 60 > 50)
-            {
-                //body.ApplyForce(new Vector2(0, -100));
-                //body.ApplyLinearImpulse(new Vector2(0, -10));
-
+            {//TODO: Extend Math or Vector2 to include rotation
                 float cos = (float)Math.Cos(body.Rotation);
                 float sin = (float)Math.Sin(body.Rotation);
                 //body.ApplyLinearImpulse(new Vector2(0 * cos - force * sin, 0 * sin + force * cos));
-                body.ApplyLinearImpulse(new Vector2( force * sin, - force * cos));
+                body.ApplyForce(new Vector2(force * sin, -force * cos));
+                //body.ApplyLinearImpulse(new Vector2(force * sin, -force * cos));
             }
         }
 

@@ -61,7 +61,7 @@ namespace Scrap
 
 
             badger = new ScrapBadger(this, new Vector2(23, 4));
-            badger.Rotate(-45f * 0.0174532925f);
+            badger.Rotate(20f * 0.0174532925f);
 
             //XmlLoader loader = new XmlLoader();
             //loader.LoadLevel(ref entityList);
