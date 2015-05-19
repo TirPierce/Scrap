@@ -150,7 +150,7 @@ namespace Scrap
 
             if (inputManager.WasKeyReleased(Keys.O))
             {
-                badger.Rotate(1f * .0174532925f, new Vector2(-1, -1), false);
+                badger.SetPosition(new Vector2(1, 0),false);
             }
         }
 

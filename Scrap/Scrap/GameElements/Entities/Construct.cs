@@ -59,6 +59,22 @@ namespace Scrap.GameElements.Entities
             
         }
 
+        public Vector2 Position
+        {
+            get { return KeyObject.Position; }
+        }
+
+        public void SetPosition(Vector2 pos, bool useWorldCoordinates = true)
+        {
+            if (useWorldCoordinates)
+                pos -= KeyObject.Position;
+
+            foreach (Entity current in entities)
+            {
+                current.Position += pos;
+            }
+        }
+
         public void Rotate(float rot)
         {
             foreach (Entity current in entities)
@@ -76,7 +92,7 @@ namespace Scrap.GameElements.Entities
             }
         }
 
-        public void Rotate(float rot, Vector2 pos, bool useWorldCoordinates)
+        public void Rotate(float rot, Vector2 pos, bool useWorldCoordinates = true)
         {//TODO: test this function (I think it has bugs)
             foreach (Entity current in entities)
             {
@@ -99,7 +115,7 @@ namespace Scrap.GameElements.Entities
             Rotate(rot - KeyObject.Rotation);
         }
 
-        public void SetRotation(float rot, Vector2 pos, bool useWorldCoordinates)
+        public void SetRotation(float rot, Vector2 pos, bool useWorldCoordinates = true)
         {
             Rotate(rot - KeyObject.Rotation, pos, useWorldCoordinates);
         }
