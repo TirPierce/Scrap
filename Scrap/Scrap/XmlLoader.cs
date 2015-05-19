@@ -66,7 +66,7 @@ namespace Scrap
 
             foreach (Entity current in currentLevel.EntityList)
             {
-                current.Init(game);
+                //current.Init(game);
             }
             itemList.AddRange(currentLevel.EntityList);
         }

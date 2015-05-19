@@ -1,4 +1,5 @@
 ﻿using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,29 +12,42 @@ using System.Threading.Tasks;
 namespace Scrap.GameElements.Entities
 {
     [Serializable]
-    class DriveWheel : PhysicalEntity
+    class DriveWheel : Entity
     {
 
-        public DriveWheel(ScrapGame game)
-            : base(game)
-        {
-            texture = game.Content.Load<Texture2D>("wheel");
-
-
-        }
-
+        Body wheelHub;
+        Joint wheelHubJoint;
         public DriveWheel(ScrapGame game, Vector2 position)
             : base(game)
         {
             texture = game.Content.Load<Texture2D>("wheel");
-
-            body = BodyFactory.CreateCircle(game.world, .5f, 1f);
+            
+            body = BodyFactory.CreateCircle(game.world, .49f, 1f);
+            body.Restitution = .5f;
             body.BodyType = BodyType.Dynamic;
-            body.Position =  position;
+            body.Position = position;
+            body.Friction = .9f;
+
+            wheelHub = BodyFactory.CreateRectangle(game.world, .1f,.1f, .1f);
+            wheelHub.Position = position;
+            wheelHub.BodyType = BodyType.Dynamic;
+
+            wheelHubJoint = JointFactory.CreateRevoluteJoint(game.world, wheelHub, body, new Vector2(0, 0), new Vector2(0, 0));
+
         }
+
         public override void Update(GameTime gameTime)
         {
-
+            //ToDo:control hack
+            if ( game.inputManager.WasKeyReleased(Microsoft.Xna.Framework.Input.Keys.Space)&& gameTime.TotalGameTime.Milliseconds % 60 >50 )
+            {
+                body.ApplyTorque(-.5f);
+            }
+        }
+        public override Body GetJointAnchor(Direction direction)
+        {
+            //if direction.up has anchorable point return it
+            return wheelHub;
         }
 
 

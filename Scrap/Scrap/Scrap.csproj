@@ -48,9 +48,9 @@
     <Compile Include="GameElements\Entities\DriveWheel.cs" />
     <Compile Include="GameElements\Entities\Entity.cs" />
     <Compile Include="GameElements\Entities\Nozzle.cs" />
-    <Compile Include="GameElements\Entities\PhysicalEntity.cs" />
     <Compile Include="GameElements\Entities\ScrapBadger.cs" />
     <Compile Include="GameElements\Entities\Wheel.cs" />
+    <Compile Include="GameElements\Joints\PowerJoint.cs" />
     <Compile Include="GameElements\World\Terrain.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="Level.cs" />

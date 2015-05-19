@@ -7,6 +7,7 @@ using Scrap.GameElements.Entities;
 using Scrap.GameElements;
 using System.Collections.Generic;
 using Scrap.GameElements.GameWorld;
+using FarseerPhysics.Factories;
 
 namespace Scrap
 {
@@ -17,14 +18,14 @@ namespace Scrap
         public World world;
         public Camera camera;
         public List<Entity> entityList = new List<Entity>();
-
+        public List<Construct> constructList = new List<Construct>();
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D background;
         DebugViewXNA debugView;
         Terrain terrain;
-
+        ScrapBadger badger;
         public ScrapGame()
             : base()
         {
@@ -35,7 +36,7 @@ namespace Scrap
             FarseerPhysics.Settings.PositionIterations = 10;
             FarseerPhysics.Settings.VelocityIterations = 10;
             FarseerPhysics.Settings.MaxPolygonVertices = 1000;
-
+            
             //XmlLoader loadLevel = new XmlLoader(this);
         }
         
@@ -58,17 +59,13 @@ namespace Scrap
             camera.Position = new Vector2(22,20);
             debugView.LoadContent(GraphicsDevice, Content);
 
-            Crate crate1 = new Crate(this, new Vector2(22, -8));
-            Crate crate2 = new Crate(this, new Vector2(22, -15));
-            Wheel wheel1 = new Wheel(this, new Vector2(21.55f, -10));
-            Wheel wheel2 = new Wheel(this, new Vector2(22.55f, -10));
+
+            badger = new ScrapBadger(this);
 
             //XmlLoader loader = new XmlLoader();
             //loader.LoadLevel(ref entityList);
 
-            camera.Follow(wheel1, camera.Magnification);
-            //camera.Follow(entityList[0], camera.Magnification);
-            //Body groundBody = BodyFactory.CreateEdge(world, new Vector2(-200, 20), new Vector2(200,20));
+
             terrain.LoadContent();
             terrain.CreateGround(world);
 
@@ -121,6 +118,10 @@ namespace Scrap
                 camera.Position = new Vector2(0f, 0f);
             }
             camera.Zoom(inputManager.ScroleWheelDelta()*.01f);//ToDo: Camera Controls need to be changed
+            foreach (Construct item in constructList)
+            {
+                item.Update(gameTime);
+            }
             
             foreach (Entity item in entityList)
             {
