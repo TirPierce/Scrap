@@ -70,6 +70,7 @@
   <ItemGroup>
     <Content Include="Content\background.png" />
     <Content Include="Content\crate.png" />
+    <Content Include="Content\engine.png" />
     <Content Include="Content\rocket.png" />
     <Content Include="Content\sky.png" />
     <Content Include="Content\soil.png" />
