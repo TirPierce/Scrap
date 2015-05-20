@@ -12,6 +12,9 @@ namespace Scrap.GameElements.Entities
     [Serializable]
     public abstract class Construct
     {
+        //ToDo: construct should be a super entiy
+        //body.CreateFixture() should be used to create one solid object out of shapes while disabling the current bodies or something
+
         public Entity KeyObject { get; set; }
 
         protected List<Joint> joints;

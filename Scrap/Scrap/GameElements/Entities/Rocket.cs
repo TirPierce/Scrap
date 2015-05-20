@@ -40,6 +40,8 @@ namespace Scrap.GameElements.Entities
             {//TODO: Extend Math or Vector2 to include rotation
                 float cos = (float)Math.Cos(body.Rotation);
                 float sin = (float)Math.Sin(body.Rotation);
+
+                // Vector2.Transform(thrust, Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), physicsBody.Rotation));
                 //body.ApplyLinearImpulse(new Vector2(0 * cos - force * sin, 0 * sin + force * cos));
                 body.ApplyForce(new Vector2(force * sin, -force * cos));
                 //body.ApplyLinearImpulse(new Vector2(force * sin, -force * cos));

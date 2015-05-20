@@ -28,11 +28,16 @@ namespace Scrap.GameElements.Entities
             wheel.Position = position;
             wheel.Friction = 2f;
 
-            body = BodyFactory.CreateRectangle(game.world, .1f,.1f, .1f);
+            body = BodyFactory.CreateRectangle(game.world, .1f,.1f, 2f);
             body.Position = position;
             body.BodyType = BodyType.Dynamic;
+            
+            
+            //body.IgnoreCCD = true;
+            
+            wheelHubJoint = JointFactory.CreateRevoluteJoint(game.world, body, wheel, new Vector2(0, 0));
+            //JointFactory.CreateDistanceJoint(game.world, body, wheel, new Vector2(0, 0), new Vector2(0, 0));
 
-            wheelHubJoint = JointFactory.CreateRevoluteJoint(game.world, body, wheel, new Vector2(0, 0), new Vector2(0, 0));
 
         }
         public override Vector2 Position
