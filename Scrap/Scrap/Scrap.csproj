@@ -55,6 +55,7 @@
     <Compile Include="GameElements\World\Terrain.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="Level.cs" />
+    <Compile Include="PlayerController.cs" />
     <Compile Include="ScrapGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,6 +71,7 @@
   <ItemGroup>
     <Content Include="Content\background.png" />
     <Content Include="Content\crate.png" />
+    <Content Include="Content\Pointer.png" />
     <Content Include="Content\rocket.png" />
     <Content Include="Content\sky.png" />
     <Content Include="Content\soil.png" />

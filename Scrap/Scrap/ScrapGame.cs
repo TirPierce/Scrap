@@ -14,7 +14,7 @@ namespace Scrap
     public class ScrapGame : Game
     {
         //Add any useful objects here puplicly. Entity derivitives hold a reference to this.
-        public InputManager inputManager;
+        //public InputManager inputManager;
         public World world;
         public Camera camera;
         public List<Entity> entityList = new List<Entity>();
@@ -26,12 +26,16 @@ namespace Scrap
         DebugViewXNA debugView;
         Terrain terrain;
         ScrapBadger badger;
+        PlayerController playerController;
+        Crate crate;
         public ScrapGame()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
+            
             Content.RootDirectory = "Content";
-            inputManager = new InputManager();
+            playerController = new PlayerController(this);
+            
             terrain = new Terrain(this);
             FarseerPhysics.Settings.PositionIterations = 10;
             FarseerPhysics.Settings.VelocityIterations = 10;
@@ -59,10 +63,13 @@ namespace Scrap
             camera.Position = new Vector2(22,20);
             debugView.LoadContent(GraphicsDevice, Content);
 
-
+            playerController.LoadContent();
             badger = new ScrapBadger(this, new Vector2(23, 4));
+
             badger.Rotate(20f * 0.0174532925f);
 
+
+            crate = new Crate(this, new Vector2(26, 2));
             //XmlLoader loader = new XmlLoader();
             //loader.LoadLevel(ref entityList);
 
@@ -88,37 +95,8 @@ namespace Scrap
         
         protected override void Update(GameTime gameTime)
         {
-            inputManager.Update();
-
-            if(inputManager.WasKeyReleased(Keys.Q))
-            {
-                camera.Rotate(- .005f);
-            }
-            if( inputManager.WasKeyReleased(Keys.E))
-            {
-                camera.Rotate(+.005f);
-            }
-            if (inputManager.WasKeyReleased(Keys.D))
-            {
-                camera.Position += new Vector2(1f,0f);
-            }
-            if (inputManager.WasKeyReleased(Keys.A))
-            {
-                camera.Position += new Vector2(-1f, 0f);
-            }
-            if (inputManager.WasKeyReleased(Keys.W))
-            {
-                camera.Position += new Vector2(0f, -1f);
-            }
-            if (inputManager.WasKeyReleased(Keys.S))
-            {
-                camera.Position += new Vector2(0f, 1f);
-            }
-            if (inputManager.WasKeyReleased(Keys.Space))
-            {
-                camera.Position = new Vector2(0f, 0f);
-            }
-            camera.Zoom(inputManager.ScroleWheelDelta()*.01f);//ToDo: Camera Controls need to be changed
+            
+            playerController.Update();
             foreach (Construct item in constructList)
             {
                 item.Update(gameTime);
@@ -136,22 +114,22 @@ namespace Scrap
             base.Update(gameTime);
 
 
-            if (inputManager.WasKeyReleased(Keys.P))
-            {
-                XmlLoader loader = new XmlLoader();
-                loader.SaveLevel(entityList);
-            }
+            //if (inputManager.WasKeyReleased(Keys.P))
+            //{
+            //    XmlLoader loader = new XmlLoader();
+            //    loader.SaveLevel(entityList);
+            //}
 
-            if (inputManager.WasKeyReleased(Keys.L))
-            {
-                XmlLoader loader = new XmlLoader();
-                loader.LoadLevel(ref entityList, this);
-            }
+            //if (inputManager.WasKeyReleased(Keys.L))
+            //{
+            //    XmlLoader loader = new XmlLoader();
+            //    loader.LoadLevel(ref entityList, this);
+            //}
 
-            if (inputManager.WasKeyReleased(Keys.O))
-            {
-                badger.SetPosition(new Vector2(1, 0),false);
-            }
+            //if (inputManager.WasKeyReleased(Keys.O))
+            //{
+            //    badger.SetPosition(new Vector2(1, 0),false);
+            //}
         }
 
         protected override void Draw(GameTime gameTime)
@@ -170,6 +148,11 @@ namespace Scrap
             {
                 item.Draw(spriteBatch);
             }
+
+            spriteBatch.End();
+
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, null);
+            playerController.Draw(spriteBatch);
             spriteBatch.End();
 
             debugView.RenderDebugData(camera.Projection, camera.Transformation);

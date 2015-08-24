@@ -31,7 +31,11 @@ namespace Scrap.GameElements.Entities
             body.Restitution = .1f;
             body.Friction = .9f;
         }
-
+        public override Direction[] JointDirections()
+        {
+            Direction[] validDirections = { Direction.Up, Direction.Right };
+            return validDirections;
+        }
         public override void Update(GameTime gameTime)
         {
         }

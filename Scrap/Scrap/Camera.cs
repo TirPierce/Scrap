@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Scrap.GameElements.Entities;
+using Scrap;
+using FarseerPhysics.Common;
 
 namespace Scrap
 {
@@ -17,6 +19,7 @@ namespace Scrap
         private Entity entityToFollow;//ToDo: Implement function to follow target and woble when vehicle stops suddenly. https://docs.google.com/document/d/1iNSQIyNpVGHeak6isbP6AHdHD50gs8MNXF1GCf08efg/pub
         private Game game;
         private float magnification;
+        
 
         public float Magnification
         {
@@ -89,6 +92,14 @@ namespace Scrap
                 
             }
             UpdateTransform();
+        }
+        public Vector2 MousePick(Point mousePos)
+        {
+            Vector2 mouseVector = mousePos.ToVector2();
+            Matrix reverseCamera = Matrix.Invert(transformation);
+            Vector2 worldPos;
+            Vector2.Transform(ref mouseVector, ref reverseCamera, out worldPos);
+            return worldPos;
         }
         public void Shake(float strength, float duration)
         {

@@ -53,10 +53,10 @@ namespace Scrap.GameElements.Entities
         public override void Update(GameTime gameTime)
         {
             //ToDo:control hack
-            if ( game.inputManager.WasKeyReleased(Microsoft.Xna.Framework.Input.Keys.Space)&& gameTime.TotalGameTime.Milliseconds % 60 >50 )
-            {
-                wheel.ApplyTorque(-50f);
-            }
+            //if ( game.inputManager.WasKeyReleased(Microsoft.Xna.Framework.Input.Keys.Space)&& gameTime.TotalGameTime.Milliseconds % 60 >50 )
+            //{
+            //    wheel.ApplyTorque(-50f);
+            //}
         }
         public override Body GetJointAnchor(Direction direction)
         {
