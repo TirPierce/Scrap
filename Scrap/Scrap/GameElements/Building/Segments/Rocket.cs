@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 
 namespace Scrap.GameElements.Entities
 {
-    class Rocket : Entity
+    class Rocket : Segment
     {
         public float force = 100f;
 
@@ -26,7 +26,7 @@ namespace Scrap.GameElements.Entities
             : base(game)
         {
             texture = game.Content.Load<Texture2D>("Rocket");
-            body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world,1f,1f,.2f,.2f,5,1f);
+            body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 1f);
             body.BodyType = BodyType.Dynamic;
             body.Position = position;
             body.Restitution = .1f;

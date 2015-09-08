@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Scrap.GameElements.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace Scrap
 {
-
     class PlayerController
     {
         InputManager inputManager;
@@ -17,9 +17,9 @@ namespace Scrap
         Texture2D pointer;
         Texture2D pointerClosed;
         Vector2 mouseWorld;
+        Segment selectedSegment = null;
         public void LoadContent()
         {
-            
             pointer = game.Content.Load<Texture2D>("Pointer");
             pointerClosed = game.Content.Load<Texture2D>("PointerClosed");
         }
@@ -62,29 +62,54 @@ namespace Scrap
             }
             game.camera.Zoom(inputManager.ScroleWheelDelta() * .01f);//ToDo: Camera Controls need to be changed
             mouseWorld = (game.camera.MousePick(inputManager.MouseState.Position));
-            if (inputManager.MouseState.LeftButton == ButtonState.Pressed)
+            if (selectedSegment == null && inputManager.MouseState.LeftButton == ButtonState.Pressed && inputManager.PrevMouseState.LeftButton == ButtonState.Released)
             {
-                //ToDo: add currently selected object and state
+                //ToDo: check if entity is attached to own ship and disconnect if it is. UserData holds consruct
                 foreach(var entity in this.game.entityList)
                 {
-                    if(entity.TestEntity(ref mouseWorld))
-                        entity.Position = mouseWorld;
-                
+                    if (entity.TestEntity(ref mouseWorld))
+                    {
+                        selectedSegment = entity;
+                        selectedSegment.body.UserData = this;
+                        break;
+                    }
                 }
-                //if (fixture != null)
-                //    fixture.Body.Position = mouseWorld;
+            }
+            if (selectedSegment != null && inputManager.MouseState.LeftButton == ButtonState.Released && inputManager.PrevMouseState.LeftButton == ButtonState.Pressed)
+            {
+                ReleaseSegment();
+            }
+            if (selectedSegment != null)
+            {
+                float length = (mouseWorld - selectedSegment.body.Position).Length();
+                Vector2 direction = (mouseWorld - selectedSegment.body.Position) / length;
                 
-            }  
+                selectedSegment.body.ApplyLinearImpulse(direction);
+                Mouse.SetPosition((int)game.camera.ProjectPoint(selectedSegment.body.Position).X, (int)game.camera.ProjectPoint(selectedSegment.body.Position).Y );
+            }
+        }
+        protected void ReleaseSegment()
+        {
+            selectedSegment.body.UserData = null;
+            selectedSegment = null;
+        }
+        public void PlaceSegment()
+        {
+            ReleaseSegment();
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            if(inputManager.MouseState.LeftButton == ButtonState.Released)
-                spriteBatch.Draw(pointer, new Rectangle((int)inputManager.MouseState.Position.X - 10, (int)inputManager.MouseState.Position.Y - 10, 20, 20), Color.BlanchedAlmond);
+            if (selectedSegment != null)
+            {
+                spriteBatch.Draw(pointerClosed, new Rectangle((int)game.camera.ProjectPoint(selectedSegment.body.Position).X - 10, (int)game.camera.ProjectPoint(selectedSegment.body.Position).Y - 10, 20, 20), Color.BlanchedAlmond);
+            }
             else
-                spriteBatch.Draw(pointerClosed, new Rectangle((int)inputManager.MouseState.Position.X - 10, (int)inputManager.MouseState.Position.Y - 10, 20, 20), Color.BlanchedAlmond);
-            
-                
-        
+            {
+                if (inputManager.MouseState.LeftButton == ButtonState.Released)
+                    spriteBatch.Draw(pointer, new Rectangle((int)inputManager.MouseState.Position.X - 10, (int)inputManager.MouseState.Position.Y - 10, 20, 20), Color.BlanchedAlmond);
+                else
+                    spriteBatch.Draw(pointerClosed, new Rectangle((int)inputManager.MouseState.Position.X - 10, (int)inputManager.MouseState.Position.Y - 10, 20, 20), Color.BlanchedAlmond);
+            }
         }
     }
 }

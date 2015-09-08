@@ -17,12 +17,12 @@ namespace Scrap
         //public InputManager inputManager;
         public World world;
         public Camera camera;
-        public List<Entity> entityList = new List<Entity>();
+        public List<Segment> entityList = new List<Segment>();
         public List<Construct> constructList = new List<Construct>();
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Texture2D background;
+        Texture2D background, foreground;
         DebugViewXNA debugView;
         Terrain terrain;
         ScrapBadger badger;
@@ -56,6 +56,7 @@ namespace Scrap
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             background = Content.Load<Texture2D>("sky");
+            foreground = Content.Load<Texture2D>("nearback");
             world = new World(new Vector2(0, 1f));
 
             debugView = new DebugViewXNA(world);
@@ -102,7 +103,7 @@ namespace Scrap
                 item.Update(gameTime);
             }
             
-            foreach (Entity item in entityList)
+            foreach (Segment item in entityList)
             {
                 item.Update(gameTime);
             }
@@ -138,13 +139,14 @@ namespace Scrap
 
             terrain.RenderTerrain();
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null,null);
-            spriteBatch.Draw(background, new Rectangle(0, 0, 800, 480), Color.White);
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, null);
+            spriteBatch.Draw(background, -badger.Position*.5f, new Rectangle(0, 0, 800, 480), Color.White);
+            spriteBatch.Draw(foreground, -badger.Position*4f, new Rectangle(0, 0, 800, 480), Color.White);
             terrain.Draw(spriteBatch);
             spriteBatch.End();
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, camera.Transformation);
-            foreach (Entity item in entityList)
+            foreach (Segment item in entityList)
             {
                 item.Draw(spriteBatch);
             }

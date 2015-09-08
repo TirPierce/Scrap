@@ -67,7 +67,7 @@ namespace Scrap.GameElements.GameWorld
             TriangulateVerts();
             CreateGeometry();
             List<Vertices> vertList = FarseerPhysics.Common.Decomposition.Triangulate.ConvexPartition(new Vertices(sourceVertices), FarseerPhysics.Common.Decomposition.TriangulationAlgorithm.Bayazit);
-            Body groundBody = BodyFactory.CreateCompoundPolygon(world, vertList, 1f, null);
+            Body groundBody = BodyFactory.CreateCompoundPolygon(world, vertList, 1f, this);
             groundBody.BodyType = BodyType.Static;
             groundBody.IgnoreGravity = true;
             groundBody.Restitution = .5f;

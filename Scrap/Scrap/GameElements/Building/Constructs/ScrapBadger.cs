@@ -10,8 +10,8 @@ namespace Scrap.GameElements.Entities
     [Serializable]
     class ScrapBadger:Construct
     {
-        DriveWheel backWheel;
-        DriveWheel frontWheel;
+        Wheel backWheel;
+        Wheel frontWheel;
         Crate torsoBack;
         Crate torsoMiddle;
         Crate torsoFront;
@@ -23,18 +23,23 @@ namespace Scrap.GameElements.Entities
             torsoBack = new Crate(game, pos + new Vector2(-1,0));
             torsoMiddle = new Crate(game, pos);
             torsoFront = new Crate(game, pos + new Vector2(1, 0));
-            backWheel = new DriveWheel(game, pos + new Vector2(-1, 1));
-            frontWheel = new DriveWheel(game, pos + new Vector2(1, 1));
+            backWheel = new Wheel(game, pos + new Vector2(-1, 1));
+            frontWheel = new Wheel(game, pos + new Vector2(1, 1));
             rocket1 = new Rocket(game, pos + new Vector2(0, -1));
 
-            JoinEntities(torsoBack, torsoMiddle, Entity.Direction.Right);
-            JoinEntities(torsoMiddle, torsoFront, Entity.Direction.Right);
-            JoinEntities(torsoBack, backWheel, Entity.Direction.Down);
-            JoinEntities(torsoFront, frontWheel, Entity.Direction.Down);
-            JoinEntities(rocket1, torsoMiddle, Entity.Direction.Down);
+            KeyObject = torsoMiddle;
+            JoinEntities(torsoMiddle, torsoFront, Segment.Direction.Right);
+            JoinEntities(torsoMiddle, rocket1 , Segment.Direction.Up);
+            JoinEntities(torsoMiddle,torsoBack,  Segment.Direction.Left);
+            
+            JoinEntities(torsoBack, backWheel, Segment.Direction.Down);
+            //backWheel.body.UserData = this;
+            //frontWheel.body.UserData = this;
+            JoinEntities(torsoFront, frontWheel, Segment.Direction.Down);
+            
 
             game.camera.Follow(torsoMiddle, game.camera.Magnification);
-            KeyObject = torsoMiddle;
+            
         }
     }
 }

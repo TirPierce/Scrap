@@ -43,18 +43,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
-    <Compile Include="GameElements\Entities\Construct.cs" />
-    <Compile Include="GameElements\Entities\Crate.cs" />
-    <Compile Include="GameElements\Entities\DriveWheel.cs" />
-    <Compile Include="GameElements\Entities\Entity.cs" />
-    <Compile Include="GameElements\Entities\Nozzle.cs" />
-    <Compile Include="GameElements\Entities\Rocket.cs" />
-    <Compile Include="GameElements\Entities\ScrapBadger.cs" />
-    <Compile Include="GameElements\Entities\Wheel.cs" />
-    <Compile Include="GameElements\Joints\PowerJoint.cs" />
+    <Compile Include="GameElements\Building\Construct.cs" />
+    <Compile Include="GameElements\Building\ConstructElement.cs" />
+    <Compile Include="GameElements\Building\Segments\Crate.cs" />
+    <Compile Include="GameElements\Building\Segments\DriveWheel.cs" />
+    <Compile Include="GameElements\Building\Segment.cs" />
+    <Compile Include="GameElements\Building\Segments\Nozzle.cs" />
+    <Compile Include="GameElements\Building\Segments\Rocket.cs" />
+    <Compile Include="GameElements\Building\Constructs\ScrapBadger.cs" />
+    <Compile Include="GameElements\Building\Segments\Wheel.cs" />
+    <Compile Include="GameElements\Building\Joints\PowerJoint.cs" />
     <Compile Include="GameElements\World\Terrain.cs" />
     <Compile Include="InputManager.cs" />
-    <Compile Include="Level.cs" />
+    <Compile Include="GameElements\World\Level.cs" />
     <Compile Include="PlayerController.cs" />
     <Compile Include="ScrapGame.cs" />
     <Compile Include="Program.cs" />
@@ -71,6 +72,9 @@
   <ItemGroup>
     <Content Include="Content\background.png" />
     <Content Include="Content\crate.png" />
+    <Content Include="Content\nearback.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Pointer.png" />
     <Content Include="Content\rocket.png" />
     <Content Include="Content\sky.png" />

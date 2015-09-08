@@ -16,7 +16,7 @@ namespace Scrap
         CameraMode cameraMode = CameraMode.Manual;
         float maxMagnification = 10000f;
         float minMagnification=.00001f;
-        private Entity entityToFollow;//ToDo: Implement function to follow target and woble when vehicle stops suddenly. https://docs.google.com/document/d/1iNSQIyNpVGHeak6isbP6AHdHD50gs8MNXF1GCf08efg/pub
+        private Segment entityToFollow;//ToDo: Implement function to follow target and woble when vehicle stops suddenly. https://docs.google.com/document/d/1iNSQIyNpVGHeak6isbP6AHdHD50gs8MNXF1GCf08efg/pub
         private Game game;
         private float magnification;
         
@@ -101,11 +101,17 @@ namespace Scrap
             Vector2.Transform(ref mouseVector, ref reverseCamera, out worldPos);
             return worldPos;
         }
+        public Vector2 ProjectPoint(Vector2 pos)
+        {
+            Vector2 worldPos;
+            Vector2.Transform(ref pos, ref transformation, out worldPos);
+            return worldPos;
+        }
         public void Shake(float strength, float duration)
         {
 
         }
-        public void Follow(Entity entity, float magnification)
+        public void Follow(Segment entity, float magnification)
         {
             cameraMode = CameraMode.FixedFollow;
             entityToFollow = entity;

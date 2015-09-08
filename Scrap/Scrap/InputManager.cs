@@ -11,6 +11,12 @@ namespace Scrap
     {
         KeyboardState prevKeyState = Keyboard.GetState();
         MouseState prevMouseState = Mouse.GetState();
+
+        public MouseState PrevMouseState
+        {
+            get { return prevMouseState; }
+            set { prevMouseState = value; }
+        }
         KeyboardState curKeyState = Keyboard.GetState();
 
         public KeyboardState KeyState

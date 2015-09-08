@@ -44,7 +44,7 @@ namespace Scrap
         //    Level newTask = GetTask();
         //}
 
-        public void SaveLevel(List<Entity> itemList)
+        public void SaveLevel(List<Segment> itemList)
         {
             Level currentLevel = new Level();
             //foreach(Entity current in itemList)
@@ -56,7 +56,7 @@ namespace Scrap
             WriteXMl(currentLevel);
         }
 
-        public void LoadLevel(ref List<Entity> itemList, ScrapGame game)
+        public void LoadLevel(ref List<Segment> itemList, ScrapGame game)
         {
             Level currentLevel = GetTask();
             //foreach (Crate current in currentLevel.CrateList)
@@ -64,7 +64,7 @@ namespace Scrap
             //    itemList.Add(current);
             //}
 
-            foreach (Entity current in currentLevel.EntityList)
+            foreach (Segment current in currentLevel.EntityList)
             {
                 //current.Init(game);
             }

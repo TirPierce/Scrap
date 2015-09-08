@@ -13,40 +13,50 @@ using FarseerPhysics.Dynamics.Joints;
 namespace Scrap.GameElements.Entities
 {
     [Serializable]
-    public class Wheel : Entity
+    public class Wheel : Segment
     {
-        Body wheelHub;
-        Joint wheelHubJoint;
+        Body wheel;
+        Joint bodyJoint;
         public Wheel(ScrapGame game, Vector2 position)
             : base(game)
         {
             texture = game.Content.Load<Texture2D>("wheel");
-            
-            body = BodyFactory.CreateCircle(game.world, .49f, 1f);
-            body.Restitution = .5f;
-            body.BodyType = BodyType.Dynamic;
+
+            wheel = BodyFactory.CreateCircle(game.world, .49f, 1f, this);
+            wheel.Restitution = .5f;
+            wheel.BodyType = BodyType.Dynamic;
+            wheel.Position = position;
+            wheel.Friction = .9f;
+
+
+
+            body = BodyFactory.CreateRectangle(game.world, .5f, .5f, .5f);
             body.Position = position;
+            body.BodyType = BodyType.Dynamic;
+            body.Restitution = .5f;
             body.Friction = .9f;
+            
 
-            wheelHub = BodyFactory.CreateRectangle(game.world, .1f,.1f, .1f);
-            wheelHub.Position = position;
-            wheelHub.BodyType = BodyType.Dynamic;
+            bodyJoint = JointFactory.CreateRevoluteJoint(game.world, body, wheel, new Vector2(0, 0), new Vector2(0, 0));
 
-            wheelHubJoint = JointFactory.CreateRevoluteJoint(game.world, wheelHub, body, new Vector2(0, 0), new Vector2(0, 0));
-
+        }
+        protected override void SetContainer(Construct construct)
+        {
+            body.UserData = construct;
+            wheel.UserData = construct;
         }
         public override void Update(GameTime gameTime)
         {
-
+            
         }
         public override Body GetJointAnchor(Direction direction)
         {
             //if direction.up has anchorable point return it
-            return wheelHub;
+            return body;
         }
         //public override Joint Join(Entity otherEntity, Direction direction)
         //{
-        //    return JointFactory.CreateRevoluteJoint(game.world, otherEntity.body, body, new Vector2(0, 1), new Vector2(0, 0));
+        //    return JointFactory.CreateRevoluteJoint(game.world, otherEntity.wheel, wheel, new Vector2(0, 1), new Vector2(0, 0));
             
         //} 
     }

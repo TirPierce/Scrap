@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Scrap.GameElements.Entities
 {
-    class Nozzle : Entity
+    class Nozzle : Segment
     {
         public Nozzle(ScrapGame game)
             : base(game)

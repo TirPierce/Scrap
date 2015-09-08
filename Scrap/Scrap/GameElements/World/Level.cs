@@ -7,6 +7,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Threading.Tasks;
 using Scrap.GameElements.Entities;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Scrap
 {
@@ -16,10 +17,9 @@ namespace Scrap
     public class Level
     {
         //[System.Xml.Serialization.XmlElementAttribute("LevelItems")]
-        public List<Entity> EntityList { get; set; }
+        public List<Segment> EntityList { get; set; }
         public List<Crate> CrateList { get; set; }
         public List<Wheel> WheelList { get; set; }
-
 
         public Level()
         {

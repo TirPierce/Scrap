@@ -13,15 +13,34 @@ namespace Scrap.GameElements.Entities
 {
 
     [Serializable]
-    public abstract class Entity
+    public abstract class Segment
     {
         public enum Direction { Left, Right, Up, Down}
         protected Texture2D texture;
         protected string objectType;
         protected ScrapGame game;
         public Body body;
-        
-        public Construct Container { get; set; }
+        Construct construct;
+        Segment segment;
+
+        public Construct Construct
+        {
+            get { return construct; }
+            set { 
+                construct = value;
+                SetContainer(value);
+            }
+        }
+        protected virtual void SetContainer(Construct construct)
+        {
+            body.UserData = construct;
+
+            
+        }
+        //public virtual void RemoveContruct()
+        //{
+        //    body.UserData = null;
+        //}
 
         public virtual Vector2 Position
         {
@@ -33,7 +52,7 @@ namespace Scrap.GameElements.Entities
             get { return body.Rotation; }
             set { body.Rotation = value; }
         }
-        public Entity(ScrapGame game)
+        public Segment(ScrapGame game)
         {
             this.game = game;
             game.entityList.Add(this);
