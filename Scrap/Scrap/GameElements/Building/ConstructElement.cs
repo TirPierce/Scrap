@@ -114,11 +114,11 @@ namespace Scrap.GameElements.Entities
                                 {
                                     if (item.body == b.Body)
                                     {
-                                        if (!construct.ContainsFixture(b))
-                                        {
+                                        //if (!construct.ContainsFixture(b))
+                                       // {
                                             game.playerController.PlaceSegment();
                                             construct.JoinEntities(this, item, (Scrap.GameElements.Entities.Segment.Direction)a.UserData);
-                                        }
+                                       // }
                                     }
                                 }
 
