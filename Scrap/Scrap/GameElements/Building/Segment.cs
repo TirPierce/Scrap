@@ -20,23 +20,11 @@ namespace Scrap.GameElements.Entities
         protected string objectType;
         protected ScrapGame game;
         public Body body;
-        Construct construct;
+        public ConstructElement constructElement;
         Segment segment;
 
-        public Construct Construct
-        {
-            get { return construct; }
-            set { 
-                construct = value;
-                SetContainer(value);
-            }
-        }
-        protected virtual void SetContainer(Construct construct)
-        {
-            body.UserData = construct;
+        
 
-            
-        }
         //public virtual void RemoveContruct()
         //{
         //    body.UserData = null;

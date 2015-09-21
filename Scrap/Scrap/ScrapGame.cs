@@ -26,7 +26,7 @@ namespace Scrap
         DebugViewXNA debugView;
         Terrain terrain;
         ScrapBadger badger;
-        PlayerController playerController;
+        public PlayerController playerController;
         Crate crate;
         public ScrapGame()
             : base()
@@ -140,8 +140,12 @@ namespace Scrap
             terrain.RenderTerrain();
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, null);
-            spriteBatch.Draw(background, -badger.Position*.5f, new Rectangle(0, 0, 800, 480), Color.White);
-            spriteBatch.Draw(foreground, -badger.Position*4f, new Rectangle(0, 0, 800, 480), Color.White);
+            //Todo: Idealy pick a Foregrounds Image that has a good Y-Axis height and determine the highest & lowest points of each level in order to make it look good 
+            // Background does not scroll, Foreground only scrolls on the X-Axis
+            float paralaxBackgroundMultiplier = 1f;
+            spriteBatch.Draw(background, -(badger.Position * paralaxBackgroundMultiplier), new Rectangle(0, 0, background.Width /*800*/, background.Height/* 480*/), Color.White);
+            float paralaxForegroundMultiplier = 2f;
+            spriteBatch.Draw(foreground, new Vector2(0, /*arbitrary offset*/foreground.Height / 2f - (badger.Position.Y * paralaxForegroundMultiplier)), new Rectangle((int)(badger.Position.X * paralaxForegroundMultiplier), 0, foreground.Width, foreground.Height), Color.White);
             terrain.Draw(spriteBatch);
             spriteBatch.End();
 

@@ -10,14 +10,16 @@ using System.Threading.Tasks;
 
 namespace Scrap
 {
-    class PlayerController
+    public class PlayerController
     {
+
         InputManager inputManager;
         ScrapGame game;
         Texture2D pointer;
         Texture2D pointerClosed;
         Vector2 mouseWorld;
-        Segment selectedSegment = null;
+        public Segment selectedSegment = null;
+        Scrap.GameElements.Entities.Segment.Direction validDirections;
         public void LoadContent()
         {
             pointer = game.Content.Load<Texture2D>("Pointer");
@@ -62,35 +64,52 @@ namespace Scrap
             }
             game.camera.Zoom(inputManager.ScroleWheelDelta() * .01f);//ToDo: Camera Controls need to be changed
             mouseWorld = (game.camera.MousePick(inputManager.MouseState.Position));
-            if (selectedSegment == null && inputManager.MouseState.LeftButton == ButtonState.Pressed && inputManager.PrevMouseState.LeftButton == ButtonState.Released)
+            if (inputManager.MouseState.LeftButton == ButtonState.Pressed && inputManager.PrevMouseState.LeftButton == ButtonState.Released)
             {
-                //ToDo: check if entity is attached to own ship and disconnect if it is. UserData holds consruct
-                foreach(var entity in this.game.entityList)
+                if (selectedSegment == null)
                 {
-                    if (entity.TestEntity(ref mouseWorld))
+                    foreach (var entity in this.game.entityList)
                     {
-                        selectedSegment = entity;
-                        selectedSegment.body.UserData = this;
-                        break;
+                        if (entity.TestEntity(ref mouseWorld))
+                        {
+                            if (entity.constructElement == null)
+                            {
+                                selectedSegment = entity;
+                                break;
+                            }
+                            if ((entity.constructElement != null && entity.constructElement.Draggable()))
+                            {
+                                if(entity.constructElement.construct!= null && entity.constructElement.construct.KeyObject != entity)
+                                    entity.constructElement.RemoveFromConstruct();
+                                selectedSegment = entity;
+                                break;
+                            }
+                        }
                     }
                 }
             }
-            if (selectedSegment != null && inputManager.MouseState.LeftButton == ButtonState.Released && inputManager.PrevMouseState.LeftButton == ButtonState.Pressed)
+            else if (selectedSegment != null && inputManager.MouseState.LeftButton == ButtonState.Released && inputManager.PrevMouseState.LeftButton == ButtonState.Pressed)
             {
                 ReleaseSegment();
             }
+
             if (selectedSegment != null)
             {
-                float length = (mouseWorld - selectedSegment.body.Position).Length();
-                Vector2 direction = (mouseWorld - selectedSegment.body.Position) / length;
-                
-                selectedSegment.body.ApplyLinearImpulse(direction);
-                Mouse.SetPosition((int)game.camera.ProjectPoint(selectedSegment.body.Position).X, (int)game.camera.ProjectPoint(selectedSegment.body.Position).Y );
+                MoveSegment();
             }
+        }
+        protected void MoveSegment()
+        {
+            float length = (mouseWorld - selectedSegment.body.Position).Length();
+            Vector2 direction = (mouseWorld - selectedSegment.body.Position) / length;
+
+            selectedSegment.body.ApplyLinearImpulse(direction);
+            Mouse.SetPosition((int)game.camera.ProjectPoint(selectedSegment.body.Position).X, (int)game.camera.ProjectPoint(selectedSegment.body.Position).Y);
+
         }
         protected void ReleaseSegment()
         {
-            selectedSegment.body.UserData = null;
+            //Todo:direction selection code
             selectedSegment = null;
         }
         public void PlaceSegment()

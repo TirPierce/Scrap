@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FarseerPhysics.Factories;
 using FarseerPhysics.Dynamics.Joints;
 
 namespace Scrap.GameElements.Entities
@@ -40,11 +39,7 @@ namespace Scrap.GameElements.Entities
             bodyJoint = JointFactory.CreateRevoluteJoint(game.world, body, wheel, new Vector2(0, 0), new Vector2(0, 0));
 
         }
-        protected override void SetContainer(Construct construct)
-        {
-            body.UserData = construct;
-            wheel.UserData = construct;
-        }
+
         public override void Update(GameTime gameTime)
         {
             

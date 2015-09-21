@@ -36,7 +36,7 @@ namespace Scrap.GameElements.Entities
         public override void Update(GameTime gameTime)
         {
             //ToDo:control hack
-            //if (game.inputManager.WasKeyReleased(Microsoft.Xna.Framework.Input.Keys.Up) && gameTime.TotalGameTime.Milliseconds % 60 > 50)
+            //if (InputManager.(Microsoft.Xna.Framework.Input.Keys.Up) && gameTime.TotalGameTime.Milliseconds % 60 > 50)
             //{//TODO: Extend Math or Vector2 to include rotation
             //    float cos = (float)Math.Cos(body.Rotation);
             //    float sin = (float)Math.Sin(body.Rotation);

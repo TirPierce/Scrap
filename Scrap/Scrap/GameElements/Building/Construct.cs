@@ -17,7 +17,7 @@ namespace Scrap.GameElements.Entities
     [Serializable]
     public abstract class Construct
     {
-        //ToDo: construct should be a super entiy
+        //ToDo: construct should be a super entity
         //body.CreateFixture() should be used to create one solid object out of shapes while disabling the current bodies or something
 
         private Segment keyObject;
@@ -28,30 +28,34 @@ namespace Scrap.GameElements.Entities
             set 
             {
                 keyObject = value;
-                keyObject.body.UserData = this;
+                keyObject.constructElement = new ConstructElement(this.game, keyObject, this, Point.Zero, null);
+                keyObject.body.UserData = keyObject.constructElement;
                 entities.Add(keyObject);
-                buildElements.Add(new ConstructElement(this.game, keyObject,this)); 
+                
+                buildElements.Add(Point.Zero,(ConstructElement)keyObject.body.UserData); 
                 
             }
         }
         
         protected List<Joint> joints;
         protected List<Segment> entities;
-        protected List<ConstructElement> buildElements;
+
+        public Dictionary<Point, ConstructElement> buildElements;
+        
         protected ScrapGame game;
         public Construct(ScrapGame game)
         {
             this.game = game;
             joints = new List<Joint>();
             entities = new List<Segment>();
-            buildElements = new List<ConstructElement>();
+            buildElements = new Dictionary<Point,ConstructElement>();
             game.constructList.Add(this);
         }
         public virtual void Update(GameTime gameTime)
         {
             foreach (var item in buildElements)
             {
-                item.Update();
+                item.Value.Update();
             }
         }
         public bool ContainsFixture(Fixture a)
@@ -65,29 +69,50 @@ namespace Scrap.GameElements.Entities
             } 
             return false;
         }
-        public void JoinEntities(Segment entityA, Segment entityB, Scrap.GameElements.Entities.Segment.Direction direction)
+        public void JoinEntities(ConstructElement entityA, Segment entityB, Scrap.GameElements.Entities.Segment.Direction direction)
         {
-            entityB.Construct = this;
+            
             entities.Add(entityB);
-            buildElements.Add(new ConstructElement(this.game, entityB,this));
+
+            Point newOffSet = entityA.offSet;
+            Joint joint;
             
             switch (direction)
             {
                 case Segment.Direction.Right:
-                    joints.Add(JointFactory.CreateWeldJoint(game.world, entityA.GetJointAnchor(direction), entityB.GetJointAnchor(direction), new Vector2( 0,0), new Vector2(-1.2f, 0)));
+                    newOffSet += new Point(1, 0);
+                    joint=JointFactory.CreateWeldJoint(game.world, entityA.entity.GetJointAnchor(direction), entityB.GetJointAnchor(direction), new Vector2( 0,0), new Vector2(-1.2f, 0));
+                    joints.Add(joint);
                     break;
                 case Segment.Direction.Left:
-                    joints.Add(JointFactory.CreateWeldJoint(game.world, entityA.GetJointAnchor(direction), entityB.GetJointAnchor(direction), new Vector2(0, 0), new Vector2( 1.2f,0)));
+                    newOffSet += new Point(-1, 0);
+                    
+                    joint=JointFactory.CreateWeldJoint(game.world, entityA.entity.GetJointAnchor(direction), entityB.GetJointAnchor(direction), new Vector2(0, 0), new Vector2(1.2f, 0));
+                    joints.Add(joint);
                     break;
                 case Segment.Direction.Up:
-                    joints.Add(JointFactory.CreateWeldJoint(game.world, entityA.GetJointAnchor(direction), entityB.GetJointAnchor(direction), new Vector2(0, 0), new Vector2(0, 1.2f)));
+                    newOffSet += new Point(0, -1);
+                    
+                    joint=JointFactory.CreateWeldJoint(game.world, entityA.entity.GetJointAnchor(direction), entityB.GetJointAnchor(direction), new Vector2(0, 0), new Vector2(0, 1.2f));
+                    joints.Add(joint);
                     break;
                 case Segment.Direction.Down://ToDo: possible bug
-                    joints.Add(JointFactory.CreateWeldJoint(game.world, entityA.GetJointAnchor(direction), entityB.GetJointAnchor(direction), new Vector2(0, 0), new Vector2(0, -1.2f)));
+                    newOffSet += new Point(0, 1);
+                    joint=JointFactory.CreateWeldJoint(game.world, entityA.entity.GetJointAnchor(direction), entityB.GetJointAnchor(direction), new Vector2(0, 0), new Vector2(0, -1.2f));
+                    joints.Add(joint);
                     break;
                 default:
+                    newOffSet += new Point(0, 1);
+                    joint=JointFactory.CreateWeldJoint(game.world, entityA.entity.GetJointAnchor(direction), entityB.GetJointAnchor(direction), new Vector2(0, 0), new Vector2(0, -1.2f));
+                    joints.Add(joint);
                     break;
             }
+            entityB.constructElement = new ConstructElement(this.game, entityB, this, newOffSet, joint);
+            entityB.body.UserData = entityB.constructElement;
+            
+            entityA.branchJoints.Add(joint);
+            buildElements.Add(newOffSet,(ConstructElement)entityB.body.UserData);
+            entityA.AddSensors();
             
         }
 
