@@ -30,8 +30,16 @@ namespace Scrap
           get { return curMouseState; }
         }
         private static InputManager instance;
-        public InputManager()
+        private InputManager()
         {
+        }
+        public static InputManager GetManager()
+        {
+            if(instance == null)
+            {
+                instance = new InputManager();
+            }
+            return instance;
         }
         public void Update()
         {

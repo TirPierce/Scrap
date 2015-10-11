@@ -5,6 +5,7 @@ using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Scrap.GameElements.Building;
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -21,7 +22,8 @@ namespace Scrap.GameElements.Entities
         protected ScrapGame game;
         public Body body;
         public ConstructElement constructElement;
-        Segment segment;
+        SegmentTile segmentTile
+            ;
 
         
 

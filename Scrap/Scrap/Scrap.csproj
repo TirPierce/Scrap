@@ -45,12 +45,15 @@
     <Compile Include="Camera.cs" />
     <Compile Include="GameElements\Building\Construct.cs" />
     <Compile Include="GameElements\Building\ConstructElement.cs" />
+    <Compile Include="GameElements\Building\BuildTile.cs" />
     <Compile Include="GameElements\Building\Segments\Crate.cs" />
     <Compile Include="GameElements\Building\Segments\DriveWheel.cs" />
     <Compile Include="GameElements\Building\Segment.cs" />
+    <Compile Include="GameElements\Building\GhostTile.cs" />
     <Compile Include="GameElements\Building\Segments\Nozzle.cs" />
     <Compile Include="GameElements\Building\Segments\Rocket.cs" />
     <Compile Include="GameElements\Building\Constructs\ScrapBadger.cs" />
+    <Compile Include="GameElements\Building\SegmentTile.cs" />
     <Compile Include="GameElements\Building\Segments\Wheel.cs" />
     <Compile Include="GameElements\Building\Joints\PowerJoint.cs" />
     <Compile Include="GameElements\ConstructSensor.cs" />

@@ -27,7 +27,7 @@ namespace Scrap
         }
         public PlayerController(ScrapGame game)
         {
-            inputManager = new InputManager();
+            inputManager = InputManager.GetManager();
             this.game = game;
         }
         public void Update()

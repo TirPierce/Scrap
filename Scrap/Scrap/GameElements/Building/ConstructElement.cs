@@ -114,6 +114,7 @@ namespace Scrap.GameElements.Entities
                                 {
                                     if (item.body == b.Body)
                                     {
+                                        //Todo: join code revamp needed
                                         //if (!construct.ContainsFixture(b))
                                        // {
                                             game.playerController.PlaceSegment();
