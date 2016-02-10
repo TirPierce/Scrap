@@ -93,36 +93,28 @@ namespace Scrap.GameElements.Entities
                 switch (direction)
                 {
                     case Direction.Left:
-
-
                         verts = new Vertices();
-                        verts.Add(new Vector2(-.6f, -.6f));
-                        verts.Add(new Vector2(-.6f, .6f));
+                        verts.Add(new Vector2(-.6f, -.4f));
+                        verts.Add(new Vector2(-.6f, .4f));
                         verts.Add(new Vector2(-1.2f, 0f));
                         break;
                     case Direction.Right:
-
                         verts = new Vertices();
                         verts.Add(new Vector2(1.2f, 0f));
-                        verts.Add(new Vector2(.6f, .6f));
-                        verts.Add(new Vector2(.6f, -.6f));
-
+                        verts.Add(new Vector2(.6f, .4f));
+                        verts.Add(new Vector2(.6f, -.4f));
                         break;
                     case Direction.Up:
                         verts = new Vertices();
-                        verts.Add(new Vector2(-.6f, -.6f));
+                        verts.Add(new Vector2(-.4f, -.6f));
                         verts.Add(new Vector2(0f, -1.2f));
-                        verts.Add(new Vector2(.6f, -.6f));
-
-                        
-
+                        verts.Add(new Vector2(.4f, -.6f));
                         break;
                     case Direction.Down:
                         verts = new Vertices();
-
-                        verts.Add(new Vector2(.6f, .6f));
+                        verts.Add(new Vector2(.4f, .6f));
                         verts.Add(new Vector2(0f, 1.2f));
-                        verts.Add(new Vector2(-.6f, .6f));
+                        verts.Add(new Vector2(-.4f, .6f));
                         break;
                     default:
                         verts = new Vertices();
@@ -132,10 +124,8 @@ namespace Scrap.GameElements.Entities
 
                 sensors.Add(sensorFixture);
                 sensorFixture.OnCollision += OnCollide;
-                //sensorFixture.IsSensor = true;
                 sensorFixture.CollidesWith = Category.Cat10;
                 sensorFixture.CollisionCategories = Category.Cat10;
-                //sensorFixture.Body.Enabled = false;
 
             }
 
