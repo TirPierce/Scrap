@@ -12,14 +12,13 @@ using System.Threading.Tasks;
 
 namespace Scrap.GameElements.Entities
 {
+
     
 
     [Serializable]
     public abstract class Construct
     {
-        //ToDo: construct should be a super entity
-        //body.CreateFixture() should be used to create one solid object out of shapes while disabling the current bodies or something
-
+        
         private Segment keyObject;
 
         public Segment KeyObject
@@ -29,10 +28,8 @@ namespace Scrap.GameElements.Entities
             {
                 keyObject = value;
                 keyObject.constructElement = new ConstructElement(this.game, keyObject, this, Point.Zero, null);
-                keyObject.body.UserData = keyObject.constructElement;
                 entities.Add(keyObject);
-                
-                buildElements.Add(Point.Zero,(ConstructElement)keyObject.body.UserData); 
+                buildElements.Add(Point.Zero,keyObject.constructElement); 
                 
             }
         }
@@ -58,6 +55,11 @@ namespace Scrap.GameElements.Entities
                 item.Value.Update();
             }
         }
+        public void SetSegmentLock(Point offset, Segment segment)
+        {
+ 
+        }
+
         public bool ContainsFixture(Fixture a)
         {
             foreach (Segment entity in entities)
@@ -69,52 +71,57 @@ namespace Scrap.GameElements.Entities
             } 
             return false;
         }
-        public void JoinEntities(ConstructElement entityA, Segment entityB, Scrap.GameElements.Entities.Segment.Direction direction)
+        public void JoinEntities(Segment entityA, Segment entityB, Scrap.GameElements.Entities.Direction direction)
         {
             
             entities.Add(entityB);
-
-            Point newOffSet = entityA.offSet;
+            Point gridOffset = entityA.constructElement.offSet;
+            Vector2 anchorOffset;
             Joint joint;
             
             switch (direction)
             {
-                case Segment.Direction.Right:
-                    newOffSet += new Point(1, 0);
-                    joint=JointFactory.CreateWeldJoint(game.world, entityA.entity.GetJointAnchor(direction), entityB.GetJointAnchor(direction), new Vector2( 0,0), new Vector2(-1.2f, 0));
-                    joints.Add(joint);
-                    break;
-                case Segment.Direction.Left:
-                    newOffSet += new Point(-1, 0);
+                case Direction.Right:
+                    gridOffset += new Point(1, 0);
+                    anchorOffset=new Vector2(-1.2f, 0);
                     
-                    joint=JointFactory.CreateWeldJoint(game.world, entityA.entity.GetJointAnchor(direction), entityB.GetJointAnchor(direction), new Vector2(0, 0), new Vector2(1.2f, 0));
-                    joints.Add(joint);
                     break;
-                case Segment.Direction.Up:
-                    newOffSet += new Point(0, -1);
-                    
-                    joint=JointFactory.CreateWeldJoint(game.world, entityA.entity.GetJointAnchor(direction), entityB.GetJointAnchor(direction), new Vector2(0, 0), new Vector2(0, 1.2f));
-                    joints.Add(joint);
+                case Direction.Left:
+                    gridOffset += new Point(-1, 0);
+                    anchorOffset= new Vector2(1.2f, 0);
                     break;
-                case Segment.Direction.Down://ToDo: possible bug
-                    newOffSet += new Point(0, 1);
-                    joint=JointFactory.CreateWeldJoint(game.world, entityA.entity.GetJointAnchor(direction), entityB.GetJointAnchor(direction), new Vector2(0, 0), new Vector2(0, -1.2f));
-                    joints.Add(joint);
+                case Direction.Up:
+                    gridOffset += new Point(0, 1);
+                    anchorOffset= new Vector2(0, 1.2f);
+                    break;
+                case Direction.Down://ToDo: possible bug
+                    gridOffset += new Point(0, -1);
+                    anchorOffset= new Vector2(0, -1.2f);
                     break;
                 default:
-                    newOffSet += new Point(0, 1);
-                    joint=JointFactory.CreateWeldJoint(game.world, entityA.entity.GetJointAnchor(direction), entityB.GetJointAnchor(direction), new Vector2(0, 0), new Vector2(0, -1.2f));
-                    joints.Add(joint);
+                    gridOffset += new Point(0, 1);
+                    anchorOffset=new Vector2(0, -1.2f);
                     break;
             }
-            entityB.constructElement = new ConstructElement(this.game, entityB, this, newOffSet, joint);
-            entityB.body.UserData = entityB.constructElement;
-            
-            entityA.branchJoints.Add(joint);
-            buildElements.Add(newOffSet,(ConstructElement)entityB.body.UserData);
-            entityA.AddSensors();
+            if (!buildElements.ContainsKey(gridOffset))
+            {
+                joint = AddJoint(entityA, entityB, direction, anchorOffset);
+                entityB.constructElement = new ConstructElement(this.game, entityB, this, gridOffset, joint);
+                entityA.constructElement.branchJoints.Add(joint);
+                buildElements.Add(gridOffset, entityB.constructElement);
+                entityB.AddSensors();
+            }
             
         }
+
+        private Joint AddJoint(Segment entityA, Segment entityB, Scrap.GameElements.Entities.Direction direction, Vector2 anchorOffset)
+        {
+            Joint joint;
+            joint = JointFactory.CreateWeldJoint(game.world, entityA.GetJointAnchor(direction), entityB.GetJointAnchor(direction), new Vector2(0, 0), anchorOffset);
+            joints.Add(joint);
+            return joint;
+        }
+
 
         public bool TestPlacement(Vector2 point)
         {
@@ -174,9 +181,10 @@ namespace Scrap.GameElements.Entities
         }
         public void FreeObject(Segment entity)
         {
+
             foreach (Joint joint in joints)
             {
-                joint.Breakpoint=0;
+                game.world.RemoveJoint(joint);
             }
         }
 

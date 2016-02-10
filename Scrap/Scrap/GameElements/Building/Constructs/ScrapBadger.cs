@@ -28,14 +28,14 @@ namespace Scrap.GameElements.Entities
             rocket1 = new Rocket(game, pos + new Vector2(0, -1));
 
             KeyObject = torsoMiddle;
-            JoinEntities((ConstructElement)torsoMiddle.body.UserData, torsoFront, Segment.Direction.Right);
-            JoinEntities((ConstructElement)torsoMiddle.body.UserData, rocket1, Segment.Direction.Up);
-            JoinEntities((ConstructElement)torsoMiddle.body.UserData, torsoBack, Segment.Direction.Left);
+            JoinEntities(torsoMiddle, torsoFront, Direction.Right);
+            JoinEntities(torsoMiddle, rocket1, Direction.Up);
+            JoinEntities(torsoMiddle, torsoBack, Direction.Left);
 
-            JoinEntities((ConstructElement)torsoBack.body.UserData, backWheel, Segment.Direction.Down);
+            JoinEntities(torsoBack, backWheel, Direction.Down);
             //backWheel.body.UserData = this;
             //frontWheel.body.UserData = this;
-            JoinEntities((ConstructElement)torsoFront.body.UserData, frontWheel, Segment.Direction.Down);
+            JoinEntities(torsoFront, frontWheel, Direction.Down);
             
 
             game.camera.Follow(torsoMiddle, game.camera.Magnification);

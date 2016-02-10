@@ -26,10 +26,10 @@ namespace Scrap.GameElements.Entities
             wheel.BodyType = BodyType.Dynamic;
             wheel.Position = position;
             wheel.Friction = .9f;
+            //wheel.CollisionCategories = new Category();
 
 
-
-            body = BodyFactory.CreateRectangle(game.world, .5f, .5f, .5f);
+            body = BodyFactory.CreateRectangle(game.world, .5f, .5f, .5f, this);
             body.Position = position;
             body.BodyType = BodyType.Dynamic;
             body.Restitution = .5f;
@@ -37,9 +37,13 @@ namespace Scrap.GameElements.Entities
             
 
             bodyJoint = JointFactory.CreateRevoluteJoint(game.world, body, wheel, new Vector2(0, 0), new Vector2(0, 0));
-
+            
         }
-
+        public override Direction[] JointDirections()
+        {
+            Direction[] validDirections = { Direction.Down, Direction.Right };
+            return validDirections;
+        }
         public override void Update(GameTime gameTime)
         {
             

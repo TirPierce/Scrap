@@ -38,7 +38,7 @@ namespace Scrap.GameElements.Entities
             //body.IgnoreCCD = true;
             
             wheelHubJoint = JointFactory.CreateRevoluteJoint(game.world, body, wheel, new Vector2(0, 0));
-
+            
 
 
         }
@@ -65,7 +65,11 @@ namespace Scrap.GameElements.Entities
             //if direction.up has anchorable point return it
             return body;
         }
-
+        public override Direction[] JointDirections()
+        {
+            Direction[] validDirections = { Direction.Down, Direction.Right };
+            return validDirections;
+        }
 
 
     }

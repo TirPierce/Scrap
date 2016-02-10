@@ -19,17 +19,18 @@ namespace Scrap.GameElements.Entities
         {
             texture = game.Content.Load<Texture2D>("Crate");
         }
-
+        //Category
 
         public Crate(ScrapGame game, Vector2 position)
             : base(game)
         {
             texture = game.Content.Load<Texture2D>("Crate");
-            body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 1f);
+            body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 2f, this);
             body.BodyType = BodyType.Dynamic;
             body.Position = position;
             body.Restitution = .1f;
             body.Friction = .9f;
+            
         }
         public override Direction[] JointDirections()
         {

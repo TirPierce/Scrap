@@ -25,9 +25,10 @@ namespace Scrap.GameElements.Entities
         {
             texture = game.Content.Load<Texture2D>("Crate");
 
-            body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 1f);
+            body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 1f, this);
             body.BodyType = BodyType.Dynamic;
             body.Position = position;
+            
         }
         public override void Update(GameTime gameTime)
         {
