@@ -8,6 +8,7 @@ using Scrap.GameElements;
 using System.Collections.Generic;
 using Scrap.GameElements.GameWorld;
 using FarseerPhysics.Factories;
+using Scrap.UserInterface;
 
 namespace Scrap
 {
@@ -17,6 +18,7 @@ namespace Scrap
         //public InputManager inputManager;
         public World world;
         public Camera camera;
+        public GUI gui;
         public List<Segment> entityList = new List<Segment>();
         public List<Construct> constructList = new List<Construct>();
 
@@ -35,7 +37,7 @@ namespace Scrap
             
             Content.RootDirectory = "Content";
             playerController = new PlayerController(this);
-            
+            gui = new GUI(this);
             terrain = new Terrain(this);
             FarseerPhysics.Settings.PositionIterations = 10;
             FarseerPhysics.Settings.VelocityIterations = 10;
@@ -140,6 +142,7 @@ namespace Scrap
             terrain.RenderTerrain();
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, null);
+            
             //Todo: Idealy pick a Foregrounds Image that has a good Y-Axis height and determine the highest & lowest points of each level in order to make it look good 
             // Background does not scroll, Foreground only scrolls on the X-Axis
             float paralaxBackgroundMultiplier = 1f;
@@ -150,6 +153,7 @@ namespace Scrap
             spriteBatch.End();
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, camera.Transformation);
+            gui.Draw(spriteBatch);
             foreach (Segment item in entityList)
             {
                 item.Draw(spriteBatch);
@@ -158,7 +162,9 @@ namespace Scrap
             spriteBatch.End();
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, null);
+            
             playerController.Draw(spriteBatch);
+            
             spriteBatch.End();
 
             debugView.RenderDebugData(camera.Projection, camera.Transformation);

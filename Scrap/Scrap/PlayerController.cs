@@ -23,7 +23,7 @@ namespace Scrap
         Vector2 mouseWorld;
         Body courserVolume;
         public Segment selectedSegment = null;
-        Scrap.GameElements.Entities.Direction validDirections;
+        //Scrap.GameElements.Entities.Direction validDirections;
         public void LoadContent()
         {
             pointer = game.Content.Load<Texture2D>("Pointer");
@@ -70,8 +70,6 @@ namespace Scrap
                         }
                         if ((entity.constructElement != null && entity.constructElement.Draggable()))
                         {
-
-                            //A single click should set the segment to a hold position
                             if(entity.constructElement.construct!= null && entity.constructElement.construct.KeyObject != entity)
                                 entity.constructElement.RemoveFromConstruct();
                             SetSelectedSegment(entity);
@@ -93,7 +91,7 @@ namespace Scrap
         private void SetSelectedSegment(Segment segment)
         {
             selectedSegment = segment;
-            selectedSegment.selected = true;
+            selectedSegment.Status = SegmentStatus.Selected;
             selectedSegment.RemoveSensors();
         }
         protected void MoveSegment()
@@ -143,13 +141,13 @@ namespace Scrap
         }
         protected void ReleaseSegment()
         {
-            //Todo:direction selection code
-            selectedSegment.selected = false;
+            selectedSegment.Status = SegmentStatus.Free;
             selectedSegment = null;
         }
         public void PlaceSegment()
         {
-            ReleaseSegment();
+            selectedSegment.Status = SegmentStatus.Locked;
+            selectedSegment = null;
         }
         public void Draw(SpriteBatch spriteBatch)
         {

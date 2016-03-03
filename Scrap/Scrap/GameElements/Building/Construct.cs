@@ -94,7 +94,7 @@ namespace Scrap.GameElements.Entities
                     gridOffset += new Point(0, 1);
                     anchorOffset= new Vector2(0, 1.2f);
                     break;
-                case Direction.Down://ToDo: possible bug
+                case Direction.Down:
                     gridOffset += new Point(0, -1);
                     anchorOffset= new Vector2(0, -1.2f);
                     break;

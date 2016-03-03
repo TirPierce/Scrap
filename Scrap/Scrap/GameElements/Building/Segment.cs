@@ -13,25 +13,24 @@ using System.Xml.Serialization;
 namespace Scrap.GameElements.Entities
 {
     public enum Direction { Left, Right, Up, Down };
+    public enum SegmentStatus { Locked, Selected, Attached, Free };
     [Serializable]
     public abstract class Segment
     {
         public const float OFFSET = 1.2f;
-        protected Texture2D texture;
+        public Texture2D texture;
         protected string objectType;
         protected ScrapGame game;
-        public bool selected = false;
+        private SegmentStatus status = SegmentStatus.Free;//ToDo: Make {locked, selected,attached, free} enum status variable
+
+        public SegmentStatus Status
+        {
+            get { return status; }
+            set { status = value; }
+        }
         public Body body;
         public ConstructElement constructElement;
         List<Fixture> sensors = new List<Fixture>();
-        //Dictionary<Direction, Segment> adjacentSegments;
-
-
-
-        //public virtual void RemoveContruct()
-        //{
-        //    body.UserData = null;
-        //}
 
         public virtual Vector2 Position
         {
@@ -47,10 +46,28 @@ namespace Scrap.GameElements.Entities
         {
             this.game = game;
             game.entityList.Add(this);
-
+            GenerateGUIButtons();
         }
         public virtual void Update(GameTime gameTime)
         {
+            switch (status)
+            {
+                case SegmentStatus.Locked:
+                    
+                    break;
+                case SegmentStatus.Selected:
+                    
+                    break;
+                case SegmentStatus.Attached:
+                    
+                    break;
+                case SegmentStatus.Free:
+                    
+                    break;
+                default:
+                    
+                    break;
+            }      
         }
         public bool TestEntity(ref Vector2 point)
         {
@@ -59,14 +76,40 @@ namespace Scrap.GameElements.Entities
             return body.FixtureList[0].Shape.TestPoint(ref t, ref point);
 
         }
+        
         public virtual Direction[] JointDirections()
         {
             Direction[] validDirections = { Direction.Up, Direction.Down, Direction.Left, Direction.Right };
             return validDirections;
         }
+        public void DrawGUI()
+        {
+        }
         public virtual void Draw(SpriteBatch batch)
         {
-            batch.Draw(texture, body.WorldCenter, null, Color.White, body.Rotation, new Vector2(texture.Width / 2f, texture.Height / 2f), .01f * (100f / (float)texture.Width), SpriteEffects.None, 0);
+            switch (status)
+            {
+                case SegmentStatus.Locked:
+                    batch.Draw(texture, body.WorldCenter, null, Color.Cyan, body.Rotation, new Vector2(texture.Width / 2f, texture.Height / 2f), .01f * (100f / (float)texture.Width), SpriteEffects.None, 1);
+
+                    break;
+                case SegmentStatus.Selected:
+                    batch.Draw(texture, body.WorldCenter, null, Color.Green, body.Rotation, new Vector2(texture.Width / 2f, texture.Height / 2f), .01f * (100f / (float)texture.Width), SpriteEffects.None, 1);
+
+                    break;
+                case SegmentStatus.Attached:
+                    batch.Draw(texture, body.WorldCenter, null, Color.White, body.Rotation, new Vector2(texture.Width / 2f, texture.Height / 2f), .01f * (100f / (float)texture.Width), SpriteEffects.None, 1);
+
+                    break;
+                case SegmentStatus.Free:
+                    batch.Draw(texture, body.WorldCenter, null, Color.White, body.Rotation, new Vector2(texture.Width / 2f, texture.Height / 2f), .01f * (100f / (float)texture.Width), SpriteEffects.None, 1);
+
+                    break;
+                default:
+                    batch.Draw(texture, body.WorldCenter, null, Color.White, body.Rotation, new Vector2(texture.Width / 2f, texture.Height / 2f), .01f * (100f / (float)texture.Width), SpriteEffects.None, 0);
+
+                    break;
+            }
         }
         public virtual Body GetJointAnchor(Direction direction)
         {
@@ -82,10 +125,24 @@ namespace Scrap.GameElements.Entities
                 sensor.Dispose();
             }
         }
-        public void AddSensors()
+
+        private void PlaceSegment()//temp function
+        {
+            status = SegmentStatus.Attached;
+        }
+        public void EnableButtons(List<Direction> validDirections)
         {
 
-
+        }
+        private void GenerateGUIButtons()
+        {
+            foreach (Direction direction in JointDirections())//The 
+            {
+                this.game.gui.AddButton(this, direction, new Action(PlaceSegment));//Buttons should be inactive when created. Drawing should be based on button activity
+            }
+        }
+        public virtual void AddSensors()
+        {
             Fixture sensorFixture;
             Vertices verts;
             foreach (var direction in JointDirections())
