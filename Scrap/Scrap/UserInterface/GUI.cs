@@ -28,6 +28,18 @@ namespace Scrap.UserInterface
         {
             this.game = game;
         }
+        public bool MouseClick(Vector2 point)
+        {
+            foreach (GameButton button in buttons)
+            {
+                if (button.TestPoint(point))
+                {
+                    button.DoActions();
+                    return true;
+                }
+            }
+            return false;
+        }
         public void Update(GameTime gameTime)
         {
             //mouse clicks are intercepted here and filtered throught the buttons before moving to the game screen

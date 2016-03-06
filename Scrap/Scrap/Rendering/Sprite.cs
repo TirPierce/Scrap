@@ -24,7 +24,7 @@ namespace Scrap.Rendering
         }
         public void Draw(SpriteBatch batch, Vector2 worldCenter, float rotation, Color color)
         {
-            batch.Draw(texture, worldCenter, null, color, rotation, new Vector2(FrameWidth / 2f, FrameHeight / 2f), .01f * (100f / (float)FrameWidth), SpriteEffects.None, 0);
+            batch.Draw(texture, worldCenter, null, color, rotation, new Vector2(FrameWidth / 2f, FrameHeight / 2f), .01f * (100f / (float)FrameWidth), SpriteEffects.None, 1);
         }
         public Texture2D Texture
         {

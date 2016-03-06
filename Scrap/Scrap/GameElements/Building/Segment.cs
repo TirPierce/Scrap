@@ -70,7 +70,8 @@ namespace Scrap.GameElements.Entities
                     break;
             }      
         }
-        public bool TestEntity(ref Vector2 point)
+        
+        public bool IsPointContained(ref Vector2 point)
         {
             Transform t = new Transform();
             body.GetTransform(out t);

@@ -58,22 +58,24 @@ namespace Scrap
             courserVolume.Position = mouseWorld;
             if (inputManager.MouseState.LeftButton == ButtonState.Pressed && inputManager.PrevMouseState.LeftButton == ButtonState.Released)
             {
-
-                foreach (var entity in this.game.entityList)
+                if (!game.gui.MouseClick(mouseWorld))
                 {
-                    if (entity.TestEntity(ref mouseWorld))
+                    foreach (var entity in this.game.entityList)
                     {
-                        if (entity.constructElement == null)
+                        if (entity.IsPointContained(ref mouseWorld))
                         {
-                            SetSelectedSegment(entity);
-                            break;
-                        }
-                        if ((entity.constructElement != null && entity.constructElement.Draggable()))
-                        {
-                            if(entity.constructElement.construct!= null && entity.constructElement.construct.KeyObject != entity)
-                                entity.constructElement.RemoveFromConstruct();
-                            SetSelectedSegment(entity);
-                            break;
+                            if (entity.constructElement == null)
+                            {
+                                SetSelectedSegment(entity);
+                                break;
+                            }
+                            if ((entity.constructElement != null && entity.constructElement.Draggable()))
+                            {
+                                if (entity.constructElement.construct != null && entity.constructElement.construct.KeyObject != entity)
+                                    entity.constructElement.RemoveFromConstruct();
+                                SetSelectedSegment(entity);
+                                break;
+                            }
                         }
                     }
                 }
