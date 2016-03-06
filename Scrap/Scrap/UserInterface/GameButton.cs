@@ -49,9 +49,9 @@ namespace Scrap.UserInterface
             {
                 Transform transform;
                 segment.body.GetTransform(out transform);
-                transform.p = Segment.GetSensorOffset(offsetDirection) + transform.p;
+                transform.p = transform.p - Segment.GetSensorOffset(offsetDirection);
                 Vector2 pLocal = MathUtils.MulT(transform.q, point - transform.p);
-                if(pLocal.X >0 && pLocal.X < 1f && pLocal.Y >0 && pLocal.Y < 1f)
+                if(pLocal.X >-.6f && pLocal.X < .6f && pLocal.Y >-.6f && pLocal.Y < .6f)
                     return true;
 
             }
