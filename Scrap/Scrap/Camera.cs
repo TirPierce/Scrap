@@ -54,7 +54,7 @@ namespace Scrap
             set { rotation = value; }
         }
         
-        public Camera(Game game)
+        public   Camera(Game game)
         {
             this.game = game;
 

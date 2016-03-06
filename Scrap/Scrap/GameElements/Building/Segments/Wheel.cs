@@ -19,7 +19,7 @@ namespace Scrap.GameElements.Entities
         public Wheel(ScrapGame game, Vector2 position)
             : base(game)
         {
-            texture = game.Content.Load<Texture2D>("wheel");
+            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("wheel"), 0, false);
 
             wheel = BodyFactory.CreateCircle(game.world, .49f, 1f, this);
             wheel.Restitution = .5f;
@@ -34,7 +34,6 @@ namespace Scrap.GameElements.Entities
             body.BodyType = BodyType.Dynamic;
             body.Restitution = .5f;
             body.Friction = .9f;
-            
 
             bodyJoint = JointFactory.CreateRevoluteJoint(game.world, body, wheel, new Vector2(0, 0), new Vector2(0, 0));
             
@@ -52,6 +51,27 @@ namespace Scrap.GameElements.Entities
         {
             //if direction.up has anchorable point return it
             return body;
+        }
+        public override void Draw(SpriteBatch batch)
+        {
+            switch (status)
+            {
+                case SegmentStatus.Locked:
+                    sprite.Draw(batch, wheel.WorldCenter, wheel.Rotation, Color.Cyan);
+                    break;
+                case SegmentStatus.Selected:
+                    sprite.Draw(batch, wheel.WorldCenter, wheel.Rotation, Color.Green);
+                    break;
+                case SegmentStatus.Attached:
+                    sprite.Draw(batch, wheel.WorldCenter, wheel.Rotation, Color.White);
+                    break;
+                case SegmentStatus.Free:
+                    sprite.Draw(batch, wheel.WorldCenter, wheel.Rotation, Color.White);
+                    break;
+                default:
+                    sprite.Draw(batch, wheel.WorldCenter, wheel.Rotation, Color.White);
+                    break;
+            }
         }
         //public override Joint Join(Entity otherEntity, Direction direction)
         //{

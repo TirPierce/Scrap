@@ -26,7 +26,12 @@ namespace Scrap.UserInterface
         {
             if (segment.Status == SegmentStatus.Locked)
             {
-                batch.Draw(segment.texture, segment.body.WorldCenter, null, Color.FromNonPremultiplied(150, 50, 150, 200), segment.body.Rotation, new Vector2(segment.texture.Width / 2f + Segment.GetSensorOffset(offsetDirection).X * segment.texture.Width, segment.texture.Height / 2f + segment.texture.Height * Segment.GetSensorOffset(offsetDirection).Y), .01f * (100f / (float)segment.texture.Width), SpriteEffects.None, 0);
+                batch.Draw(segment.sprite.Texture, segment.body.WorldCenter, null, 
+                    Color.FromNonPremultiplied(150, 50, 150, 200), segment.body.Rotation, 
+                    new Vector2(segment.sprite.FrameWidth / 2f
+                    + Segment.GetSensorOffset(offsetDirection).X * segment.sprite.FrameWidth, segment.sprite.FrameHeight / 2f + segment.sprite.FrameHeight 
+                    * Segment.GetSensorOffset(offsetDirection).Y), .01f
+                    * (100f / (float)segment.sprite.FrameWidth), SpriteEffects.None, 0);
             }
         }
 

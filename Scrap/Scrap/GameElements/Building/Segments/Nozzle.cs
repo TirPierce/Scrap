@@ -15,7 +15,7 @@ namespace Scrap.GameElements.Entities
         public Nozzle(ScrapGame game)
             : base(game)
         {
-            texture = game.Content.Load<Texture2D>("Crate");
+            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Crate"), 0, false);
 
 
         }
@@ -23,7 +23,7 @@ namespace Scrap.GameElements.Entities
         public Nozzle(ScrapGame game, Vector2 position)
             : base(game)
         {
-            texture = game.Content.Load<Texture2D>("Crate");
+            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Crate"), 0, false);
 
             body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 1f, this);
             body.BodyType = BodyType.Dynamic;

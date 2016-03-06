@@ -6,6 +6,7 @@ using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Scrap.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -18,10 +19,10 @@ namespace Scrap.GameElements.Entities
     public abstract class Segment
     {
         public const float OFFSET = 1.2f;
-        public Texture2D texture;
+        public Sprite sprite;
         protected string objectType;
         protected ScrapGame game;
-        private SegmentStatus status = SegmentStatus.Free;//ToDo: Make {locked, selected,attached, free} enum status variable
+        public SegmentStatus status = SegmentStatus.Free;//ToDo: Make {locked, selected,attached, free} enum status variable
 
         public SegmentStatus Status
         {
@@ -90,26 +91,22 @@ namespace Scrap.GameElements.Entities
             switch (status)
             {
                 case SegmentStatus.Locked:
-                    batch.Draw(texture, body.WorldCenter, null, Color.Cyan, body.Rotation, new Vector2(texture.Width / 2f, texture.Height / 2f), .01f * (100f / (float)texture.Width), SpriteEffects.None, 1);
-
+                    sprite.Draw(batch, body.WorldCenter, body.Rotation, Color.Cyan);
                     break;
                 case SegmentStatus.Selected:
-                    batch.Draw(texture, body.WorldCenter, null, Color.Green, body.Rotation, new Vector2(texture.Width / 2f, texture.Height / 2f), .01f * (100f / (float)texture.Width), SpriteEffects.None, 1);
-
+                    sprite.Draw(batch, body.WorldCenter, body.Rotation, Color.Green);
                     break;
                 case SegmentStatus.Attached:
-                    batch.Draw(texture, body.WorldCenter, null, Color.White, body.Rotation, new Vector2(texture.Width / 2f, texture.Height / 2f), .01f * (100f / (float)texture.Width), SpriteEffects.None, 1);
-
+                    sprite.Draw(batch, body.WorldCenter, body.Rotation, Color.White);
                     break;
                 case SegmentStatus.Free:
-                    batch.Draw(texture, body.WorldCenter, null, Color.White, body.Rotation, new Vector2(texture.Width / 2f, texture.Height / 2f), .01f * (100f / (float)texture.Width), SpriteEffects.None, 1);
-
+                    sprite.Draw(batch, body.WorldCenter, body.Rotation, Color.White);
                     break;
                 default:
-                    batch.Draw(texture, body.WorldCenter, null, Color.White, body.Rotation, new Vector2(texture.Width / 2f, texture.Height / 2f), .01f * (100f / (float)texture.Width), SpriteEffects.None, 0);
-
+                    sprite.Draw(batch, body.WorldCenter, body.Rotation, Color.White);
                     break;
             }
+            
         }
         public virtual Body GetJointAnchor(Direction direction)
         {

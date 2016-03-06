@@ -1,7 +1,4 @@
-﻿
-
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -117,7 +114,7 @@ namespace Scrap.GameElements.GameWorld
             VertexPositionNormalTexture[] verts = new VertexPositionNormalTexture[targetVertices.Length];
             for (int i = 0; i < targetVertices.Length; i++)
                 verts[i] = new VertexPositionNormalTexture(new Vector3(targetVertices[i], 0f), Vector3.Backward,
-                    new Vector2(targetVertices[i].X / 100f, targetVertices[i].Y / 100f));
+                    new Vector2(targetVertices[i].X / 10f, targetVertices[i].Y / 10f));
             vertBuffer = new VertexBuffer(
                 game.GraphicsDevice,
                 typeof(VertexPositionNormalTexture),

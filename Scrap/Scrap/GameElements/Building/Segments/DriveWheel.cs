@@ -3,6 +3,7 @@ using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Scrap.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace Scrap.GameElements.Entities
         public DriveWheel(ScrapGame game, Vector2 position)
             : base(game)
         {
-            texture = game.Content.Load<Texture2D>("wheel");
+            sprite = new Sprite(game.Content.Load<Texture2D>("wheel"),0,false);
 
             wheel = BodyFactory.CreateCircle(game.world, .49f, 2f,this);
             wheel.Restitution = 1f;
