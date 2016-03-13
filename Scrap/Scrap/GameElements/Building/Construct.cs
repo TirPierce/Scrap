@@ -170,7 +170,6 @@ namespace Scrap.GameElements.Entities
                 entityA.constructElement.branchJoints.Add(joint);
                 buildElements.Add(newGridOffset, entityB.constructElement);
                 entityB.constructElement.EnableSensors();
-                //entityA.constructElement.l
             }
         }
         private Joint AddJoint(Segment entityA, Segment entityB, Scrap.GameElements.Entities.Direction direction, Vector2 anchorOffset)
