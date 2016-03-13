@@ -93,8 +93,8 @@ namespace Scrap
         private void SetSelectedSegment(Segment segment)
         {
             selectedSegment = segment;
-            selectedSegment.Status = SegmentStatus.Selected;
-            selectedSegment.RemoveSensors();
+            selectedSegment.constructElement.Status = ElementStatus.Selected;
+            selectedSegment.constructElement.DisableSensors();
         }
         protected void MoveSegment()
         {
@@ -107,7 +107,7 @@ namespace Scrap
         }
         public void OnConstructSensorTriggered(ConstructElement constructElement, Direction direction)
         {
-            Vector2 target = Segment.GetSensorOffset(direction);
+            Vector2 target = ConstructElement.GetSensorOffset(direction);
             Transform t;
             constructElement.segment.body.GetTransform(out t);
             target = Vector2.Transform(target, Quaternion.CreateFromAxisAngle(Vector3.Backward, constructElement.segment.body.Rotation));
@@ -124,7 +124,7 @@ namespace Scrap
                     {
                         PlaceSegment();
                         //Set Lock here
-                        constructElement.construct.JoinEntities(constructElement.segment, item, direction);
+                        constructElement.construct.AddSegment(item, constructElement.offSet + Construct.DirectionToPoint(direction));
                         break;
 
                     }
@@ -143,12 +143,12 @@ namespace Scrap
         }
         protected void ReleaseSegment()
         {
-            selectedSegment.Status = SegmentStatus.Free;
+            selectedSegment.constructElement.Status = ElementStatus.Free;
             selectedSegment = null;
         }
         public void PlaceSegment()
         {
-            selectedSegment.Status = SegmentStatus.Locked;
+            selectedSegment.constructElement.Status = ElementStatus.Locked;
             selectedSegment = null;
         }
         public void Draw(SpriteBatch spriteBatch)

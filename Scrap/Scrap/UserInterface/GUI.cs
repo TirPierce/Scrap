@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Scrap.UserInterface
 {
+    public enum UIStatus { Active, Inactive };
     public class GUI
     {
         protected ScrapGame game;
@@ -20,9 +21,11 @@ namespace Scrap.UserInterface
             this.game = game;
         }
 
-        public void AddButton(Segment segment, Direction direction, Action callback)
+        public GameButton AddButton(Segment segment, Direction direction, Action callback)
         {
-            buttons.Add(new GameButton(segment, direction, callback));
+            GameButton button = new GameButton(segment, direction, callback);
+            buttons.Add(button);
+            return button;
         }
         public void Init(ScrapGame game)
         {

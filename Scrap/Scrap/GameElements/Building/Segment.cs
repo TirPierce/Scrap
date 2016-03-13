@@ -7,6 +7,7 @@ using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Scrap.Rendering;
+using Scrap.UserInterface;
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -14,24 +15,19 @@ using System.Xml.Serialization;
 namespace Scrap.GameElements.Entities
 {
     public enum Direction { Left, Right, Up, Down };
-    public enum SegmentStatus { Locked, Selected, Attached, Free };
-    [Serializable]
+
+
     public abstract class Segment
     {
-        public const float OFFSET = 1.2f;
+        
         public Sprite sprite;
         protected string objectType;
         protected ScrapGame game;
-        public SegmentStatus status = SegmentStatus.Free;//ToDo: Make {locked, selected,attached, free} enum status variable
 
-        public SegmentStatus Status
-        {
-            get { return status; }
-            set { status = value; }
-        }
+
+
         public Body body;
         public ConstructElement constructElement;
-        List<Fixture> sensors = new List<Fixture>();
 
         public virtual Vector2 Position
         {
@@ -47,28 +43,12 @@ namespace Scrap.GameElements.Entities
         {
             this.game = game;
             game.entityList.Add(this);
-            GenerateGUIButtons();
+            constructElement = new ConstructElement(game, this);
+            
         }
         public virtual void Update(GameTime gameTime)
         {
-            switch (status)
-            {
-                case SegmentStatus.Locked:
-                    
-                    break;
-                case SegmentStatus.Selected:
-                    
-                    break;
-                case SegmentStatus.Attached:
-                    
-                    break;
-                case SegmentStatus.Free:
-                    
-                    break;
-                default:
-                    
-                    break;
-            }      
+   
         }
         
         public bool IsPointContained(ref Vector2 point)
@@ -84,23 +64,21 @@ namespace Scrap.GameElements.Entities
             Direction[] validDirections = { Direction.Up, Direction.Down, Direction.Left, Direction.Right };
             return validDirections;
         }
-        public void DrawGUI()
-        {
-        }
+
         public virtual void Draw(SpriteBatch batch)
         {
-            switch (status)
+            switch (constructElement.Status)
             {
-                case SegmentStatus.Locked:
+                case ElementStatus.Locked:
                     sprite.Draw(batch, body.WorldCenter, body.Rotation, Color.Cyan);
                     break;
-                case SegmentStatus.Selected:
+                case ElementStatus.Selected:
                     sprite.Draw(batch, body.WorldCenter, body.Rotation, Color.Green);
                     break;
-                case SegmentStatus.Attached:
+                case ElementStatus.Attached:
                     sprite.Draw(batch, body.WorldCenter, body.Rotation, Color.White);
                     break;
-                case SegmentStatus.Free:
+                case ElementStatus.Free:
                     sprite.Draw(batch, body.WorldCenter, body.Rotation, Color.White);
                     break;
                 default:
@@ -116,109 +94,6 @@ namespace Scrap.GameElements.Entities
         }
 
         //Sensor creation
-        public void RemoveSensors()
-        {
-            foreach (Fixture sensor in sensors)
-            {
-                sensor.Dispose();
-            }
-        }
-
-        private void PlaceSegment()//temp function
-        {
-            status = SegmentStatus.Attached;
-        }
-        public void EnableButtons(List<Direction> validDirections)
-        {
-
-        }
-        private void GenerateGUIButtons()
-        {
-            foreach (Direction direction in JointDirections())//The 
-            {
-                this.game.gui.AddButton(this, direction, new Action(PlaceSegment));//Buttons should be inactive when created. Drawing should be based on button activity
-            }
-        }
-        public virtual void AddSensors()
-        {
-            Fixture sensorFixture;
-            Vertices verts;
-            foreach (var direction in JointDirections())
-            {
-                switch (direction)
-                {
-                    case Direction.Left:
-                        verts = new Vertices();
-                        verts.Add(new Vector2(-.6f, -.4f));
-                        verts.Add(new Vector2(-.6f, .4f));
-                        verts.Add(new Vector2(-1.2f, 0f));
-                        break;
-                    case Direction.Right:
-                        verts = new Vertices();
-                        verts.Add(new Vector2(1.2f, 0f));
-                        verts.Add(new Vector2(.6f, .4f));
-                        verts.Add(new Vector2(.6f, -.4f));
-                        break;
-                    case Direction.Up:
-                        verts = new Vertices();
-                        verts.Add(new Vector2(-.4f, -.6f));
-                        verts.Add(new Vector2(0f, -1.2f));
-                        verts.Add(new Vector2(.4f, -.6f));
-                        break;
-                    case Direction.Down:
-                        verts = new Vertices();
-                        verts.Add(new Vector2(.4f, .6f));
-                        verts.Add(new Vector2(0f, 1.2f));
-                        verts.Add(new Vector2(-.4f, .6f));
-                        break;
-                    default:
-                        verts = new Vertices();
-                        break;
-                }
-                sensorFixture = FixtureFactory.AttachPolygon(verts, 0f, body, direction);
-
-                sensors.Add(sensorFixture);
-                sensorFixture.OnCollision += OnCollide;
-                sensorFixture.CollidesWith = Category.Cat10;
-                sensorFixture.CollisionCategories = Category.Cat10;
-
-            }
-
-        }
-        public static Vector2 GetSensorOffset(Scrap.GameElements.Entities.Direction direction)
-        {
-            Vector2 offset = Vector2.Zero;
-            if (direction == Direction.Right)
-            {
-                offset = Vector2.UnitX * OFFSET;
-
-            }
-            if (direction == Direction.Left)
-            {
-                offset = Vector2.UnitX * -OFFSET;
-
-            }
-            if (direction == Direction.Down)
-            {
-                offset = Vector2.UnitY * OFFSET;
-
-            }
-            if (direction == Direction.Up)
-            {
-                offset = Vector2.UnitY * -OFFSET;
-
-            }
-            return offset;
-        }
-        public bool OnCollide(Fixture a, Fixture b, Contact contact)
-        {
-            if (this.game.playerController.selectedSegment != null)
-            {
-                game.playerController.OnConstructSensorTriggered(this.constructElement, (Direction)a.UserData);
-            }
-            return true;
-
-        }
 
     }
 }

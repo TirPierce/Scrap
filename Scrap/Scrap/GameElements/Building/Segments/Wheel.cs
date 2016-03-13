@@ -40,7 +40,7 @@ namespace Scrap.GameElements.Entities
         }
         public override Direction[] JointDirections()
         {
-            Direction[] validDirections = { Direction.Down, Direction.Right };
+            Direction[] validDirections = { Direction.Down, Direction.Right , Direction.Up, Direction.Left};
             return validDirections;
         }
         public override void Update(GameTime gameTime)
@@ -54,18 +54,18 @@ namespace Scrap.GameElements.Entities
         }
         public override void Draw(SpriteBatch batch)
         {
-            switch (status)
+            switch (constructElement.Status)
             {
-                case SegmentStatus.Locked:
+                case ElementStatus.Locked:
                     sprite.Draw(batch, wheel.WorldCenter, wheel.Rotation, Color.Cyan);
                     break;
-                case SegmentStatus.Selected:
+                case ElementStatus.Selected:
                     sprite.Draw(batch, wheel.WorldCenter, wheel.Rotation, Color.Green);
                     break;
-                case SegmentStatus.Attached:
+                case ElementStatus.Attached:
                     sprite.Draw(batch, wheel.WorldCenter, wheel.Rotation, Color.White);
                     break;
-                case SegmentStatus.Free:
+                case ElementStatus.Free:
                     sprite.Draw(batch, wheel.WorldCenter, wheel.Rotation, Color.White);
                     break;
                 default:

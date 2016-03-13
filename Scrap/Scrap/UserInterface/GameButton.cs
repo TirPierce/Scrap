@@ -10,11 +10,13 @@ using System.Threading.Tasks;
 
 namespace Scrap.UserInterface
 {
+
     public class GameButton
     {//should have base class button
         Segment segment;
         Direction offsetDirection;
         Action callBack;
+        public UIStatus status = UIStatus.Inactive;
         public GameButton(Segment seg, Direction dir, Action callBack)
         {
             this.segment = seg;
@@ -29,13 +31,13 @@ namespace Scrap.UserInterface
         }
         public virtual void Draw(SpriteBatch batch)
         {
-            if (segment.Status == SegmentStatus.Locked)
+            if (status == UIStatus.Active)
             {
                 batch.Draw(segment.sprite.Texture, segment.body.WorldCenter, null,
                     Color.FromNonPremultiplied(150, 50, 150, 200), segment.body.Rotation,
                     new Vector2(segment.sprite.FrameWidth / 2f
-                    + Segment.GetSensorOffset(offsetDirection).X * segment.sprite.FrameWidth, segment.sprite.FrameHeight / 2f + segment.sprite.FrameHeight
-                    * Segment.GetSensorOffset(offsetDirection).Y), .01f
+                    + ConstructElement.GetSensorOffset(offsetDirection).X * segment.sprite.FrameWidth, segment.sprite.FrameHeight / 2f + segment.sprite.FrameHeight
+                    * ConstructElement.GetSensorOffset(offsetDirection).Y), .01f
                     * (100f / (float)segment.sprite.FrameWidth), SpriteEffects.None, 0);
             }
             else 
@@ -45,11 +47,12 @@ namespace Scrap.UserInterface
         }
         public bool TestPoint(Vector2 point)
         {
-            if (this.segment != null && segment.status == SegmentStatus.Locked)
+
+            if (this.segment != null && status == UIStatus.Active)
             {
                 Transform transform;
                 segment.body.GetTransform(out transform);
-                transform.p = transform.p - Segment.GetSensorOffset(offsetDirection);
+                transform.p = transform.p - ConstructElement.GetSensorOffset(offsetDirection);
                 Vector2 pLocal = MathUtils.MulT(transform.q, point - transform.p);
                 if(pLocal.X >-.6f && pLocal.X < .6f && pLocal.Y >-.6f && pLocal.Y < .6f)
                     return true;
