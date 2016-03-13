@@ -105,9 +105,9 @@ namespace Scrap
             //Mouse.SetPosition((int)game.camera.ProjectPoint(selectedSegment.body.Position).X, (int)game.camera.ProjectPoint(selectedSegment.body.Position).Y);
             selectedSegment.Position = mouseWorld;
         }
-        public void OnConstructSensorTriggered(ConstructElement constructElement, Direction direction)
+        public void OnConstructSensorTriggered(ConstructElement constructElement, Point offSet)
         {
-            Vector2 target = ConstructElement.GetSensorOffset(direction);
+            Vector2 target = ConstructElement.GetSensorOffset(Construct.PointToDirection(offSet - constructElement.offSet));
             Transform t;
             constructElement.segment.body.GetTransform(out t);
             target = Vector2.Transform(target, Quaternion.CreateFromAxisAngle(Vector3.Backward, constructElement.segment.body.Rotation));
@@ -124,7 +124,7 @@ namespace Scrap
                     {
                         PlaceSegment();
                         //Set Lock here
-                        constructElement.construct.AddSegment(item, constructElement.offSet + Construct.DirectionToPoint(direction));
+                        constructElement.construct.AddSegment(item, offSet);
                         break;
 
                     }

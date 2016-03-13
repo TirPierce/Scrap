@@ -27,9 +27,9 @@ namespace Scrap.GameElements.Entities
                 case Direction.Right:
                     return new Point(1, 0);
                 case Direction.Up:
-                    return new Point(0, -1);
-                case Direction.Down:
                     return new Point(0, 1);
+                case Direction.Down:
+                    return new Point(0, -1);
             }
             return new Point(0, 0);
         }
@@ -39,7 +39,7 @@ namespace Scrap.GameElements.Entities
                  return Direction.Left;
               if(point == new Point(1, 0))
                  return Direction.Right;
-            if(point == new Point(0, -1))
+            if(point == new Point(0, 1))
                  return Direction.Up;
             return Direction.Down;
             
@@ -100,42 +100,6 @@ namespace Scrap.GameElements.Entities
             //segment.constructElement.rootJoint = JointFactory.CreateWeldJoint(game.world, bodyA, bodyB, new Vector2(0, 0), offset);
         
         }
-        private Dictionary<Direction, ConstructElement> AdjacentElements(Point position)
-        {
-            Dictionary<Direction, ConstructElement> adjacentElements = new Dictionary<Direction, ConstructElement>();
-            Point gridOffset = position + DirectionToPoint(Direction.Up);
-
-            if (buildElements.Keys.Contains<Point>(gridOffset))
-            {
-                adjacentElements.Add(Direction.Up, buildElements[gridOffset]);
-            }
-            gridOffset = position + DirectionToPoint(Direction.Down);
-            if (buildElements.Keys.Contains<Point>(gridOffset))
-            {
-                adjacentElements.Add(Direction.Down, buildElements[gridOffset]);
-            }
-            gridOffset = position + DirectionToPoint(Direction.Left);
-            if (buildElements.Keys.Contains<Point>(gridOffset))
-            {
-                adjacentElements.Add(Direction.Left, buildElements[gridOffset]);
-            }
-            gridOffset = position + DirectionToPoint(Direction.Right);
-            if (buildElements.Keys.Contains<Point>(gridOffset))
-            {
-                adjacentElements.Add(Direction.Right, buildElements[gridOffset]);
-            }
-            return adjacentElements;
-        }
-        public void AddSegment(Segment segment, Point offset)
-        {
-            
-
-        }
-        public void AddSegment(Segment segment, Point offset, Direction direction)
-        {
-
-        }
-
         public bool ContainsFixture(Fixture a)
         {
             foreach (Segment entity in entities)
@@ -144,22 +108,64 @@ namespace Scrap.GameElements.Entities
                 {
                     return true;
                 }
-            } 
+            }
             return false;
         }
+        public Dictionary<Direction, ConstructElement> AdjacentElements(Point position)
+        {
+            Dictionary<Direction, ConstructElement> adjacentElements = new Dictionary<Direction, ConstructElement>();
+            Point gridOffset = position + DirectionToPoint(Direction.Up);
+
+            if (buildElements.Keys.Contains<Point>(gridOffset))
+            {
+                adjacentElements.Add(Direction.Down, buildElements[gridOffset]);
+            }
+            gridOffset = position + DirectionToPoint(Direction.Down);
+            if (buildElements.Keys.Contains<Point>(gridOffset))
+            {
+                adjacentElements.Add(Direction.Up, buildElements[gridOffset]);
+            }
+            gridOffset = position + DirectionToPoint(Direction.Left);
+            if (buildElements.Keys.Contains<Point>(gridOffset))
+            {
+                adjacentElements.Add(Direction.Right, buildElements[gridOffset]);
+            }
+            gridOffset = position + DirectionToPoint(Direction.Right);
+            if (buildElements.Keys.Contains<Point>(gridOffset))
+            {
+                adjacentElements.Add(Direction.Left, buildElements[gridOffset]);
+            }
+            return adjacentElements;
+        }
+        public void AddSegment(Segment segment, Point offset)
+        {
+
+            foreach (ConstructElement item in AdjacentElements(offset).Values)
+            {
+                JoinEntities(segment, item.segment, offset, 0);
+                break;
+            }
+            
+
+        }
+        public void AddSegment(Segment segment, Point offset, Direction direction)
+        {
+
+        }
+
+
         protected void JoinEntities(Segment entityA, Segment entityB, Point newGridOffset, float rotation)
         {
 
             entities.Add(entityB);
-            Point gridOffset = entityA.constructElement.offSet-newGridOffset;
             Vector2 anchorOffset;
             Joint joint;
             entityB.body.SetTransform(entityB.body.Position, entityB.body.Rotation += rotation);
-            anchorOffset = new Vector2(gridOffset.X * -1.2f, gridOffset.Y * -1.2f);
+            anchorOffset = new Vector2((entityA.constructElement.offSet - newGridOffset).X * -1.2f, (entityA.constructElement.offSet - newGridOffset).Y * -1.2f);
             
             if (!buildElements.ContainsKey(newGridOffset))
             {
-                joint = AddJoint(entityA, entityB, Construct.PointToDirection(gridOffset), anchorOffset);
+                joint = AddJoint(entityA, entityB, Construct.PointToDirection(newGridOffset-entityA.constructElement.offSet), anchorOffset);
                 entityB.constructElement.AddToConstruct(this, newGridOffset, joint);
                 entityA.constructElement.branchJoints.Add(joint);
                 buildElements.Add(newGridOffset, entityB.constructElement);
@@ -167,50 +173,6 @@ namespace Scrap.GameElements.Entities
                 //entityA.constructElement.l
             }
         }
-        /*
-        protected void JoinEntities(Segment entityA, Segment entityB, Scrap.GameElements.Entities.Direction direction, float rotation)
-        {
-            
-            entities.Add(entityB);
-            Point gridOffset = entityA.constructElement.offSet;
-            Vector2 anchorOffset;
-            Joint joint;
-            entityB.body.SetTransform(entityB.body.Position, entityB.body.Rotation += rotation);
-            switch (direction)
-            {
-                case Direction.Right:
-                    gridOffset += new Point(1, 0);
-                    anchorOffset=new Vector2(-1.2f, 0);
-                    
-                    break;
-                case Direction.Left:
-                    gridOffset += new Point(-1, 0);
-                    anchorOffset= new Vector2(1.2f, 0);
-                    break;
-                case Direction.Up:
-                    gridOffset += new Point(0, 1);
-                    anchorOffset= new Vector2(0, 1.2f);
-                    break;
-                case Direction.Down:
-                    gridOffset += new Point(0, -1);
-                    anchorOffset= new Vector2(0, -1.2f);
-                    break;
-                default:
-                    gridOffset += new Point(0, 1);
-                    anchorOffset=new Vector2(0, -1.2f);
-                    break;
-            }
-            if (!buildElements.ContainsKey(gridOffset))
-            {
-                joint = AddJoint(entityA, entityB, direction, anchorOffset);
-                entityB.constructElement.AddToConstruct(this, gridOffset, joint);
-                entityA.constructElement.branchJoints.Add(joint);
-                buildElements.Add(gridOffset, entityB.constructElement);
-                entityB.constructElement.EnableSensors();
-                //entityA.constructElement.l
-            }
-        }
-        */
         private Joint AddJoint(Segment entityA, Segment entityB, Scrap.GameElements.Entities.Direction direction, Vector2 anchorOffset)
         {
             Joint joint;

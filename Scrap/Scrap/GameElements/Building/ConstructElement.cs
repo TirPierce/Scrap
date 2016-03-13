@@ -25,9 +25,8 @@ namespace Scrap.GameElements.Entities
         public Point offSet;
         public Joint rootJoint;
         public List<Joint> branchJoints;
-        private ConstructElement left, right, up, down=null;
         private List<GameButton> gameButtons = new List<GameButton>();
-
+        public Dictionary<Direction, ConstructElement> adjacentElements = new Dictionary<Direction, ConstructElement>();
         List<Fixture> sensors = new List<Fixture>();
         ElementStatus status = ElementStatus.Free;
         private bool sensorsAdded = false; //ToDo: fix hack to solve issue where body is not initialised when addSensors is called.
@@ -63,8 +62,10 @@ namespace Scrap.GameElements.Entities
         {
             this.rootJoint = rootJoint;
             this.construct = construct;
-            this.offSet = offSet;
+            this.offSet = offSet; 
+            adjacentElements = construct.AdjacentElements(offSet);
         }
+
         public void RemoveFromConstruct()
         {
             if (construct != null)
@@ -76,6 +77,7 @@ namespace Scrap.GameElements.Entities
                 segment.constructElement.construct = null;
                 
             }
+            adjacentElements.Clear();
         }
         public static Vector2 GetSensorOffset(Scrap.GameElements.Entities.Direction direction)
         {
@@ -92,12 +94,12 @@ namespace Scrap.GameElements.Entities
             }
             if (direction == Direction.Down)
             {
-                offset = Vector2.UnitY * OFFSET;
+                offset = Vector2.UnitY * -OFFSET;
 
             }
             if (direction == Direction.Up)
             {
-                offset = Vector2.UnitY * -OFFSET;
+                offset = Vector2.UnitY * OFFSET;
 
             }
             return offset;
@@ -210,7 +212,7 @@ namespace Scrap.GameElements.Entities
 
             if (this.game.playerController.selectedSegment != null)
             {
-                game.playerController.OnConstructSensorTriggered(this, (Direction)a.UserData);
+                game.playerController.OnConstructSensorTriggered(this, Construct.DirectionToPoint((Direction)a.UserData) + this.offSet);
             }
             return true;
 
