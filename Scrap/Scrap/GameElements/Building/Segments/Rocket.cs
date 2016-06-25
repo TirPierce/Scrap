@@ -26,14 +26,18 @@ namespace Scrap.GameElements.Entities
             : base(game)
         {
             sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Rocket"), 0, false);
-            body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 1f, this);
+            body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 1f, (object)this);
             body.BodyType = BodyType.Dynamic;
             body.Position = position;
             body.Restitution = .1f;
             body.Friction = .9f;
             
         }
-
+        public override Direction[] JointDirections()
+        {
+            Direction[] validDirections = { Direction.Up , Direction.Right, Direction.Left};
+            return validDirections;
+        }
         public override void Update(GameTime gameTime)
         {
             //ToDo:control hack
@@ -42,10 +46,8 @@ namespace Scrap.GameElements.Entities
                 float cos = (float)Math.Cos(body.Rotation);
                 float sin = (float)Math.Sin(body.Rotation);
 
-                // Vector2.Transform(thrust, Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), physicsBody.Rotation));
-                //body.ApplyLinearImpulse(new Vector2(0 * cos - force * sin, 0 * sin + force * cos));
-                body.ApplyForce(new Vector2(force * sin, -force * cos));
-                //body.ApplyLinearImpulse(new Vector2(force * sin, -force * cos));
+                body.ApplyForce(new Vector2(0, -50));
+                //body.ApplyForce(new Vector2(force * sin, -force * cos));
             }
         }
 

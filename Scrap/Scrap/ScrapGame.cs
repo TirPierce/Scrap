@@ -67,12 +67,17 @@ namespace Scrap
             debugView.LoadContent(GraphicsDevice, Content);
 
             playerController.LoadContent();
-            badger = new ScrapBadger(this, new Vector2(23, 4));
+            badger = new ScrapBadger(this, new Vector2(375, 55));
 
             badger.Rotate(20f * 0.0174532925f);
 
 
-            crate = new Crate(this, new Vector2(26, 2));
+            crate = new Crate(this, new Vector2(380, 55));
+            var crate2 = new Crate(this, new Vector2(390, 55));
+            var crate3 = new Crate(this, new Vector2(370, 55));
+            var crate4 = new Crate(this, new Vector2(370, 55));
+            //crate2.Rotation = 1f;
+            //JointFactory.CreateWeldJoint(world, crate.body, crate2.body, new Vector2(0, 0), new Vector2(0, 1.2f));
             //XmlLoader loader = new XmlLoader();
             //loader.LoadLevel(ref entityList);
 

@@ -1,12 +1,15 @@
 ﻿using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Scrap.GameElements.Building;
 using Scrap.GameElements.Entities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +18,6 @@ namespace Scrap
 {
     public class PlayerController
     {
-
         InputManager inputManager;
         ScrapGame game;
         Texture2D pointer;
@@ -29,10 +31,19 @@ namespace Scrap
             pointer = game.Content.Load<Texture2D>("Pointer");
             pointerClosed = game.Content.Load<Texture2D>("PointerClosed");
             courserVolume = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 2f, this);
-            courserVolume.IsSensor = true;
+            courserVolume.IsSensor = false;
             courserVolume.CollisionCategories = Category.Cat10;
             courserVolume.CollidesWith = Category.Cat10;
+            courserVolume.OnCollision += OnCollide;
             
+        }
+        public bool OnCollide(Fixture a, Fixture b, Contact contact) 
+        {
+            if (selectedSegment != null) 
+            { 
+                OnConstructSensorTriggered(selectedSegment.constructElement, b.UserData as Sensor);
+            }
+            return false; 
         }
         public PlayerController(ScrapGame game)
         {
@@ -82,12 +93,12 @@ namespace Scrap
             }
             else if (selectedSegment != null && inputManager.MouseState.LeftButton == ButtonState.Released && inputManager.PrevMouseState.LeftButton == ButtonState.Pressed)
             {
-                  ReleaseSegment();
+                 ReleaseSegment();
             }
 
             if (selectedSegment != null)
             {
-                MoveSegment();
+                DragSelectedSegment();
             }
         }
         private void SetSelectedSegment(Segment segment)
@@ -96,7 +107,7 @@ namespace Scrap
             selectedSegment.constructElement.Status = ElementStatus.Selected;
             selectedSegment.constructElement.DisableSensors();
         }
-        protected void MoveSegment()
+        protected void DragSelectedSegment()
         {
             //float length = (mouseWorld - selectedSegment.body.Position).Length();
             //Vector2 direction = (mouseWorld - selectedSegment.body.Position) / length;
@@ -105,33 +116,20 @@ namespace Scrap
             //Mouse.SetPosition((int)game.camera.ProjectPoint(selectedSegment.body.Position).X, (int)game.camera.ProjectPoint(selectedSegment.body.Position).Y);
             selectedSegment.Position = mouseWorld;
         }
-        public void OnConstructSensorTriggered(ConstructElement constructElement, Point offSet)
+        private void OnConstructSensorTriggered(ConstructElement constructElement, Sensor sensor)
         {
-            Vector2 target = ConstructElement.GetSensorOffset(Construct.PointToDirection(offSet - constructElement.offSet));
-            Transform t;
-            constructElement.segment.body.GetTransform(out t);
-            target = Vector2.Transform(target, Quaternion.CreateFromAxisAngle(Vector3.Backward, constructElement.segment.body.Rotation));
-            target += constructElement.segment.body.WorldCenter;
-            //if ((target - this.selectedSegment.body.Position).Length() < .5f)
-            {
-                this.selectedSegment.body.Rotation = constructElement.segment.body.Rotation;
-                this.selectedSegment.body.Position = target;
-                this.selectedSegment.body.LinearVelocity = Vector2.Zero;
+            Debug.WriteLine("OnConstructSensorTriggered by " + constructElement.segment.ToString());
+            Debug.WriteLine("OnConstructSensorTriggered on sensor " + sensor.direction.ToString());
+            Debug.WriteLine("OnConstructSensorTriggered on segment:" + sensor.constructElement.offSet.ToString());
+            
+            //ToDo: Refactor- PlaceSegment is almost useless. 
+            this.selectedSegment.body.Rotation = sensor.body.Rotation;
+            this.selectedSegment.body.Position = sensor.body.Position;
+            this.selectedSegment.body.LinearVelocity = sensor.body.LinearVelocity;
 
-                foreach (Segment item in game.entityList)
-                {
-                    if (item.body == this.selectedSegment.body)
-                    {
-                        PlaceSegment();
-                        //Set Lock here
-                        constructElement.construct.AddSegment(item, offSet);
-                        break;
+            sensor.constructElement.construct.AddSegmentAtSensorPosition(selectedSegment, sensor);
+            PlaceSegment();
 
-                    }
-                }
-
-
-            }
         }
         public void GetAvailableJoins()
         {

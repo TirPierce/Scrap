@@ -23,7 +23,7 @@ namespace Scrap.UserInterface
 
         public GameButton AddButton(Segment segment, Direction direction, Action callback)
         {
-            GameButton button = new GameButton(segment, direction, callback);
+            GameButton button = new  GameButton(segment, direction, callback);
             buttons.Add(button);
             return button;
         }

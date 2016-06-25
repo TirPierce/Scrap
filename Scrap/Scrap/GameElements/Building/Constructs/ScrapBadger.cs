@@ -21,21 +21,27 @@ namespace Scrap.GameElements.Entities
         public ScrapBadger(ScrapGame game, Vector2 pos):base(game)
         {
             torsoMiddle = new Crate(game, pos);
+            KeyObject = torsoMiddle;
             torsoFront = new Crate(game, pos +  new Vector2(1.2f, 0));
-            JoinEntities(torsoMiddle, torsoFront, new Point(1, 0), 0);
+            AddNewSegmentToConstruct(torsoMiddle, torsoFront, new Point(1, 0), 0);
 
             torsoBack = new Crate(game, pos +  new Vector2(-1.2f, 0));
-            JoinEntities(torsoMiddle, torsoBack, new Point(-1, 0), 0);
+            AddNewSegmentToConstruct(torsoMiddle, torsoBack, new Point(-1, 0), 0);
 
             backWheel = new Wheel(game, pos + new Vector2(-1.2f, 1.2f));
-            JoinEntities(torsoBack, backWheel, new Point(-1, -1), 0);
+            AddNewSegmentToConstruct(torsoBack, backWheel, new Point(0, 1), 0);
 
             frontWheel = new Wheel(game, pos + new Vector2(1.2f, 1.2f));
-            JoinEntities(torsoFront, frontWheel, new Point(1, -1), 0);
+            AddNewSegmentToConstruct(torsoFront, frontWheel, new Point(0, 1), 0);
 
             rocket1 = new Rocket(game, pos + new Vector2(0, -1.2f));
-            JoinEntities(torsoMiddle, rocket1, new Point(0,1), 0);
-            KeyObject = torsoMiddle;
+            AddNewSegmentToConstruct(torsoMiddle, rocket1, new Point(0,-1), 0);
+            foreach(var constructElement in this.buildElements)
+            {
+
+                constructElement.Value.DisableSensors();
+                constructElement.Value.EnableSensors();
+            }
 
             game.camera.Follow(torsoMiddle, game.camera.Magnification);
             

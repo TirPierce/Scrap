@@ -1,6 +1,7 @@
 ﻿using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Scrap.GameElements.Building;
 using Scrap.GameElements.Entities;
 using System;
 using System.Collections.Generic;
@@ -36,8 +37,8 @@ namespace Scrap.UserInterface
                 batch.Draw(segment.sprite.Texture, segment.body.WorldCenter, null,
                     Color.FromNonPremultiplied(150, 50, 150, 200), segment.body.Rotation,
                     new Vector2(segment.sprite.FrameWidth / 2f
-                    + ConstructElement.GetSensorOffset(offsetDirection).X * segment.sprite.FrameWidth, segment.sprite.FrameHeight / 2f + segment.sprite.FrameHeight
-                    * ConstructElement.GetSensorOffset(offsetDirection).Y), .01f
+                    + Sensor.GetRelativePositionOfADirection(offsetDirection).X * segment.sprite.FrameWidth, segment.sprite.FrameHeight / 2f + segment.sprite.FrameHeight
+                    * Sensor.GetRelativePositionOfADirection(offsetDirection).Y), .01f
                     * (100f / (float)segment.sprite.FrameWidth), SpriteEffects.None, 0);
             }
             else 
@@ -52,7 +53,7 @@ namespace Scrap.UserInterface
             {
                 Transform transform;
                 segment.body.GetTransform(out transform);
-                transform.p = transform.p - ConstructElement.GetSensorOffset(offsetDirection);
+                transform.p = transform.p - Sensor.GetRelativePositionOfADirection(offsetDirection);
                 Vector2 pLocal = MathUtils.MulT(transform.q, point - transform.p);
                 if(pLocal.X >-.6f && pLocal.X < .6f && pLocal.Y >-.6f && pLocal.Y < .6f)
                     return true;

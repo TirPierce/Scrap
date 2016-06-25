@@ -4,6 +4,7 @@ using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
+using Scrap.GameElements.Building;
 using Scrap.GameElements.GameWorld;
 using Scrap.UserInterface;
 using System;
@@ -18,7 +19,7 @@ namespace Scrap.GameElements.Entities
     public enum ElementStatus { Locked, Selected, Attached, Free };
     public class ConstructElement
     {
-        public const float OFFSET = 1.2f;
+        
         public Segment segment;
         public Construct construct;
         ScrapGame game;
@@ -27,7 +28,7 @@ namespace Scrap.GameElements.Entities
         public List<Joint> branchJoints;
         private List<GameButton> gameButtons = new List<GameButton>();
         public Dictionary<Direction, ConstructElement> adjacentElements = new Dictionary<Direction, ConstructElement>();
-        List<Fixture> sensors = new List<Fixture>();
+        List<Sensor> sensors = new List<Sensor>();
         ElementStatus status = ElementStatus.Free;
         private bool sensorsAdded = false; //ToDo: fix hack to solve issue where body is not initialised when addSensors is called.
         public ElementStatus Status
@@ -40,13 +41,11 @@ namespace Scrap.GameElements.Entities
             if (status == ElementStatus.Locked)
             {
                 EnableButtons();
-
             }
             else
             {
                 DisableButtons();
             }
-
             this.status = status;
         }
 
@@ -56,13 +55,13 @@ namespace Scrap.GameElements.Entities
             this.game = game;
             branchJoints = new List<Joint>();
             GenerateGUIButtons();
-            //AddSensors();
         }
         public void AddToConstruct(Construct construct, Point offSet, Joint rootJoint)
         {
             this.rootJoint = rootJoint;
             this.construct = construct;
-            this.offSet = offSet; 
+            this.offSet = offSet;
+            
             adjacentElements = construct.AdjacentElements(offSet);
         }
 
@@ -75,35 +74,10 @@ namespace Scrap.GameElements.Entities
                 if (construct.buildElements.ContainsKey(offSet))
                     construct.buildElements.Remove(offSet);
                 segment.constructElement.construct = null;
-                
             }
             adjacentElements.Clear();
         }
-        public static Vector2 GetSensorOffset(Scrap.GameElements.Entities.Direction direction)
-        {
-            Vector2 offset = Vector2.Zero;
-            if (direction == Direction.Right)
-            {
-                offset = Vector2.UnitX * OFFSET;
 
-            }
-            if (direction == Direction.Left)
-            {
-                offset = Vector2.UnitX * -OFFSET;
-
-            }
-            if (direction == Direction.Down)
-            {
-                offset = Vector2.UnitY * -OFFSET;
-
-            }
-            if (direction == Direction.Up)
-            {
-                offset = Vector2.UnitY * OFFSET;
-
-            }
-            return offset;
-        }
         public void SetValidAdjacentElements(List<ConstructElement> validElements)
         {
 
@@ -132,7 +106,6 @@ namespace Scrap.GameElements.Entities
         private void PlaceSegmentLeft()//temp function
         {
             construct.SetSegmentDirection(segment, MathHelper.ToRadians(270));
-
             SetStatus(ElementStatus.Attached);
         }
         private void PlaceSegmentRight()//temp function
@@ -152,74 +125,37 @@ namespace Scrap.GameElements.Entities
         }
         public void EnableSensors()
         {
-            AddSensors();
+            if (sensors.Count == 0)//ToDo: this seems hacky
+            {
+                AddSensors();
+            }
+            var freeSensors = sensors.Where(sensor => !adjacentElements.ContainsKey(sensor.direction));
+            foreach (Sensor sensor in freeSensors)
+            {
+                sensor.Enable();
+            }
         }
         public void DisableSensors()
         {
-            foreach (Fixture sensor in sensors)
+            foreach (Sensor sensor in sensors)
             {
-                sensor.Dispose();
+                sensor.Disable();
+                
             }
         }
         private void AddSensors()
         {
-            Fixture sensorFixture;
-            Vertices verts;
+            Sensor sensor;
             foreach (var direction in segment.JointDirections())
             {
-                switch (direction)
-                {
-                    case Direction.Left:
-                        verts = new Vertices();
-                        verts.Add(new Vector2(-.6f, -.4f));
-                        verts.Add(new Vector2(-.6f, .4f));
-                        verts.Add(new Vector2(-1.2f, 0f));
-                        break;
-                    case Direction.Right:
-                        verts = new Vertices();
-                        verts.Add(new Vector2(1.2f, 0f));
-                        verts.Add(new Vector2(.6f, .4f));
-                        verts.Add(new Vector2(.6f, -.4f));
-                        break;
-                    case Direction.Up:
-                        verts = new Vertices();
-                        verts.Add(new Vector2(-.4f, -.6f));
-                        verts.Add(new Vector2(0f, -1.2f));
-                        verts.Add(new Vector2(.4f, -.6f));
-                        break;
-                    case Direction.Down:
-                        verts = new Vertices();
-                        verts.Add(new Vector2(.4f, .6f));
-                        verts.Add(new Vector2(0f, 1.2f));
-                        verts.Add(new Vector2(-.4f, .6f));
-                        break;
-                    default:
-                        verts = new Vertices();
-                        break;
-                }
-                sensorFixture = FixtureFactory.AttachPolygon(verts, 0f, segment.body, direction);
-
-                sensors.Add(sensorFixture);
-                sensorFixture.OnCollision += OnCollide;
-                sensorFixture.CollidesWith = Category.Cat10;
-                sensorFixture.CollisionCategories = Category.Cat10;
-
+                sensor = new Sensor(this, direction, game);
+                sensors.Add(sensor);
             }
-
         }
-        public bool OnCollide(Fixture a, Fixture b, Contact contact)
-        {
 
-            if (this.game.playerController.selectedSegment != null)
-            {
-                game.playerController.OnConstructSensorTriggered(this, Construct.DirectionToPoint((Direction)a.UserData) + this.offSet);
-            }
-            return true;
-
-        }
         private void GenerateGUIButtons()
         {
-            foreach (Direction direction in segment.JointDirections())//The 
+            foreach (Direction direction in segment.JointDirections())
             {
                 switch (direction)
                 {
@@ -260,7 +196,10 @@ namespace Scrap.GameElements.Entities
         }
         public void Update()
         {
-
+            foreach (Sensor sensor in sensors)
+            {
+                sensor.Update();
+            }
         }
     }
 

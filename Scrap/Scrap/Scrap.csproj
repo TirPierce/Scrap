@@ -53,6 +53,7 @@
     <Compile Include="GameElements\Building\Constructs\ScrapBadger.cs" />
     <Compile Include="GameElements\Building\Segments\Wheel.cs" />
     <Compile Include="GameElements\Building\Joints\PowerJoint.cs" />
+    <Compile Include="GameElements\Building\Sensor.cs" />
     <Compile Include="GameElements\World\Terrain.cs" />
     <Compile Include="Rendering\Sprite.cs" />
     <Compile Include="InputManager.cs" />

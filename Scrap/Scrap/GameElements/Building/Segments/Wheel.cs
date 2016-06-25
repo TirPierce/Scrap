@@ -20,8 +20,7 @@ namespace Scrap.GameElements.Entities
             : base(game)
         {
             sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("wheel"), 0, false);
-
-            wheel = BodyFactory.CreateCircle(game.world, .49f, 1f, this);
+            wheel = BodyFactory.CreateCircle(game.world, .49f, 1f, (object)this);
             wheel.Restitution = .5f;
             wheel.BodyType = BodyType.Dynamic;
             wheel.Position = position;
@@ -29,7 +28,7 @@ namespace Scrap.GameElements.Entities
             //wheel.CollisionCategories = new Category();
 
 
-            body = BodyFactory.CreateRectangle(game.world, .5f, .5f, .5f, this);
+            body = BodyFactory.CreateRectangle(game.world, .5f, .5f, .5f, (object)this);
             body.Position = position;
             body.BodyType = BodyType.Dynamic;
             body.Restitution = .5f;
@@ -40,7 +39,7 @@ namespace Scrap.GameElements.Entities
         }
         public override Direction[] JointDirections()
         {
-            Direction[] validDirections = { Direction.Down, Direction.Right , Direction.Up, Direction.Left};
+            Direction[] validDirections = { Direction.Left, Direction.Up};
             return validDirections;
         }
         public override void Update(GameTime gameTime)

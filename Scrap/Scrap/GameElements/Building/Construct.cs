@@ -3,9 +3,11 @@ using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
+using Scrap.GameElements.Building;
 using Scrap.GameElements.GameWorld;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +20,12 @@ namespace Scrap.GameElements.Entities
     [Serializable]
     public abstract class Construct
     {
+        protected List<Joint> joints;
+        protected List<Segment> entities;
+        private Segment keyObject;
+        public Dictionary<Point, ConstructElement> buildElements;
+
+        protected ScrapGame game;
         public static Point DirectionToPoint(Direction direction)
         {
             switch (direction)
@@ -27,9 +35,9 @@ namespace Scrap.GameElements.Entities
                 case Direction.Right:
                     return new Point(1, 0);
                 case Direction.Up:
-                    return new Point(0, 1);
-                case Direction.Down:
                     return new Point(0, -1);
+                case Direction.Down:
+                    return new Point(0, 1);
             }
             return new Point(0, 0);
         }
@@ -42,10 +50,7 @@ namespace Scrap.GameElements.Entities
             if(point == new Point(0, 1))
                  return Direction.Up;
             return Direction.Down;
-            
-            
         }
-        private Segment keyObject;
 
         public Segment KeyObject
         {
@@ -58,13 +63,6 @@ namespace Scrap.GameElements.Entities
                 
             }
         }
-        
-        protected List<Joint> joints;
-        protected List<Segment> entities;
-
-        public Dictionary<Point, ConstructElement> buildElements;
-        
-        protected ScrapGame game;
         public Construct(ScrapGame game)
         {
             this.game = game;
@@ -83,6 +81,8 @@ namespace Scrap.GameElements.Entities
         
         public void SetSegmentDirection(Segment segment, float rotation)
         {
+            Debug.WriteLine("Construct.SetSegmentDirection Offset: " + segment.constructElement.offSet.ToString() + " Rotation: " + rotation.ToString());
+            this.FreeObject(segment);
             //Point segmentPositon = segment.constructElement.offSet;
             //Joint oldJoint = segment.constructElement.rootJoint;
             //if(this.buildElements.FirstOrDefault(x=
@@ -113,6 +113,7 @@ namespace Scrap.GameElements.Entities
         }
         public Dictionary<Direction, ConstructElement> AdjacentElements(Point position)
         {
+            Debug.WriteLine("Construct.AdjacentElements for position:" + position.ToString());
             Dictionary<Direction, ConstructElement> adjacentElements = new Dictionary<Direction, ConstructElement>();
             Point gridOffset = position + DirectionToPoint(Direction.Up);
 
@@ -135,48 +136,56 @@ namespace Scrap.GameElements.Entities
             {
                 adjacentElements.Add(Direction.Left, buildElements[gridOffset]);
             }
+            Debug.WriteLine("Construct.AdjacentElements Adjacent count:" + adjacentElements.Count.ToString());
             return adjacentElements;
         }
-        public void AddSegment(Segment segment, Point offset)
-        {
+        public void AddSegmentAtSensorPosition(Segment segment, Sensor sensor)
+        {//Segment will point up until the user picks the orientation 
 
-            foreach (ConstructElement item in AdjacentElements(offset).Values)
+            AddNewSegmentToConstruct(sensor.constructElement.segment, segment, Sensor.DirectonToPoint(sensor.direction), 0);
+
+            foreach (ConstructElement item in buildElements.Values)
             {
-                JoinEntities(segment, item.segment, offset, 0);
-                break;
+                //ToDo: heavy handed. Maybe an update sensors function would be better
+                item.DisableSensors();
+                item.EnableSensors();
             }
-            
-
         }
-        public void AddSegment(Segment segment, Point offset, Direction direction)
+        protected void AddNewSegmentToConstruct(Segment recievingSegment, Segment newSegment, Point relativeOffset, float rotation)
         {
-
-        }
-
-
-        protected void JoinEntities(Segment entityA, Segment entityB, Point newGridOffset, float rotation)
-        {
-
-            entities.Add(entityB);
+            //ToDo: rotation is fucked
+            Debug.WriteLine("AddNewSegmentToConstruct recievingSegment:" + recievingSegment.constructElement.offSet.ToString());
+            Debug.WriteLine("AddNewSegmentToConstruct newSegment offset: " + (recievingSegment.constructElement.offSet + relativeOffset).ToString());
+            entities.Add(newSegment);
             Vector2 anchorOffset;
             Joint joint;
-            entityB.body.SetTransform(entityB.body.Position, entityB.body.Rotation += rotation);
-            anchorOffset = new Vector2((entityA.constructElement.offSet - newGridOffset).X * -1.2f, (entityA.constructElement.offSet - newGridOffset).Y * -1.2f);
-            
-            if (!buildElements.ContainsKey(newGridOffset))
+            newSegment.body.SetTransform(newSegment.body.Position, newSegment.body.Rotation += rotation);
+            //anchorOffset = new Vector2((entityA.constructElement.offSet + relativeOffset).X * 1.2f, (entityA.constructElement.offSet + relativeOffset).Y * -1.2f);
+            anchorOffset = new Vector2((relativeOffset).X * 1.2f, (relativeOffset).Y * 1.2f);
+
+            Debug.WriteLine("AddNewSegmentToConstruct anchorOffset:" + anchorOffset.ToString());
+            Debug.WriteLine("AddNewSegmentToConstruct new direction:" + Construct.PointToDirection(relativeOffset).ToString());
+            if (!buildElements.ContainsKey(relativeOffset + recievingSegment.constructElement.offSet))
             {
-                joint = AddJoint(entityA, entityB, Construct.PointToDirection(newGridOffset-entityA.constructElement.offSet), anchorOffset);
-                entityB.constructElement.AddToConstruct(this, newGridOffset, joint);
-                entityA.constructElement.branchJoints.Add(joint);
-                buildElements.Add(newGridOffset, entityB.constructElement);
-                entityB.constructElement.EnableSensors();
+
+                joint = CreateJointBetweenAnchorsOnSegments(recievingSegment, newSegment, Construct.PointToDirection(relativeOffset), anchorOffset);//magic *-1
+                newSegment.constructElement.AddToConstruct(this, relativeOffset + recievingSegment.constructElement.offSet, joint);
+                recievingSegment.constructElement.branchJoints.Add(joint);
+                buildElements.Add(recievingSegment.constructElement.offSet + relativeOffset, newSegment.constructElement);
+                newSegment.constructElement.EnableSensors();
+                recievingSegment.constructElement.construct = this;
+            }
+            else
+            {
+
+                Debug.WriteLine("AddNewSegmentToConstruct key exists: " + (relativeOffset + recievingSegment.constructElement.offSet).ToString());
             }
         }
-        private Joint AddJoint(Segment entityA, Segment entityB, Scrap.GameElements.Entities.Direction direction, Vector2 anchorOffset)
+        private Joint CreateJointBetweenAnchorsOnSegments(Segment entityA, Segment entityB, Scrap.GameElements.Entities.Direction direction, Vector2 anchorOffset)
         {
             Joint joint;
-            
-            joint = JointFactory.CreateWeldJoint(game.world, entityA.GetJointAnchor(direction), entityB.GetJointAnchor(direction), new Vector2(0, 0), anchorOffset);
+            //The offset is applied to the first entity in order to allow the second entity to have alternative rotations
+            joint = JointFactory.CreateWeldJoint(game.world, entityA.GetJointAnchor(direction), entityB.GetJointAnchor(direction), anchorOffset, new Vector2(0, 0));
             joints.Add(joint);
             return joint;
         }
@@ -239,12 +248,11 @@ namespace Scrap.GameElements.Entities
             }
         }
         public void FreeObject(Segment entity)
-        {
-
-            foreach (Joint joint in joints)
-            {
-                game.world.RemoveJoint(joint);
-            }
+        {//ToDo: This function is rubbish. Rename and fix. Should remove an object from the construct. Might be dublicate. 
+            //Check how objct is fried when dragging away from construct
+            entity.constructElement.BreakBranch();
+            entity.constructElement.BreakRoot();
+            this.buildElements.Remove(entity.constructElement.offSet);
         }
 
         public void SetRotation(float rot)

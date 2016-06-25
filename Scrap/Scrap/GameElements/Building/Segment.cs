@@ -14,7 +14,7 @@ using System.Xml.Serialization;
 
 namespace Scrap.GameElements.Entities
 {
-    public enum Direction { Left, Right, Up, Down };
+    public enum Direction { Up=180, Right=270, Down=0, Left=90 };
 
 
     public abstract class Segment

@@ -23,7 +23,7 @@ namespace Scrap.GameElements.Entities
         {
             sprite = new Sprite(game.Content.Load<Texture2D>("wheel"),0,false);
 
-            wheel = BodyFactory.CreateCircle(game.world, .49f, 2f,this);
+            wheel = BodyFactory.CreateCircle(game.world, .49f, 2f, (object)this);
             wheel.Restitution = 1f;
             wheel.BodyType = BodyType.Dynamic;
             wheel.Position = position;
@@ -31,7 +31,7 @@ namespace Scrap.GameElements.Entities
 
             wheel.UserData = this;
 
-            body = BodyFactory.CreateRectangle(game.world, .1f, .1f, 2f);
+            body = BodyFactory.CreateRectangle(game.world, .1f, .1f, 2f,(object)this);
             body.Position = position;
             body.BodyType = BodyType.Dynamic;
             
