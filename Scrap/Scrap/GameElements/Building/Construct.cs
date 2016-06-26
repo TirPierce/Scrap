@@ -119,22 +119,22 @@ namespace Scrap.GameElements.Entities
 
             if (buildElements.Keys.Contains<Point>(gridOffset))
             {
-                adjacentElements.Add(Direction.Down, buildElements[gridOffset]);
+                adjacentElements.Add(Direction.Up, buildElements[gridOffset]);
             }
             gridOffset = position + DirectionToPoint(Direction.Down);
             if (buildElements.Keys.Contains<Point>(gridOffset))
             {
-                adjacentElements.Add(Direction.Up, buildElements[gridOffset]);
+                adjacentElements.Add(Direction.Down, buildElements[gridOffset]);
             }
             gridOffset = position + DirectionToPoint(Direction.Left);
             if (buildElements.Keys.Contains<Point>(gridOffset))
             {
-                adjacentElements.Add(Direction.Right, buildElements[gridOffset]);
+                adjacentElements.Add(Direction.Left, buildElements[gridOffset]);
             }
             gridOffset = position + DirectionToPoint(Direction.Right);
             if (buildElements.Keys.Contains<Point>(gridOffset))
             {
-                adjacentElements.Add(Direction.Left, buildElements[gridOffset]);
+                adjacentElements.Add(Direction.Right, buildElements[gridOffset]);
             }
             Debug.WriteLine("Construct.AdjacentElements Adjacent count:" + adjacentElements.Count.ToString());
             return adjacentElements;

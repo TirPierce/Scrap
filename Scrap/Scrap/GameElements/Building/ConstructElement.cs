@@ -129,8 +129,20 @@ namespace Scrap.GameElements.Entities
             {
                 AddSensors();
             }
-            var freeSensors = sensors.Where(sensor => !adjacentElements.ContainsKey(sensor.direction));
-            foreach (Sensor sensor in freeSensors)
+            adjacentElements = construct.AdjacentElements(offSet);
+            DisableSensors();
+
+            List<Sensor> matchingSensors = new List<Sensor>();
+
+            foreach (Sensor item in sensors)
+            {
+                if (!adjacentElements.ContainsKey(item.direction))
+                {
+                    matchingSensors.Add(item);
+                }
+            }
+            //var freeSensors = sensors.Where(sensor => !adjacentElements.ContainsKey(sensor.direction));
+            foreach (Sensor sensor in matchingSensors)
             {
                 sensor.Enable();
             }
