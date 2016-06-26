@@ -26,7 +26,7 @@ namespace Scrap.GameElements.Entities
             : base(game)
         {
             sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Crate"), 0, false);
-            body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 2f, (object)this);
+            body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 2f, this);
             body.BodyType = BodyType.Dynamic;
             body.Position = position;
             body.Restitution = .1f;

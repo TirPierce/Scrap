@@ -78,26 +78,22 @@ namespace Scrap.GameElements.Entities
                 item.Value.Update();
             }
         }
-        
+        public void RecalculateAdjacentSegmentsAndActivateSensors()
+        {
+            foreach (ConstructElement item in buildElements.Values)
+            {
+                item.EnableSensors();
+            }
+ 
+        }
         public void SetSegmentDirection(Segment segment, float rotation)
         {
             Debug.WriteLine("Construct.SetSegmentDirection Offset: " + segment.constructElement.offSet.ToString() + " Rotation: " + rotation.ToString());
+            
+            var recievingSegment=segment.constructElement.adjacentElements.First().Value.segment;
+            var offset = segment.constructElement.offSet - recievingSegment.constructElement.offSet;
             this.FreeObject(segment);
-            //Point segmentPositon = segment.constructElement.offSet;
-            //Joint oldJoint = segment.constructElement.rootJoint;
-            //if(this.buildElements.FirstOrDefault(x=
-
-                
-
-            //Body bodyA = oldJoint.BodyA;
-            //Body bodyB = oldJoint.BodyB;
-            ////Todo: calculate valid directions
-            //Vector2 offset = oldJoint.WorldAnchorA - oldJoint.WorldAnchorB;
-            //game.world.RemoveJoint(segment.constructElement.rootJoint);
-            //segment.body.SetTransform(segment.body.Position, segment.body.Rotation + rotation);
-            ////up
-
-            //segment.constructElement.rootJoint = JointFactory.CreateWeldJoint(game.world, bodyA, bodyB, new Vector2(0, 0), offset);
+            AddNewSegmentToConstruct(recievingSegment, segment, offset, rotation);
         
         }
         public bool ContainsFixture(Fixture a)
@@ -143,24 +139,18 @@ namespace Scrap.GameElements.Entities
         {//Segment will point up until the user picks the orientation 
 
             AddNewSegmentToConstruct(sensor.constructElement.segment, segment, Sensor.DirectonToPoint(sensor.direction), 0);
-
-            foreach (ConstructElement item in buildElements.Values)
-            {
-                //ToDo: heavy handed. Maybe an update sensors function would be better
-                item.DisableSensors();
-                item.EnableSensors();
-            }
+            RecalculateAdjacentSegmentsAndActivateSensors();
         }
         protected void AddNewSegmentToConstruct(Segment recievingSegment, Segment newSegment, Point relativeOffset, float rotation)
         {
-            //ToDo: rotation is fucked
             Debug.WriteLine("AddNewSegmentToConstruct recievingSegment:" + recievingSegment.constructElement.offSet.ToString());
             Debug.WriteLine("AddNewSegmentToConstruct newSegment offset: " + (recievingSegment.constructElement.offSet + relativeOffset).ToString());
             entities.Add(newSegment);
             Vector2 anchorOffset;
             Joint joint;
-            newSegment.body.SetTransform(newSegment.body.Position, newSegment.body.Rotation += rotation);
-            //anchorOffset = new Vector2((entityA.constructElement.offSet + relativeOffset).X * 1.2f, (entityA.constructElement.offSet + relativeOffset).Y * -1.2f);
+            
+            newSegment.body.SetTransform(newSegment.Position, recievingSegment.Rotation + rotation);
+            
             anchorOffset = new Vector2((relativeOffset).X * 1.2f, (relativeOffset).Y * 1.2f);
 
             Debug.WriteLine("AddNewSegmentToConstruct anchorOffset:" + anchorOffset.ToString());

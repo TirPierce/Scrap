@@ -73,8 +73,10 @@ namespace Scrap.GameElements.Entities
                 BreakBranch();
                 if (construct.buildElements.ContainsKey(offSet))
                     construct.buildElements.Remove(offSet);
-                segment.constructElement.construct = null;
+                construct.RecalculateAdjacentSegmentsAndActivateSensors();
+                construct = null;
             }
+            
             adjacentElements.Clear();
         }
 
@@ -151,6 +153,7 @@ namespace Scrap.GameElements.Entities
         {
             foreach (Sensor sensor in sensors)
             {
+                sensor.body.Position = Vector2.Zero;
                 sensor.Disable();
                 
             }
@@ -190,7 +193,6 @@ namespace Scrap.GameElements.Entities
                     default:
                         break;
                 }
-
             }
         }
         public void BreakRoot()

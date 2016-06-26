@@ -73,9 +73,9 @@ namespace Scrap
 
 
             crate = new Crate(this, new Vector2(380, 55));
-            var crate2 = new Crate(this, new Vector2(390, 55));
-            var crate3 = new Crate(this, new Vector2(370, 55));
-            var crate4 = new Crate(this, new Vector2(370, 55));
+            var crate2 = new Rocket(this, new Vector2(390, 55));
+            var crate3 = new Rocket(this, new Vector2(370, 55));
+            var crate4 = new Rocket(this, new Vector2(370, 55));
             //crate2.Rotation = 1f;
             //JointFactory.CreateWeldJoint(world, crate.body, crate2.body, new Vector2(0, 0), new Vector2(0, 1.2f));
             //XmlLoader loader = new XmlLoader();

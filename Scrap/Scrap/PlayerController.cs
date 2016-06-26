@@ -29,6 +29,7 @@ namespace Scrap
         Texture2D pointerClosed;
         Vector2 mouseWorld;
         Body courserVolume;
+        bool SegmentWasAttachedToConstruct = false;
         public Segment selectedSegment = null;
 
         public void LoadContent()
@@ -43,7 +44,7 @@ namespace Scrap
             courserVolume.OnSeparation += courserVolume_OnSeparation;
 
         }
-        bool wasInPlace = false;
+        
         void courserVolume_OnSeparation(Fixture fixtureA, Fixture fixtureB)
         {
             //if (selectedSegment != null && fixtureB.Body.UserData as Sensor != null)
@@ -56,7 +57,7 @@ namespace Scrap
 
         public bool courserVolume_OnCollision(Fixture a, Fixture b, Contact contact)
         {
-            if (selectedSegment != null)
+            if (selectedSegment != null && !SegmentWasAttachedToConstruct)
             {
                 OnConstructSensorTriggered(selectedSegment.constructElement, b.UserData as Sensor);
                 Debug.WriteLine("courserVolume_OnCollision: Triggered");
@@ -113,8 +114,11 @@ namespace Scrap
                             }
                             if ((entity.constructElement != null && entity.constructElement.Draggable()))
                             {
-                                if (entity.constructElement.construct != null && entity.constructElement.construct.KeyObject != entity)
+                                if (entity.constructElement.construct != null && entity.constructElement.construct.KeyObject != entity) 
+                                {
                                     entity.constructElement.RemoveFromConstruct();
+                                    SegmentWasAttachedToConstruct = true;
+                                }
                                 SetSelectedSegment(entity);
                                 break;
                             }
@@ -124,6 +128,7 @@ namespace Scrap
             }
             else if (selectedSegment != null && inputManager.MouseState.LeftButton == ButtonState.Released && inputManager.PrevMouseState.LeftButton == ButtonState.Pressed)
             {
+                SegmentWasAttachedToConstruct = false;
                 ReleaseSegment();
             }
 
@@ -158,16 +163,16 @@ namespace Scrap
         }
         protected void ReleaseSegment()
         {
-            if (wasInPlace)
-            {//ToDo: reattach segment here. :O
-                selectedSegment.constructElement.Status = ElementStatus.Locked;
-            }
-            else
-            {
+           // if (wasInPlace)
+           // {//ToDo: reattach segment here. :O
+            //    selectedSegment.constructElement.Status = ElementStatus.Locked;
+           // }
+            //else
+            //{
                 selectedSegment.constructElement.Status = ElementStatus.Free;
                 
-            }
-            wasInPlace = false;
+            //}
+            //wasInPlace = false;
             selectedSegment = null;
         }
         public void PlaceSegment()

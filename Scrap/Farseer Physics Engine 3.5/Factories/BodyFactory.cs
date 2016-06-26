@@ -217,8 +217,10 @@ namespace FarseerPhysics.Factories
                 body.Position = position;
                 return body;
             }
+            //ToDo: bug in library here
+            //return CreatePolygon(world, verts, density);
 
-            return CreatePolygon(world, verts, density);
+            return CreatePolygon(world, verts, density,userData);
         }
 
         public static Body CreateRoundedRectangle(World world, float width, float height, float xRadius, float yRadius, int segments, float density, object userData = null)
