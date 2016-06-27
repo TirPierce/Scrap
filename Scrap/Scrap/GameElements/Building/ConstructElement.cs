@@ -9,6 +9,7 @@ using Scrap.GameElements.GameWorld;
 using Scrap.UserInterface;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -105,24 +106,10 @@ namespace Scrap.GameElements.Entities
                 game.world.RemoveJoint(item);
             }
         }
-        private void PlaceSegmentLeft()//temp function
+        private void PlaceSegment(Direction direction)
         {
-            construct.SetSegmentDirection(segment, MathHelper.ToRadians(270));
-            SetStatus(ElementStatus.Attached);
-        }
-        private void PlaceSegmentRight()//temp function
-        {
-            construct.SetSegmentDirection(segment, MathHelper.ToRadians(90));
-            SetStatus(ElementStatus.Attached);
-        }
-        private void PlaceSegmentUp()//temp function
-        {
-            construct.SetSegmentDirection(segment, MathHelper.ToRadians(0));
-            SetStatus(ElementStatus.Attached);
-        }
-        private void PlaceSegmentDown()//temp function
-        {
-            construct.SetSegmentDirection(segment, MathHelper.ToRadians(180));
+            Debug.WriteLine("PlaceSegment():" + direction.ToString());
+            construct.SetSegmentDirection(segment, Segment.DirectionToRadians(direction));
             SetStatus(ElementStatus.Attached);
         }
         public void EnableSensors()
@@ -172,27 +159,8 @@ namespace Scrap.GameElements.Entities
         {
             foreach (Direction direction in segment.JointDirections())
             {
-                switch (direction)
-                {
-                    case Direction.Left:
-                        gameButtons.Add(
-                        this.game.gui.AddButton(this.segment, direction, new Action(PlaceSegmentLeft)));
-                        break;
-                    case Direction.Right:
-                        gameButtons.Add(
-                        this.game.gui.AddButton(this.segment, direction, new Action(PlaceSegmentRight)));
-                        break;
-                    case Direction.Up:
-                        gameButtons.Add(
-                        this.game.gui.AddButton(this.segment, direction, new Action(PlaceSegmentUp)));
-                        break;
-                    case Direction.Down:
-                        gameButtons.Add(
-                        this.game.gui.AddButton(this.segment, direction, new Action(PlaceSegmentDown)));
-                        break;
-                    default:
-                        break;
-                }
+                gameButtons.Add(this.game.gui.AddButton(this.segment, direction, new Action<Direction>(PlaceSegment)));
+
             }
         }
         public void BreakRoot()

@@ -29,7 +29,7 @@ namespace Scrap
         Texture2D pointerClosed;
         Vector2 mouseWorld;
         Body courserVolume;
-        bool SegmentWasAttachedToConstruct = false;
+        bool SegmentReleased = false;
         public Segment selectedSegment = null;
 
         public void LoadContent()
@@ -57,7 +57,7 @@ namespace Scrap
 
         public bool courserVolume_OnCollision(Fixture a, Fixture b, Contact contact)
         {
-            if (selectedSegment != null && !SegmentWasAttachedToConstruct)
+            if (selectedSegment != null && !SegmentReleased)
             {
                 OnConstructSensorTriggered(selectedSegment.constructElement, b.UserData as Sensor);
                 Debug.WriteLine("courserVolume_OnCollision: Triggered");
@@ -117,7 +117,7 @@ namespace Scrap
                                 if (entity.constructElement.construct != null && entity.constructElement.construct.KeyObject != entity) 
                                 {
                                     entity.constructElement.RemoveFromConstruct();
-                                    SegmentWasAttachedToConstruct = true;
+                                    SegmentReleased = true;
                                 }
                                 SetSelectedSegment(entity);
                                 break;
@@ -128,7 +128,7 @@ namespace Scrap
             }
             else if (selectedSegment != null && inputManager.MouseState.LeftButton == ButtonState.Released && inputManager.PrevMouseState.LeftButton == ButtonState.Pressed)
             {
-                SegmentWasAttachedToConstruct = false;
+                SegmentReleased = false;
                 ReleaseSegment();
             }
 
@@ -165,14 +165,7 @@ namespace Scrap
         {
            // if (wasInPlace)
            // {//ToDo: reattach segment here. :O
-            //    selectedSegment.constructElement.Status = ElementStatus.Locked;
-           // }
-            //else
-            //{
-                selectedSegment.constructElement.Status = ElementStatus.Free;
-                
-            //}
-            //wasInPlace = false;
+            selectedSegment.constructElement.Status = ElementStatus.Free;
             selectedSegment = null;
         }
         public void PlaceSegment()

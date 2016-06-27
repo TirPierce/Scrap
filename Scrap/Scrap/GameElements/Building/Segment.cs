@@ -14,16 +14,34 @@ using System.Xml.Serialization;
 
 namespace Scrap.GameElements.Entities
 {
-    public enum Direction { Up=180, Right=270, Down=0, Left=90 };
+    public enum Direction { Up, Right, Down, Left};
+    
 
 
     public abstract class Segment
     {
-        
+        public static float DirectionToRadians(Direction direction)
+        {
+            switch (direction)
+            {
+
+                case Direction.Up:
+                    return MathHelper.Pi;
+                case Direction.Right:
+                    return 3* MathHelper.PiOver2;
+                case Direction.Down:
+                    return 0;
+                case Direction.Left:
+                    return MathHelper.PiOver2;
+                default:
+                    return 0;
+            }
+        }
+
         public Sprite sprite;
         protected string objectType;
         protected ScrapGame game;
-
+        
 
 
         public Body body;

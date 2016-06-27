@@ -138,7 +138,7 @@ namespace Scrap.GameElements.Building
             //Vector2 rotationVector = constructElement.segment.body.Position;
             //rotationVector = new Vector2(offSet.X * cos - offSet.Y * sin, offSet.X * sin + offSet.Y * cos);
             //+ rotationVector
-            body.SetTransform(constructElement.segment.body.Position , constructElement.segment.body.Rotation + MathHelper.ToRadians((float)direction));
+            body.SetTransform(constructElement.segment.body.Position , constructElement.segment.body.Rotation + Segment.DirectionToRadians(direction));
         }
         public void Update()
         {

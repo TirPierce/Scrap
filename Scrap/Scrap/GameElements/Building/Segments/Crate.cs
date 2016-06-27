@@ -35,7 +35,7 @@ namespace Scrap.GameElements.Entities
         }
         public override Direction[] JointDirections()
         {
-            Direction[] validDirections = { Direction.Down, Direction.Right, Direction.Up, Direction.Left };
+            Direction[] validDirections = { Direction.Down, Direction.Right};
             return validDirections;
         }
         public override void Update(GameTime gameTime)
