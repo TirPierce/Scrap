@@ -26,31 +26,7 @@ namespace Scrap.GameElements.Entities
         public Dictionary<Point, ConstructElement> buildElements;
 
         protected ScrapGame game;
-        public static Point DirectionToPoint(Direction direction)
-        {
-            switch (direction)
-            {
-                case Direction.Left:
-                    return new Point(-1, 0);
-                case Direction.Right:
-                    return new Point(1, 0);
-                case Direction.Up:
-                    return new Point(0, -1);
-                case Direction.Down:
-                    return new Point(0, 1);
-            }
-            return new Point(0, 0);
-        }
-        public static Direction PointToDirection(Point point)
-        {
-            if(point == new Point(-1, 0))
-                 return Direction.Left;
-              if(point == new Point(1, 0))
-                 return Direction.Right;
-            if(point == new Point(0, 1))
-                 return Direction.Up;
-            return Direction.Down;
-        }
+        
 
         public Segment KeyObject
         {
@@ -86,14 +62,14 @@ namespace Scrap.GameElements.Entities
             }
  
         }
-        public void SetSegmentDirection(Segment segment, float rotation)
+        public void SetSegmentDirection(Segment segment, Direction direction)
         {
-            Debug.WriteLine("Construct.SetSegmentDirection Offset: " + segment.constructElement.offSet.ToString() + " Rotation: " + rotation.ToString());
-            
-            var recievingSegment=segment.constructElement.adjacentElements.First().Value.segment;
+            Debug.WriteLine("Construct.SetSegmentDirection Offset: " + segment.constructElement.offSet.ToString() + " Rotation: " + direction.ToString());
+
+            var recievingSegment = this.buildElements[segment.constructElement.adjacentElements.First()].segment;
             var offset = segment.constructElement.offSet - recievingSegment.constructElement.offSet;
             this.FreeObject(segment);
-            AddNewSegmentToConstruct(recievingSegment, segment, offset, rotation);
+            AddNewSegmentToConstruct(recievingSegment, segment, offset, direction);
         
         }
         public bool ContainsFixture(Fixture a)
@@ -107,42 +83,44 @@ namespace Scrap.GameElements.Entities
             }
             return false;
         }
-        public Dictionary<Direction, ConstructElement> AdjacentElements(Point position)
+        public List<Point> AdjacentElements(Point position)
         {
             Debug.WriteLine("Construct.AdjacentElements for position:" + position.ToString());
-            Dictionary<Direction, ConstructElement> adjacentElements = new Dictionary<Direction, ConstructElement>();
-            Point gridOffset = position + DirectionToPoint(Direction.Up);
+            List<Point> adjacentElements = new List<Point>();
+            Point gridOffset = position + Orientation.DirectionToPoint(Direction.Up);
 
             if (buildElements.Keys.Contains<Point>(gridOffset))
             {
-                adjacentElements.Add(Direction.Up, buildElements[gridOffset]);
+                adjacentElements.Add(gridOffset);
             }
-            gridOffset = position + DirectionToPoint(Direction.Down);
+            gridOffset = position + Orientation.DirectionToPoint(Direction.Down);
             if (buildElements.Keys.Contains<Point>(gridOffset))
             {
-                adjacentElements.Add(Direction.Down, buildElements[gridOffset]);
+                adjacentElements.Add(gridOffset);
             }
-            gridOffset = position + DirectionToPoint(Direction.Left);
+            gridOffset = position + Orientation.DirectionToPoint(Direction.Left);
             if (buildElements.Keys.Contains<Point>(gridOffset))
             {
-                adjacentElements.Add(Direction.Left, buildElements[gridOffset]);
+                adjacentElements.Add(gridOffset);
             }
-            gridOffset = position + DirectionToPoint(Direction.Right);
+            gridOffset = position + Orientation.DirectionToPoint(Direction.Right);
             if (buildElements.Keys.Contains<Point>(gridOffset))
             {
-                adjacentElements.Add(Direction.Right, buildElements[gridOffset]);
+                adjacentElements.Add(gridOffset);
             }
             Debug.WriteLine("Construct.AdjacentElements Adjacent count:" + adjacentElements.Count.ToString());
+
             return adjacentElements;
         }
         public void AddSegmentAtSensorPosition(Segment segment, Sensor sensor)
         {//Segment will point up until the user picks the orientation 
 
-            AddNewSegmentToConstruct(sensor.constructElement.segment, segment, Sensor.DirectonToPoint(sensor.direction), 0);
+            AddNewSegmentToConstruct(sensor.constructElement.segment, segment, Orientation.DirectionToPoint(sensor.direction), Direction.Up);
             RecalculateAdjacentSegmentsAndActivateSensors();
         }
-        protected void AddNewSegmentToConstruct(Segment recievingSegment, Segment newSegment, Point relativeOffset, float rotation)
+        protected void AddNewSegmentToConstruct(Segment recievingSegment, Segment newSegment, Point relativeOffset, Direction direction)
         {
+            float rotation = Orientation.DirectionToRadians(direction);
             Debug.WriteLine("AddNewSegmentToConstruct recievingSegment:" + recievingSegment.constructElement.offSet.ToString());
             Debug.WriteLine("AddNewSegmentToConstruct newSegment offset: " + (recievingSegment.constructElement.offSet + relativeOffset).ToString());
             entities.Add(newSegment);
@@ -154,11 +132,11 @@ namespace Scrap.GameElements.Entities
             anchorOffset = new Vector2((relativeOffset).X * 1.2f, (relativeOffset).Y * 1.2f);
 
             Debug.WriteLine("AddNewSegmentToConstruct anchorOffset:" + anchorOffset.ToString());
-            Debug.WriteLine("AddNewSegmentToConstruct new direction:" + Construct.PointToDirection(relativeOffset).ToString());
+            Debug.WriteLine("AddNewSegmentToConstruct new direction:" + Orientation.PointToDirection(relativeOffset).ToString());
             if (!buildElements.ContainsKey(relativeOffset + recievingSegment.constructElement.offSet))
             {
 
-                joint = CreateJointBetweenAnchorsOnSegments(recievingSegment, newSegment, Construct.PointToDirection(relativeOffset), anchorOffset);//magic *-1
+                joint = CreateJointBetweenAnchorsOnSegments(recievingSegment, newSegment, Orientation.PointToDirection(relativeOffset), anchorOffset);//magic *-1
                 newSegment.constructElement.AddToConstruct(this, relativeOffset + recievingSegment.constructElement.offSet, joint);
                 recievingSegment.constructElement.branchJoints.Add(joint);
                 buildElements.Add(recievingSegment.constructElement.offSet + relativeOffset, newSegment.constructElement);
@@ -171,7 +149,7 @@ namespace Scrap.GameElements.Entities
                 Debug.WriteLine("AddNewSegmentToConstruct key exists: " + (relativeOffset + recievingSegment.constructElement.offSet).ToString());
             }
         }
-        private Joint CreateJointBetweenAnchorsOnSegments(Segment entityA, Segment entityB, Scrap.GameElements.Entities.Direction direction, Vector2 anchorOffset)
+        private Joint CreateJointBetweenAnchorsOnSegments(Segment entityA, Segment entityB, Direction direction, Vector2 anchorOffset)
         {
             Joint joint;
             //The offset is applied to the first entity in order to allow the second entity to have alternative rotations

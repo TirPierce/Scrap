@@ -28,7 +28,7 @@ namespace Scrap.GameElements.Entities
         public Joint rootJoint;
         public List<Joint> branchJoints;
         private List<GameButton> gameButtons = new List<GameButton>();
-        public Dictionary<Direction, ConstructElement> adjacentElements = new Dictionary<Direction, ConstructElement>();
+        public List<Point> adjacentElements = new List<Point>();
         List<Sensor> sensors = new List<Sensor>();
         ElementStatus status = ElementStatus.Free;
         private bool sensorsAdded = false; //ToDo: fix hack to solve issue where body is not initialised when addSensors is called.
@@ -109,7 +109,7 @@ namespace Scrap.GameElements.Entities
         private void PlaceSegment(Direction direction)
         {
             Debug.WriteLine("PlaceSegment():" + direction.ToString());
-            construct.SetSegmentDirection(segment, Segment.DirectionToRadians(direction));
+            construct.SetSegmentDirection(segment, direction);
             SetStatus(ElementStatus.Attached);
         }
         public void EnableSensors()
@@ -122,19 +122,17 @@ namespace Scrap.GameElements.Entities
             DisableSensors();
 
             List<Sensor> matchingSensors = new List<Sensor>();
-
+            matchingSensors.AddRange(sensors);
+            List<ConstructElement> matches = new List<ConstructElement>();
             foreach (Sensor item in sensors)
             {
-                if (!adjacentElements.ContainsKey(item.direction))
+                if (!adjacentElements.Contains(item.constructElement.offSet + item.offSet))
                 {
-                    matchingSensors.Add(item);
+                    item.Enable();
                 }
+
             }
-            //var freeSensors = sensors.Where(sensor => !adjacentElements.ContainsKey(sensor.direction));
-            foreach (Sensor sensor in matchingSensors)
-            {
-                sensor.Enable();
-            }
+
         }
         public void DisableSensors()
         {

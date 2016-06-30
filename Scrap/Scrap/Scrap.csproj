@@ -45,6 +45,7 @@
     <Compile Include="Camera.cs" />
     <Compile Include="GameElements\Building\Construct.cs" />
     <Compile Include="GameElements\Building\ConstructElement.cs" />
+    <Compile Include="GameElements\Building\Orientation.cs" />
     <Compile Include="GameElements\Building\Segments\Crate.cs" />
     <Compile Include="GameElements\Building\Segments\DriveWheel.cs" />
     <Compile Include="GameElements\Building\Segment.cs" />

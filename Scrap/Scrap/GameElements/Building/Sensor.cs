@@ -26,7 +26,7 @@ namespace Scrap.GameElements.Building
         public Point offSet;
         bool enabled = false;
         Joint joint;
-        public const float OFFSET = 1.2f;
+        
         public Sensor(ConstructElement constructElement, Direction direction, ScrapGame game) 
         {
             
@@ -34,8 +34,8 @@ namespace Scrap.GameElements.Building
             this.constructElement = constructElement;
             this.game = game;
             this.direction = direction;
-            offSet = DirectonToPoint(direction);
-            rotationRad = MathHelper.ToRadians((float)direction);
+            offSet = Orientation.DirectionToPoint(direction);
+            rotationRad = Orientation.DirectionToRadians(direction);
 
             Debug.WriteLine("Sensor:" + direction.ToString() + " Construct element :" + constructElement.offSet.ToString());
             Debug.WriteLine("Sensor offset:" + offSet.ToString() + " Rotation :" + rotationRad.ToString());
@@ -44,49 +44,8 @@ namespace Scrap.GameElements.Building
             CreateBody();
             //element.segment.body.
         }
-        public static Point DirectonToPoint(Scrap.GameElements.Entities.Direction direction)
-        {
-            Point offset = Point.Zero;
-            if (direction == Direction.Right)
-            {
-                offset = new Point(1, 0);
-            }
-            if (direction == Direction.Left)
-            {
-                offset = new Point(-1, 0);
-            }
-            if (direction == Direction.Down)
-            {
-                offset = new Point(0, 1);
-            }
-            if (direction == Direction.Up)
-            {
-                offset = new Point(0, -1);
-            }
-            return offset;
-        }
-        public static Vector2 GetRelativePositionOfADirection(Scrap.GameElements.Entities.Direction direction)
-        {
-            Vector2 offset = Vector2.Zero;
-            if (direction == Direction.Right)
-            {
-                offset = Vector2.UnitX * OFFSET;
-            }
-            if (direction == Direction.Left)
-            {
-                offset = Vector2.UnitX * -OFFSET;
-            }
 
-            if (direction == Direction.Down)
-            {
-                offset = Vector2.UnitY * OFFSET;
-            }
-            if (direction == Direction.Up)
-            {
-                offset = Vector2.UnitY * -OFFSET;
-            }
-            return offset;
-        }
+
         private void CreateBody()
         {
             Vertices verts;
@@ -138,7 +97,7 @@ namespace Scrap.GameElements.Building
             //Vector2 rotationVector = constructElement.segment.body.Position;
             //rotationVector = new Vector2(offSet.X * cos - offSet.Y * sin, offSet.X * sin + offSet.Y * cos);
             //+ rotationVector
-            body.SetTransform(constructElement.segment.body.Position , constructElement.segment.body.Rotation + Segment.DirectionToRadians(direction));
+            body.SetTransform(constructElement.segment.body.Position, constructElement.segment.body.Rotation + Orientation.DirectionToRadians(direction));
         }
         public void Update()
         {

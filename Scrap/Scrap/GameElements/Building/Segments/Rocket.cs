@@ -2,6 +2,7 @@
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Scrap.GameElements.Building;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,10 +44,10 @@ namespace Scrap.GameElements.Entities
             //ToDo:control hack
             if (InputManager.GetManager().KeyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Up) && gameTime.TotalGameTime.Milliseconds % 60 > 50)
             {//TODO: Extend Math or Vector2 to include rotation
-                float cos = (float)Math.Cos(body.Rotation);
-                float sin = (float)Math.Sin(body.Rotation);
+                float cos = (float)Math.Cos(body.Rotation - MathHelper.PiOver2);
+                float sin = (float)Math.Sin(body.Rotation - MathHelper.PiOver2);
 
-                body.ApplyForce(new Vector2(0, -50));
+                body.ApplyForce(new Vector2(cos, sin)*50f);
                 //body.ApplyForce(new Vector2(force * sin, -force * cos));
             }
         }

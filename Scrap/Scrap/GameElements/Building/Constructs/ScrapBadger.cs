@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Scrap.GameElements.Building;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,19 +24,19 @@ namespace Scrap.GameElements.Entities
             torsoMiddle = new Crate(game, pos);
             KeyObject = torsoMiddle;
             torsoFront = new Crate(game, pos +  new Vector2(1.2f, 0));
-            AddNewSegmentToConstruct(torsoMiddle, torsoFront, new Point(1, 0), 0);
+            AddNewSegmentToConstruct(torsoMiddle, torsoFront, new Point(1, 0), Direction.Up);
 
             torsoBack = new Crate(game, pos +  new Vector2(-1.2f, 0));
-            AddNewSegmentToConstruct(torsoMiddle, torsoBack, new Point(-1, 0), 0);
+            AddNewSegmentToConstruct(torsoMiddle, torsoBack, new Point(-1, 0), Direction.Up);
 
             backWheel = new Wheel(game, pos + new Vector2(-1.2f, 1.2f));
-            AddNewSegmentToConstruct(torsoBack, backWheel, new Point(0, 1), 0);
+            AddNewSegmentToConstruct(torsoBack, backWheel, new Point(0, 1), Direction.Up);
 
             frontWheel = new Wheel(game, pos + new Vector2(1.2f, 1.2f));
-            AddNewSegmentToConstruct(torsoFront, frontWheel, new Point(0, 1), 0);
+            AddNewSegmentToConstruct(torsoFront, frontWheel, new Point(0, 1), Direction.Up);
 
             rocket1 = new Rocket(game, pos + new Vector2(0, -1.2f));
-            AddNewSegmentToConstruct(torsoMiddle, rocket1, new Point(0,-1), 0);
+            AddNewSegmentToConstruct(torsoMiddle, rocket1, new Point(0, -1), Direction.Up);
             foreach(var constructElement in this.buildElements)
             {
 

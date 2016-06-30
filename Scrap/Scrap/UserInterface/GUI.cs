@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Scrap.GameElements.Building;
 using Scrap.GameElements.Entities;
 using System;
 using System.Collections.Generic;

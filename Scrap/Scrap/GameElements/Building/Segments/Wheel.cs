@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FarseerPhysics.Dynamics.Joints;
+using Scrap.GameElements.Building;
 
 namespace Scrap.GameElements.Entities
 {

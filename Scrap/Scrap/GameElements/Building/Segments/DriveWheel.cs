@@ -3,6 +3,7 @@ using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Scrap.GameElements.Building;
 using Scrap.Rendering;
 using System;
 using System.Collections.Generic;
