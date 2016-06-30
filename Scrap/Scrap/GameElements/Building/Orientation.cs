@@ -7,20 +7,31 @@ using System.Threading.Tasks;
 
 namespace Scrap.GameElements.Building
 {
-    public enum Direction { Up, Right, Down, Left };
+    public enum Direction { Up = 0, Right = 90, Down = 180, Left = 270};
     public class Orientation
     {
 
         
+        /*
         public static int UP = 0;
         public static int Right = 0;
         public static int Down = 0;
         public static int Left = 0;
-
+        */
         private Direction direction;
+
+        public Direction Direction
+        {
+            get { return direction; }
+            set { direction = value; }
+        }
         private float rotationRadians;
         private Point unitDirectionPoint;
-
+        public Direction AddDirectionsAsClockwiseAngles(Direction direction)
+        {
+            int newDirection = ((int)direction + (int)this.direction) % 360;
+            return (Direction)newDirection;
+        }
         public Orientation(Direction direction)
         {
             this.direction = direction;

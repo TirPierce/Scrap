@@ -20,7 +20,7 @@ namespace Scrap.GameElements.Entities
     public enum ElementStatus { Locked, Selected, Attached, Free };
     public class ConstructElement
     {
-        
+        public Orientation orientation = new Orientation(Direction.Up);
         public Segment segment;
         public Construct construct;
         ScrapGame game;
@@ -57,8 +57,9 @@ namespace Scrap.GameElements.Entities
             branchJoints = new List<Joint>();
             GenerateGUIButtons();
         }
-        public void AddToConstruct(Construct construct, Point offSet, Joint rootJoint)
+        public void AddToConstruct(Construct construct, Point offSet, Joint rootJoint, Direction direction)
         {
+            orientation.Direction = direction;
             this.rootJoint = rootJoint;
             this.construct = construct;
             this.offSet = offSet;
@@ -106,9 +107,10 @@ namespace Scrap.GameElements.Entities
                 game.world.RemoveJoint(item);
             }
         }
-        private void PlaceSegment(Direction direction)
+        private void OrientateSegmentAndSetStatusToAttached(Direction direction)
         {
             Debug.WriteLine("PlaceSegment():" + direction.ToString());
+            orientation.Direction = direction;
             construct.SetSegmentDirection(segment, direction);
             SetStatus(ElementStatus.Attached);
         }
@@ -126,7 +128,8 @@ namespace Scrap.GameElements.Entities
             List<ConstructElement> matches = new List<ConstructElement>();
             foreach (Sensor item in sensors)
             {
-                if (!adjacentElements.Contains(item.constructElement.offSet + item.offSet))
+                Point itemRelativeOffset =  Orientation.DirectionToPoint(this.orientation.AddDirectionsAsClockwiseAngles(item.direction));
+                if (!adjacentElements.Contains(item.constructElement.offSet + itemRelativeOffset))
                 {
                     item.Enable();
                 }
@@ -157,7 +160,7 @@ namespace Scrap.GameElements.Entities
         {
             foreach (Direction direction in segment.JointDirections())
             {
-                gameButtons.Add(this.game.gui.AddButton(this.segment, direction, new Action<Direction>(PlaceSegment)));
+                gameButtons.Add(this.game.gui.AddButton(this.segment, direction, new Action<Direction>(OrientateSegmentAndSetStatusToAttached)));
 
             }
         }

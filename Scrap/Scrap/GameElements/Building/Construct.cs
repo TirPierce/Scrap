@@ -120,6 +120,7 @@ namespace Scrap.GameElements.Entities
         }
         protected void AddNewSegmentToConstruct(Segment recievingSegment, Segment newSegment, Point relativeOffset, Direction direction)
         {
+            
             float rotation = Orientation.DirectionToRadians(direction);
             Debug.WriteLine("AddNewSegmentToConstruct recievingSegment:" + recievingSegment.constructElement.offSet.ToString());
             Debug.WriteLine("AddNewSegmentToConstruct newSegment offset: " + (recievingSegment.constructElement.offSet + relativeOffset).ToString());
@@ -136,8 +137,8 @@ namespace Scrap.GameElements.Entities
             if (!buildElements.ContainsKey(relativeOffset + recievingSegment.constructElement.offSet))
             {
 
-                joint = CreateJointBetweenAnchorsOnSegments(recievingSegment, newSegment, Orientation.PointToDirection(relativeOffset), anchorOffset);//magic *-1
-                newSegment.constructElement.AddToConstruct(this, relativeOffset + recievingSegment.constructElement.offSet, joint);
+                joint = CreateJointBetweenAnchorsOnSegments(recievingSegment, newSegment, Orientation.PointToDirection(relativeOffset), anchorOffset);
+                newSegment.constructElement.AddToConstruct(this, relativeOffset + recievingSegment.constructElement.offSet, joint, direction);
                 recievingSegment.constructElement.branchJoints.Add(joint);
                 buildElements.Add(recievingSegment.constructElement.offSet + relativeOffset, newSegment.constructElement);
                 newSegment.constructElement.EnableSensors();
