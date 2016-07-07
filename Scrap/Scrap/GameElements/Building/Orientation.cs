@@ -54,7 +54,24 @@ namespace Scrap.GameElements.Building
                     break;
             }
         }
-
+        public float ToRadians()
+        {
+            switch (direction)
+            {
+                case Direction.Up:
+                    return 0;
+                //return MathHelper.Pi;
+                case Direction.Right:
+                    return 3 * MathHelper.PiOver2;
+                case Direction.Down:
+                    return MathHelper.Pi;
+                //return 0;
+                case Direction.Left:
+                    return MathHelper.PiOver2;
+                default:
+                    return 0;
+            }
+        }
         public static float DirectionToRadians(Direction direction)
         {
             switch (direction)

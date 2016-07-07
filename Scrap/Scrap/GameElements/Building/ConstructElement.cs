@@ -4,6 +4,7 @@ using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Scrap.GameElements.Building;
 using Scrap.GameElements.GameWorld;
 using Scrap.UserInterface;
@@ -20,13 +21,17 @@ namespace Scrap.GameElements.Entities
     public enum ElementStatus { Locked, Selected, Attached, Free };
     public class ConstructElement
     {
+        Linker linker;
         public Orientation orientation = new Orientation(Direction.Up);
         public Segment segment;
         public Construct construct;
         ScrapGame game;
         public Point offSet;
+
         public Joint rootJoint;
-        public List<Joint> branchJoints;
+        public ConstructElement rootElement;
+        
+        public Dictionary<Point,Joint> branchJoints;
         private List<GameButton> gameButtons = new List<GameButton>();
         public List<Point> adjacentElements = new List<Point>();
         List<Sensor> sensors = new List<Sensor>();
@@ -54,31 +59,51 @@ namespace Scrap.GameElements.Entities
         {
             this.segment = entity;
             this.game = game;
-            branchJoints = new List<Joint>();
+            branchJoints = new Dictionary<Point,Joint>();
             GenerateGUIButtons();
+            
         }
-        public void AddToConstruct(Construct construct, Point offSet, Joint rootJoint, Direction direction)
+        public void AddToConstruct(Construct construct, Point offSet, Joint rootJoint,ConstructElement rootElement, Direction direction)
         {
             orientation.Direction = direction;
             this.rootJoint = rootJoint;
+            this.rootElement = rootElement;
             this.construct = construct;
             this.offSet = offSet;
             
             adjacentElements = construct.AdjacentElements(offSet);
+            linker = new Linker(this.game, rootJoint);
         }
+
 
         public void RemoveFromConstruct()
         {
+            
             if (construct != null)
             {
-                BreakRoot();
-                BreakBranch();
+
+                //foreach (Point branchElement in this.branchJoints.Keys)
+                //{
+                //    construct.buildElements[branchElement].RemoveFromConstruct();
+                //}
+                foreach (Point key in branchJoints.Keys)
+                {
+                    construct.buildElements[key].RemoveFromConstruct();
+                }
+                this.branchJoints.Clear();
+                if (rootJoint != null)
+                {
+                    game.world.RemoveJoint(rootJoint);
+                    rootElement = null;
+                }
                 if (construct.buildElements.ContainsKey(offSet))
                     construct.buildElements.Remove(offSet);
                 construct.RecalculateAdjacentSegmentsAndActivateSensors();
                 construct = null;
+
             }
-            
+            DisableSensors();
+            this.SetStatus(ElementStatus.Free);
             adjacentElements.Clear();
         }
 
@@ -100,16 +125,10 @@ namespace Scrap.GameElements.Entities
                 button.status = UIStatus.Inactive;
             }
         }
-        public void BreakBranch()
-        {
-            foreach (Joint item in branchJoints)
-            {
-                game.world.RemoveJoint(item);
-            }
-        }
+
         private void OrientateSegmentAndSetStatusToAttached(Direction direction)
         {
-            Debug.WriteLine("PlaceSegment():" + direction.ToString());
+            //Debug.WriteLine("PlaceSegment():" + direction.ToString());
             orientation.Direction = direction;
             construct.SetSegmentDirection(segment, direction);
             SetStatus(ElementStatus.Attached);
@@ -128,14 +147,13 @@ namespace Scrap.GameElements.Entities
             List<ConstructElement> matches = new List<ConstructElement>();
             foreach (Sensor item in sensors)
             {
-                Point itemRelativeOffset =  Orientation.DirectionToPoint(this.orientation.AddDirectionsAsClockwiseAngles(item.direction));
+                //Point itemRelativeOffset =  Orientation.DirectionToPoint(this.orientation.AddDirectionsAsClockwiseAngles(item.direction));
+                Point itemRelativeOffset =  Orientation.DirectionToPoint(item.GetOrientationRelativeToConstruct().Direction);
                 if (!adjacentElements.Contains(item.constructElement.offSet + itemRelativeOffset))
                 {
                     item.Enable();
                 }
-
             }
-
         }
         public void DisableSensors()
         {
@@ -143,7 +161,6 @@ namespace Scrap.GameElements.Entities
             {
                 sensor.body.Position = Vector2.Zero;
                 sensor.Disable();
-                
             }
         }
         private void AddSensors()
@@ -161,14 +178,15 @@ namespace Scrap.GameElements.Entities
             foreach (Direction direction in segment.JointDirections())
             {
                 gameButtons.Add(this.game.gui.AddButton(this.segment, direction, new Action<Direction>(OrientateSegmentAndSetStatusToAttached)));
-
             }
         }
-        public void BreakRoot()
-        {
-            if (rootJoint != null)
-                game.world.RemoveJoint(rootJoint);
 
+        public virtual void Draw(SpriteBatch batch)
+        {
+            if (linker != null)
+            {
+                linker.Draw(batch);
+            }
         }
         public bool Draggable() 
         {
@@ -179,11 +197,14 @@ namespace Scrap.GameElements.Entities
         }
         public void Update()
         {
+            if (linker != null)
+            {
+                linker.Update();
+            }
             foreach (Sensor sensor in sensors)
             {
                 sensor.Update();
             }
         }
     }
-
 }

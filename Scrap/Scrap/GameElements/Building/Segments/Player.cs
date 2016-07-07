@@ -13,31 +13,30 @@ using System.Xml.Serialization;
 namespace Scrap.GameElements.Entities
 {
     [Serializable]
-    public class Crate : Segment
+    public class Player : Segment
     {
-        
-        public Crate(ScrapGame game)
+        public Player(ScrapGame game)
             : base(game)
         {
-            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Crate"), 0, false, 1f);
-            //texture = game.Content.Load<Texture2D>("Crate");
+            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Player"), 0, false, 1f);
+            //texture = game.Content.Load<Texture2D>("Player");
         }
         //Category
 
-        public Crate(ScrapGame game, Vector2 position)
+        public Player(ScrapGame game, Vector2 position)
             : base(game)
         {
-            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Crate"), 0, false, 1f);
+            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Player"), 0, false, 1f);
             body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 2f, this);
             body.BodyType = BodyType.Dynamic;
             body.Position = position;
             body.Restitution = .1f;
             body.Friction = .9f;
-            
+
         }
         public override Direction[] JointDirections()
         {
-            Direction[] validDirections = { Direction.Down, Direction.Right};
+            Direction[] validDirections = { Direction.Down, Direction.Right,Direction.Left,Direction.Up };
             return validDirections;
         }
         public override void Update(GameTime gameTime)

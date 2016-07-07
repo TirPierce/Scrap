@@ -13,6 +13,7 @@ namespace Scrap.Rendering
         Dictionary<String, Tuple<int, int>> animations;
         String currentAnimation;
         int currentFrame;
+        float scale =1f;
 
         public void Update(GameTime gameTime)
         {
@@ -24,7 +25,7 @@ namespace Scrap.Rendering
         }
         public void Draw(SpriteBatch batch, Vector2 worldCenter, float rotation, Color color)
         {
-            batch.Draw(texture, worldCenter, null, color, rotation, new Vector2(FrameWidth / 2f, FrameHeight / 2f), .01f * (100f / (float)FrameWidth), SpriteEffects.None, 1);
+            batch.Draw(texture, worldCenter, null, color, rotation, new Vector2(FrameWidth / 2f, FrameHeight / 2f), 1f / (float)FrameWidth * scale, SpriteEffects.None, 1);
         }
         public Texture2D Texture
         {
@@ -53,8 +54,9 @@ namespace Scrap.Rendering
         {
             get { return Texture.Height; }
         }    
-        public Sprite(Texture2D texture, float frameTime, bool isLooping)
+        public Sprite(Texture2D texture, float frameTime, bool isLooping, float scale)
         {
+            this.scale = scale;
             this.texture = texture;
             this.frameTime = frameTime;
             this.isLooping = isLooping;

@@ -29,7 +29,7 @@ namespace Scrap.UserInterface
         }
         public void DoActions()
         {
-            Debug.WriteLine("Button:" + offsetDirection.ToString());
+            //Debug.WriteLine("Button:" + offsetDirection.ToString());
             callBack.Invoke(offsetDirection);
         }
         public virtual void Draw(SpriteBatch batch)

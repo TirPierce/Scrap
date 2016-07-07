@@ -20,7 +20,7 @@ namespace Scrap.GameElements.Entities
         public Wheel(ScrapGame game, Vector2 position)
             : base(game)
         {
-            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("wheel"), 0, false);
+            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("wheel"), 0, false, 1f);
             wheel = BodyFactory.CreateCircle(game.world, .49f, 1f, (object)this);
             wheel.Restitution = .5f;
             wheel.BodyType = BodyType.Dynamic;

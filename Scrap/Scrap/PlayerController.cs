@@ -68,7 +68,7 @@ namespace Scrap
         private void OnConstructSensorTriggered(ConstructElement constructElement, Sensor sensor)
         {
             Debug.WriteLine("OnConstructSensorTriggered by " + constructElement.segment.ToString());
-            Debug.WriteLine("OnConstructSensorTriggered on sensor " + sensor.direction.ToString());
+            Debug.WriteLine("OnConstructSensorTriggered on sensor " + sensor.GetOrientationRelativeToSegment().ToString());
             Debug.WriteLine("OnConstructSensorTriggered on segment:" + sensor.constructElement.offSet.ToString());
 
             //ToDo: Refactor- PlaceSegment is almost useless. 
@@ -107,15 +107,11 @@ namespace Scrap
                     {
                         if (entity.IsPointContained(ref mouseWorld))
                         {
-                            if (entity.constructElement == null)
-                            {
-                                SetSelectedSegment(entity);
-                                break;
-                            }
                             if ((entity.constructElement != null && entity.constructElement.Draggable()))
                             {
                                 if (entity.constructElement.construct != null && entity.constructElement.construct.KeyObject != entity) 
                                 {
+                                    List<Point> adjacentElements = entity.constructElement.adjacentElements;
                                     entity.constructElement.RemoveFromConstruct();
                                     SegmentReleased = true;
                                 }

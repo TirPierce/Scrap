@@ -3,6 +3,7 @@ using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Scrap.GameElements.Building;
 using Scrap.GameElements.GameWorld;
 using System;
@@ -21,7 +22,7 @@ namespace Scrap.GameElements.Entities
     public abstract class Construct
     {
         protected List<Joint> joints;
-        protected List<Segment> entities;
+        //protected List<Segment> entities;
         private Segment keyObject;
         public Dictionary<Point, ConstructElement> buildElements;
 
@@ -34,7 +35,7 @@ namespace Scrap.GameElements.Entities
             set 
             {
                 keyObject = value;
-                entities.Add(keyObject);
+                //entities.Add(keyObject);
                 buildElements.Add(Point.Zero,keyObject.constructElement); 
                 
             }
@@ -43,15 +44,16 @@ namespace Scrap.GameElements.Entities
         {
             this.game = game;
             joints = new List<Joint>();
-            entities = new List<Segment>();
+            //entities = new List<Segment>();
             buildElements = new Dictionary<Point,ConstructElement>();
             game.constructList.Add(this);
         }
         public virtual void Update(GameTime gameTime)
         {
-            foreach (var item in buildElements)
+            foreach (var item in buildElements.Values)
             {
-                item.Value.Update();
+                item.Update();
+                
             }
         }
         public void RecalculateAdjacentSegmentsAndActivateSensors()
@@ -64,7 +66,7 @@ namespace Scrap.GameElements.Entities
         }
         public void SetSegmentDirection(Segment segment, Direction direction)
         {
-            Debug.WriteLine("Construct.SetSegmentDirection Offset: " + segment.constructElement.offSet.ToString() + " Rotation: " + direction.ToString());
+            //Debug.WriteLine("Construct.SetSegmentDirection Offset: " + segment.constructElement.offSet.ToString() + " Rotation: " + direction.ToString());
 
             var recievingSegment = this.buildElements[segment.constructElement.adjacentElements.First()].segment;
             var offset = segment.constructElement.offSet - recievingSegment.constructElement.offSet;
@@ -74,9 +76,9 @@ namespace Scrap.GameElements.Entities
         }
         public bool ContainsFixture(Fixture a)
         {
-            foreach (Segment entity in entities)
+            foreach (ConstructElement entity in buildElements.Values)
             {
-                if (entity.body.FixtureList.Contains(a))
+                if (entity.segment.body.FixtureList.Contains(a))
                 {
                     return true;
                 }
@@ -85,7 +87,7 @@ namespace Scrap.GameElements.Entities
         }
         public List<Point> AdjacentElements(Point position)
         {
-            Debug.WriteLine("Construct.AdjacentElements for position:" + position.ToString());
+            //Debug.WriteLine("Construct.AdjacentElements for position:" + position.ToString());
             List<Point> adjacentElements = new List<Point>();
             Point gridOffset = position + Orientation.DirectionToPoint(Direction.Up);
 
@@ -108,38 +110,45 @@ namespace Scrap.GameElements.Entities
             {
                 adjacentElements.Add(gridOffset);
             }
-            Debug.WriteLine("Construct.AdjacentElements Adjacent count:" + adjacentElements.Count.ToString());
+            //Debug.WriteLine("Construct.AdjacentElements Adjacent count:" + adjacentElements.Count.ToString());
 
             return adjacentElements;
         }
         public void AddSegmentAtSensorPosition(Segment segment, Sensor sensor)
         {//Segment will point up until the user picks the orientation 
 
-            AddNewSegmentToConstruct(sensor.constructElement.segment, segment, Orientation.DirectionToPoint(sensor.direction), Direction.Up);
+            AddNewSegmentToConstruct(sensor.constructElement.segment, segment, Orientation.DirectionToPoint(sensor.GetOrientationRelativeToConstruct().Direction), Direction.Up);
             RecalculateAdjacentSegmentsAndActivateSensors();
+        }
+        public virtual void Draw(SpriteBatch batch)
+        {
+            foreach (ConstructElement item in this.buildElements.Values)
+            {
+                item.Draw(batch);
+            }
         }
         protected void AddNewSegmentToConstruct(Segment recievingSegment, Segment newSegment, Point relativeOffset, Direction direction)
         {
             
             float rotation = Orientation.DirectionToRadians(direction);
-            Debug.WriteLine("AddNewSegmentToConstruct recievingSegment:" + recievingSegment.constructElement.offSet.ToString());
-            Debug.WriteLine("AddNewSegmentToConstruct newSegment offset: " + (recievingSegment.constructElement.offSet + relativeOffset).ToString());
-            entities.Add(newSegment);
+            //Debug.WriteLine("AddNewSegmentToConstruct recievingSegment:" + recievingSegment.constructElement.offSet.ToString());
+            //Debug.WriteLine("AddNewSegmentToConstruct newSegment offset: " + (recievingSegment.constructElement.offSet + relativeOffset).ToString());
+            //entities.Add(newSegment);
             Vector2 anchorOffset;
             Joint joint;
             
             newSegment.body.SetTransform(newSegment.Position, recievingSegment.Rotation + rotation);
-            
-            anchorOffset = new Vector2((relativeOffset).X * 1.2f, (relativeOffset).Y * 1.2f);
+            Point offsetRelativeToOrientatedSegment =Orientation.DirectionToPoint(recievingSegment.constructElement.orientation.AddDirectionsAsClockwiseAngles((Direction)((((int)Orientation.PointToDirection(relativeOffset))+0)%360)));
+            anchorOffset = new Vector2((offsetRelativeToOrientatedSegment).X * 1.2f, (offsetRelativeToOrientatedSegment).Y * 1.2f);
 
-            Debug.WriteLine("AddNewSegmentToConstruct anchorOffset:" + anchorOffset.ToString());
-            Debug.WriteLine("AddNewSegmentToConstruct new direction:" + Orientation.PointToDirection(relativeOffset).ToString());
+            //Debug.WriteLine("AddNewSegmentToConstruct anchorOffset:" + anchorOffset.ToString());
+            //Debug.WriteLine("AddNewSegmentToConstruct new direction:" + Orientation.PointToDirection(relativeOffset).ToString());
             if (!buildElements.ContainsKey(relativeOffset + recievingSegment.constructElement.offSet))
             {
 
                 joint = CreateJointBetweenAnchorsOnSegments(recievingSegment, newSegment, Orientation.PointToDirection(relativeOffset), anchorOffset);
-                newSegment.constructElement.AddToConstruct(this, relativeOffset + recievingSegment.constructElement.offSet, joint, direction);
-                recievingSegment.constructElement.branchJoints.Add(joint);
+                newSegment.constructElement.AddToConstruct(this, relativeOffset + recievingSegment.constructElement.offSet, joint,recievingSegment.constructElement, direction);
+                recievingSegment.constructElement.branchJoints.Add(relativeOffset + recievingSegment.constructElement.offSet, joint);
                 buildElements.Add(recievingSegment.constructElement.offSet + relativeOffset, newSegment.constructElement);
                 newSegment.constructElement.EnableSensors();
                 recievingSegment.constructElement.construct = this;
@@ -176,52 +185,50 @@ namespace Scrap.GameElements.Entities
             if (useWorldCoordinates)
                 pos -= KeyObject.Position;
 
-            foreach (Segment current in entities)
+            foreach (ConstructElement current in buildElements.Values)
             {
-                current.Position += pos;
+                current.segment.Position += pos;
             }
         }
 
         public void Rotate(float rot)
         {
-            foreach (Segment current in entities)
+            foreach (ConstructElement current in buildElements.Values)
             {
-                current.Rotation += rot;
-                if (current != KeyObject)
+                current.segment.Rotation += rot;
+                if (current.segment != KeyObject)
                 {
-                    current.Position -= KeyObject.Position;
+                    current.segment.Position -= KeyObject.Position;
                     float cos = (float)Math.Cos(rot);
                     float sin = (float)Math.Sin(rot);
-                    Vector2 rotationVector = current.Position;
-                    rotationVector = new Vector2(current.Position.X * cos - current.Position.Y * sin, current.Position.X * sin + current.Position.Y * cos);
-                    current.Position = rotationVector + KeyObject.Position;
+                    Vector2 rotationVector = current.segment.Position;
+                    rotationVector = new Vector2(current.segment.Position.X * cos - current.segment.Position.Y * sin, current.segment.Position.X * sin + current.segment.Position.Y * cos);
+                    current.segment.Position = rotationVector + KeyObject.Position;
                 }
             }
         }
 
         public void Rotate(float rot, Vector2 pos, bool useWorldCoordinates = true)
         {//TODO: test this function (I think it has bugs)
-            foreach (Segment current in entities)
+            foreach (ConstructElement current in buildElements.Values)
             {
-                current.Rotation += rot;
+                current.segment.Rotation += rot;
                 if(!useWorldCoordinates)
                 {
                     pos += KeyObject.Position;
                 }
-                current.Position -= pos;
+                current.segment.Position -= pos;
                 float cos = (float)Math.Cos(rot);
                 float sin = (float)Math.Sin(rot);
-                Vector2 rotationVector = current.Position;
-                rotationVector = new Vector2(current.Position.X * cos - current.Position.Y * sin, current.Position.X * sin + current.Position.Y * cos);
-                current.Position = rotationVector + pos;
+                Vector2 rotationVector = current.segment.Position;
+                rotationVector = new Vector2(current.segment.Position.X * cos - current.segment.Position.Y * sin, current.segment.Position.X * sin + current.segment.Position.Y * cos);
+                current.segment.Position = rotationVector + pos;
             }
         }
         public void FreeObject(Segment entity)
         {//ToDo: This function is rubbish. Rename and fix. Should remove an object from the construct. Might be dublicate. 
             //Check how objct is fried when dragging away from construct
-            entity.constructElement.BreakBranch();
-            entity.constructElement.BreakRoot();
-            this.buildElements.Remove(entity.constructElement.offSet);
+            entity.constructElement.RemoveFromConstruct();
         }
 
         public void SetRotation(float rot)

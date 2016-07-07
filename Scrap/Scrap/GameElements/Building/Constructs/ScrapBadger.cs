@@ -11,32 +11,67 @@ namespace Scrap.GameElements.Entities
     [Serializable]
     class ScrapBadger:Construct
     {
+        //load Level objects
+        Player torsoMiddle;
+
+        Crate torsoBack;        
+        Crate torsoFront;
+        Crate torsoFront2;
+        Crate torsoFront3;
         Wheel backWheel;
         Wheel frontWheel;
-        Crate torsoBack;
-        Crate torsoMiddle;
-        Crate torsoFront;
+        Wheel frontWheel2;
+        Wheel frontWheel3;
         Rocket rocket1;
+        Rocket rocket2;
         Nozzle face;
 
         public ScrapBadger(ScrapGame game, Vector2 pos):base(game)
         {
-            torsoMiddle = new Crate(game, pos);
-            KeyObject = torsoMiddle;
-            torsoFront = new Crate(game, pos +  new Vector2(1.2f, 0));
-            AddNewSegmentToConstruct(torsoMiddle, torsoFront, new Point(1, 0), Direction.Up);
+            //Define joins, Define Join side, Define joined srap direction//
 
-            torsoBack = new Crate(game, pos +  new Vector2(-1.2f, 0));
+            //Player
+            torsoMiddle = new Player(game, pos);
+            KeyObject = torsoMiddle;
+            /**********************             
+             /-1-1/01/1-1/
+             /-10/00/10/
+             /-11/01/11/
+             ***********************/
+            //Crates
+            torsoFront = new Crate(game, pos +  new Vector2(1.2f, 0));
+            AddNewSegmentToConstruct(torsoMiddle, torsoFront, new Point(1, 0), Direction.Up);            
+
+            torsoFront2 = new Crate(game, pos + new Vector2(1.2f, 0));
+            AddNewSegmentToConstruct(torsoFront, torsoFront2, new Point(1, 0), Direction.Up);
+
+            torsoFront3 = new Crate(game, pos + new Vector2(1.2f, 0));
+            AddNewSegmentToConstruct(torsoFront2, torsoFront3, new Point(1, 0), Direction.Up);
+
+            torsoBack = new Crate(game, pos + new Vector2(-1.2f, 0));
             AddNewSegmentToConstruct(torsoMiddle, torsoBack, new Point(-1, 0), Direction.Up);
 
+            //Wheels
             backWheel = new Wheel(game, pos + new Vector2(-1.2f, 1.2f));
             AddNewSegmentToConstruct(torsoBack, backWheel, new Point(0, 1), Direction.Up);
 
             frontWheel = new Wheel(game, pos + new Vector2(1.2f, 1.2f));
             AddNewSegmentToConstruct(torsoFront, frontWheel, new Point(0, 1), Direction.Up);
 
+            frontWheel2 = new Wheel(game, pos + new Vector2(1.2f, 1.2f));
+            AddNewSegmentToConstruct(torsoFront2, frontWheel2, new Point(0, 1), Direction.Up);
+
+            frontWheel3 = new Wheel(game, pos + new Vector2(1.2f, 1.2f));
+            AddNewSegmentToConstruct(torsoFront3, frontWheel3, new Point(0, 1), Direction.Up);
+
+            //Rockets
             rocket1 = new Rocket(game, pos + new Vector2(0, -1.2f));
-            AddNewSegmentToConstruct(torsoMiddle, rocket1, new Point(0, -1), Direction.Up);
+            AddNewSegmentToConstruct(torsoMiddle, rocket1, new Point(0, -1), Direction.Right);
+
+            rocket2 = new Rocket(game, pos + new Vector2(0, -1.2f));
+            AddNewSegmentToConstruct(torsoFront, rocket2, new Point(0, -1), Direction.Right);
+
+            //init sensors
             foreach(var constructElement in this.buildElements)
             {
 

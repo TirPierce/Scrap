@@ -22,7 +22,7 @@ namespace Scrap.GameElements.Entities
         public DriveWheel(ScrapGame game, Vector2 position)
             : base(game)
         {
-            sprite = new Sprite(game.Content.Load<Texture2D>("wheel"),0,false);
+            sprite = new Sprite(game.Content.Load<Texture2D>("wheel"), 0, false, 1f);
 
             wheel = BodyFactory.CreateCircle(game.world, .49f, 2f, (object)this);
             wheel.Restitution = 1f;

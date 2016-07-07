@@ -45,7 +45,9 @@
     <Compile Include="Camera.cs" />
     <Compile Include="GameElements\Building\Construct.cs" />
     <Compile Include="GameElements\Building\ConstructElement.cs" />
+    <Compile Include="GameElements\Building\Linker.cs" />
     <Compile Include="GameElements\Building\Orientation.cs" />
+    <Compile Include="GameElements\Building\Segments\Player.cs" />
     <Compile Include="GameElements\Building\Segments\Crate.cs" />
     <Compile Include="GameElements\Building\Segments\DriveWheel.cs" />
     <Compile Include="GameElements\Building\Segment.cs" />
@@ -79,6 +81,7 @@
   <ItemGroup>
     <Content Include="Content\background.png" />
     <Content Include="Content\crate.png" />
+    <Content Include="Content\Linker.png" />
     <Content Include="Content\nearback.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

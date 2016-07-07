@@ -22,7 +22,15 @@ namespace Scrap.GameElements.Building
         ScrapGame game;
         public ConstructElement constructElement;
         float rotationRad;
-        public Direction direction;
+        private Orientation orientation;
+        public Orientation GetOrientationRelativeToConstruct()
+        {
+            return new Orientation(orientation.AddDirectionsAsClockwiseAngles(constructElement.orientation.Direction));
+        }
+        public Orientation GetOrientationRelativeToSegment()
+        {
+            return orientation;
+        }
         public Point offSet;
         bool enabled = false;
         Joint joint;
@@ -33,12 +41,12 @@ namespace Scrap.GameElements.Building
             
             this.constructElement = constructElement;
             this.game = game;
-            this.direction = direction;
+            orientation = new Orientation(direction);
             offSet = Orientation.DirectionToPoint(direction);
             rotationRad = Orientation.DirectionToRadians(direction);
 
-            Debug.WriteLine("Sensor:" + direction.ToString() + " Construct element :" + constructElement.offSet.ToString());
-            Debug.WriteLine("Sensor offset:" + offSet.ToString() + " Rotation :" + rotationRad.ToString());
+            //Debug.WriteLine("Sensor:" + direction.ToString() + " Construct element :" + constructElement.offSet.ToString());
+            //Debug.WriteLine("Sensor offset:" + offSet.ToString() + " Rotation :" + rotationRad.ToString());
 
             //offSet = new Vector2((float)Math.Cos(rotationRad), (float)Math.Sin(rotationRad)) * ConstructElement.OFFSET;
             CreateBody();
@@ -97,7 +105,7 @@ namespace Scrap.GameElements.Building
             //Vector2 rotationVector = constructElement.segment.body.Position;
             //rotationVector = new Vector2(offSet.X * cos - offSet.Y * sin, offSet.X * sin + offSet.Y * cos);
             //+ rotationVector
-            body.SetTransform(constructElement.segment.body.Position, constructElement.segment.body.Rotation + Orientation.DirectionToRadians(direction));
+            body.SetTransform(constructElement.segment.body.Position, constructElement.segment.body.Rotation + orientation.ToRadians());
         }
         public void Update()
         {

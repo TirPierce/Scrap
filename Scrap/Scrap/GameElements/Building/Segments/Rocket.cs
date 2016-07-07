@@ -19,14 +19,14 @@ namespace Scrap.GameElements.Entities
         public Rocket(ScrapGame game)
             : base(game)
         {
-            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Rocket"), 0, false);
+            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Rocket"), 0, false, 1f);
         }
 
 
         public Rocket(ScrapGame game, Vector2 position)
             : base(game)
         {
-            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Rocket"), 0, false);
+            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Rocket"), 0, false, 1f);
             body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 1f, (object)this);
             body.BodyType = BodyType.Dynamic;
             body.Position = position;
