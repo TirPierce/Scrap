@@ -27,6 +27,11 @@ namespace Scrap.GameElements.Building
         }
         private float rotationRadians;
         private Point unitDirectionPoint;
+        public Direction AddDirectionsAsAntiClockwiseAngles(Direction direction)
+        {
+            int newDirection = ((int)direction - (int)this.direction) % 360;
+            return (Direction)newDirection;
+        }
         public Direction AddDirectionsAsClockwiseAngles(Direction direction)
         {
             int newDirection = ((int)direction + (int)this.direction) % 360;
@@ -66,12 +71,12 @@ namespace Scrap.GameElements.Building
                     return 0;
                 //return MathHelper.Pi;
                 case Direction.Right:
-                    return 3 * MathHelper.PiOver2;
+                    return  MathHelper.PiOver2;
                 case Direction.Down:
                     return MathHelper.Pi;
                 //return 0;
                 case Direction.Left:
-                    return MathHelper.PiOver2;
+                    return 3 * MathHelper.PiOver2;
                 default:
                     return 0;
             }

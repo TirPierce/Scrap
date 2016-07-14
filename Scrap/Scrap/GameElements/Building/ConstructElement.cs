@@ -149,8 +149,8 @@ namespace Scrap.GameElements.Entities
             List<ConstructElement> matches = new List<ConstructElement>();
             foreach (Sensor item in sensors)
             {
-                //Point itemRelativeOffset =  Orientation.DirectionToPoint(this.orientation.AddDirectionsAsClockwiseAngles(item.direction));
-                Point itemRelativeOffset =  Orientation.DirectionToPoint(item.GetOrientationRelativeToConstruct().Direction);
+                Point itemRelativeOffset=  Orientation.DirectionToPoint(this.orientation.AddDirectionsAsClockwiseAngles(item.GetOrientationRelativeToSegment().Direction));
+                //Point itemRelativeOffset =  Orientation.DirectionToPoint(item.GetOrientationRelativeToSegment().Direction);
                 if (!adjacentElements.Contains(item.constructElement.offSet + itemRelativeOffset))
                 {
                     item.Enable();
