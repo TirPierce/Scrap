@@ -81,18 +81,20 @@ namespace Scrap.GameElements.Entities
             
             if (construct != null)
             {
-
+                
                 //foreach (Point branchElement in this.branchJoints.Keys)
                 //{
                 //    construct.buildElements[branchElement].RemoveFromConstruct();
                 //}
                 foreach (Point key in branchJoints.Keys)
                 {
-                    construct.buildElements[key].RemoveFromConstruct();
+                    if (construct.buildElements.Keys.Contains(key))
+                        construct.buildElements[key].RemoveFromConstruct();
                 }
                 this.branchJoints.Clear();
                 if (rootJoint != null)
                 {
+                    //rootElement.branchJoints.Remove(this.offSet);
                     game.world.RemoveJoint(rootJoint);
                     rootElement = null;
                 }
@@ -186,6 +188,10 @@ namespace Scrap.GameElements.Entities
             if (linker != null)
             {
                 linker.Draw(batch);
+            }
+            foreach (Sensor sensor in sensors)
+            {
+                sensor.Draw(batch);
             }
         }
         public bool Draggable() 

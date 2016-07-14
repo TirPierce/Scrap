@@ -29,9 +29,10 @@ namespace Scrap
         Texture2D pointerClosed;
         Vector2 mouseWorld;
         Body courserVolume;
-        bool SegmentReleased = false;
+        //bool SegmentReleased = false;
         public Segment selectedSegment = null;
 
+        List<Sensor> contactList = new List<Sensor>();
         public void LoadContent()
         {
             pointer = game.Content.Load<Texture2D>("Pointer");
@@ -57,13 +58,18 @@ namespace Scrap
 
         public bool courserVolume_OnCollision(Fixture a, Fixture b, Contact contact)
         {
-            if (selectedSegment != null && !SegmentReleased)
+            if (selectedSegment != null)
             {
-                OnConstructSensorTriggered(selectedSegment.constructElement, b.UserData as Sensor);
-                Debug.WriteLine("courserVolume_OnCollision: Triggered");
+                contactList.Add(b.UserData as Sensor);
             }
 
-            return true;
+            //if (selectedSegment != null && !SegmentReleased)
+            //{
+            //    //OnConstructSensorTriggered(selectedSegment.constructElement, b.UserData as Sensor);
+            //    Debug.WriteLine("courserVolume_OnCollision: Triggered");
+            //}
+
+            return false;
         }
         private void OnConstructSensorTriggered(ConstructElement constructElement, Sensor sensor)
         {
@@ -113,7 +119,7 @@ namespace Scrap
                                 {
                                     List<Point> adjacentElements = entity.constructElement.adjacentElements;
                                     entity.constructElement.RemoveFromConstruct();
-                                    SegmentReleased = true;
+                                    //SegmentReleased = true;
                                 }
                                 SetSelectedSegment(entity);
                                 break;
@@ -124,7 +130,6 @@ namespace Scrap
             }
             else if (selectedSegment != null && inputManager.MouseState.LeftButton == ButtonState.Released && inputManager.PrevMouseState.LeftButton == ButtonState.Pressed)
             {
-                SegmentReleased = false;
                 ReleaseSegment();
             }
 
@@ -132,6 +137,11 @@ namespace Scrap
             {
                 DragSelectedSegment();
             }
+            foreach (Sensor item in contactList)
+            {
+                Debug.WriteLine("Hover:" + item.GetOrientationRelativeToSegment().Direction.ToString());
+            }
+            contactList.Clear();
         }
         private void SetSelectedSegment(Segment segment)
         {
@@ -159,10 +169,18 @@ namespace Scrap
         }
         protected void ReleaseSegment()
         {
-           // if (wasInPlace)
-           // {//ToDo: reattach segment here. :O
-            selectedSegment.constructElement.Status = ElementStatus.Free;
-            selectedSegment = null;
+
+            if (contactList.Count > 0)
+            {//ToDo: join to each adjacet object
+                OnConstructSensorTriggered(selectedSegment.constructElement, contactList[0]);
+            }
+            else 
+            {
+                selectedSegment.constructElement.Status = ElementStatus.Free;
+                selectedSegment = null;
+            }
+
+            
         }
         public void PlaceSegment()
         {

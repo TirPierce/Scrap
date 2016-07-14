@@ -56,21 +56,7 @@ namespace Scrap.GameElements.Building
         }
         public float ToRadians()
         {
-            switch (direction)
-            {
-                case Direction.Up:
-                    return 0;
-                //return MathHelper.Pi;
-                case Direction.Right:
-                    return 3 * MathHelper.PiOver2;
-                case Direction.Down:
-                    return MathHelper.Pi;
-                //return 0;
-                case Direction.Left:
-                    return MathHelper.PiOver2;
-                default:
-                    return 0;
-            }
+            return DirectionToRadians(direction);
         }
         public static float DirectionToRadians(Direction direction)
         {
@@ -142,9 +128,9 @@ namespace Scrap.GameElements.Building
                 case Direction.Right:
                     return new Point(1, 0);
                 case Direction.Up:
-                    return new Point(0, 1);
-                case Direction.Down:
                     return new Point(0, -1);
+                case Direction.Down:
+                    return new Point(0, 1);
             }
             return new Point(0, 0);
         }
@@ -156,7 +142,7 @@ namespace Scrap.GameElements.Building
             if (point == new Point(1, 0))
                 return Direction.Right;
 
-            if (point == new Point(0, 1))
+            if (point == new Point(0, -1))
                 return Direction.Up;
 
             return Direction.Down;

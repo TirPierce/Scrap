@@ -66,10 +66,10 @@ namespace Scrap.GameElements.Entities
 
             //Rockets
             rocket1 = new Rocket(game, pos + new Vector2(0, -1.2f));
-            AddNewSegmentToConstruct(torsoMiddle, rocket1, new Point(0, -1), Direction.Right);
+            AddNewSegmentToConstruct(torsoMiddle, rocket1, new Point(0, -1), Direction.Left);
 
             rocket2 = new Rocket(game, pos + new Vector2(0, -1.2f));
-            AddNewSegmentToConstruct(torsoFront, rocket2, new Point(0, -1), Direction.Right);
+            AddNewSegmentToConstruct(torsoFront, rocket2, new Point(0, -1), Direction.Left);
 
             //init sensors
             foreach(var constructElement in this.buildElements)

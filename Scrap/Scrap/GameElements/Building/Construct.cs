@@ -145,7 +145,6 @@ namespace Scrap.GameElements.Entities
             //Debug.WriteLine("AddNewSegmentToConstruct new direction:" + Orientation.PointToDirection(relativeOffset).ToString());
             if (!buildElements.ContainsKey(relativeOffset + recievingSegment.constructElement.offSet))
             {
-
                 joint = CreateJointBetweenAnchorsOnSegments(recievingSegment, newSegment, Orientation.PointToDirection(relativeOffset), anchorOffset);
                 newSegment.constructElement.AddToConstruct(this, relativeOffset + recievingSegment.constructElement.offSet, joint,recievingSegment.constructElement, direction);
                 recievingSegment.constructElement.branchJoints.Add(relativeOffset + recievingSegment.constructElement.offSet, joint);
@@ -155,7 +154,6 @@ namespace Scrap.GameElements.Entities
             }
             else
             {
-
                 Debug.WriteLine("AddNewSegmentToConstruct key exists: " + (relativeOffset + recievingSegment.constructElement.offSet).ToString());
             }
         }
@@ -173,18 +171,14 @@ namespace Scrap.GameElements.Entities
         {
             return false;
         }
-
-
         public Vector2 Position
         {
             get { return KeyObject.Position; }
         }
-
         public void SetPosition(Vector2 pos, bool useWorldCoordinates = true)
         {
             if (useWorldCoordinates)
                 pos -= KeyObject.Position;
-
             foreach (ConstructElement current in buildElements.Values)
             {
                 current.segment.Position += pos;

@@ -5,7 +5,9 @@ using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Scrap.GameElements.Entities;
+using Scrap.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,6 +25,8 @@ namespace Scrap.GameElements.Building
         public ConstructElement constructElement;
         float rotationRad;
         private Orientation orientation;
+        public Sprite sprite;
+
         public Orientation GetOrientationRelativeToConstruct()
         {
             return new Orientation(orientation.AddDirectionsAsClockwiseAngles(constructElement.orientation.Direction));
@@ -37,8 +41,25 @@ namespace Scrap.GameElements.Building
         
         public Sensor(ConstructElement constructElement, Direction direction, ScrapGame game) 
         {
-            
-            
+
+            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("PipeShort"), 0, false, 1f);
+            switch (direction)
+            {
+                case Direction.Up:
+                    sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Up"), 0, false, 1f);
+                    break;
+                case Direction.Right:
+                    sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Right"), 0, false, 1f);
+                    break;
+                case Direction.Down:
+                    sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Down"), 0, false, 1f);
+                    break;
+                case Direction.Left:
+                    sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Left"), 0, false, 1f);
+                    break;
+                default:
+                    break;
+            }
             this.constructElement = constructElement;
             this.game = game;
             orientation = new Orientation(direction);
@@ -58,9 +79,10 @@ namespace Scrap.GameElements.Building
         {
             Vertices verts;
             verts = new Vertices();
-            verts.Add(new Vector2(.4f, .6f));
-            verts.Add(new Vector2(0f, 1.2f));
-            verts.Add(new Vector2(-.4f, .6f));
+            verts.Add(new Vector2(.4f, 0f));
+            verts.Add(new Vector2(.4f, .4f));
+            verts.Add(new Vector2(-.4f, .4f));
+            verts.Add(new Vector2(-.4f, 0f));
             
             //constructElement.segment.body 
             //body.CreateFixture(new Shape());
@@ -70,6 +92,7 @@ namespace Scrap.GameElements.Building
             body.BodyType = BodyType.Dynamic;
             body.SleepingAllowed = false;
             body.CollidesWith = Category.Cat10;
+            body.IsSensor = true;
             body.CollisionCategories = Category.Cat10;
             //body.OnCollision += OnCollide;
             body.IgnoreGravity = true;
@@ -98,15 +121,30 @@ namespace Scrap.GameElements.Building
         }
         private void MoveSensor()
         {
-
-
-            //float cos = (float)Math.Cos(constructElement.segment.body.Rotation);
-            //float sin = (float)Math.Sin(constructElement.segment.body.Rotation);
-            //Vector2 rotationVector = constructElement.segment.body.Position;
-            //rotationVector = new Vector2(offSet.X * cos - offSet.Y * sin, offSet.X * sin + offSet.Y * cos);
+            float cos = (float)Math.Cos(constructElement.segment.body.Rotation);
+            float sin = (float)Math.Sin(constructElement.segment.body.Rotation);
+            Vector2 relativePosition = Orientation.GetRelativePositionOfADirection(this.orientation.Direction);
+            Vector2 rotationVector = relativePosition;
+            rotationVector = new Vector2(rotationVector.X * cos - rotationVector.Y * sin, rotationVector.X * sin + rotationVector.Y * cos);
             //+ rotationVector
-            body.SetTransform(constructElement.segment.body.Position, constructElement.segment.body.Rotation + orientation.ToRadians());
+
+            body.SetTransform(constructElement.segment.body.Position + rotationVector*.5f, orientation.ToRadians() + this.constructElement.segment.Rotation);
         }
+        //                float cos = (float)Math.Cos(body.Rotation - MathHelper.PiOver2);
+        //float sin = (float)Math.Sin(body.Rotation - MathHelper.PiOver2);
+
+        private Vector2 Rotate(float angle, float distance, Vector2 centre)
+        {
+            return new Vector2((float)(distance * Math.Cos(angle)), (float)(distance * Math.Sin(angle))) + centre;
+        }
+        public Vector2 RotateVector(Vector2 initialVector, float angle)
+        {
+            float cos = (float)Math.Cos(angle);
+            float sin = (float)Math.Sin(angle);
+            Vector2 rotationVector = new Vector2(initialVector.X * cos - initialVector.Y * sin, initialVector.X * sin + initialVector.Y * cos);
+            return rotationVector;
+        }
+
         public void Update()
         {
             if (enabled)
@@ -114,7 +152,13 @@ namespace Scrap.GameElements.Building
                 MoveSensor();
             }
         }
-
+        public virtual void Draw(SpriteBatch batch)
+        {
+            if (enabled)
+            {
+                sprite.Draw(batch, body.Position,body.Rotation+MathHelper.Pi, Color.White);
+            }
+        }
         public Body Body
         {
             get { return body; }

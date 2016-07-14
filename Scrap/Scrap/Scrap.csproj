@@ -81,15 +81,22 @@
   <ItemGroup>
     <Content Include="Content\background.png" />
     <Content Include="Content\crate.png" />
+    <Content Include="Content\Down.png" />
+    <Content Include="Content\Left.png" />
     <Content Include="Content\Linker.png" />
     <Content Include="Content\nearback.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\PipeLong.png" />
+    <Content Include="Content\PipeShort.png" />
+    <Content Include="Content\Player.png" />
     <Content Include="Content\Pointer.png" />
     <Content Include="Content\PointerClosed.png" />
+    <Content Include="Content\Right.png" />
     <Content Include="Content\rocket.png" />
     <Content Include="Content\sky.png" />
     <Content Include="Content\soil.png" />
+    <Content Include="Content\Up.png" />
     <Content Include="Content\wheel.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>

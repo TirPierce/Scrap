@@ -48,7 +48,7 @@ namespace Scrap.Rendering
         }
         public int FrameWidth
         {
-            get { return Texture.Height; }
+            get { return Texture.Width; }
         }
         public int FrameHeight
         {
