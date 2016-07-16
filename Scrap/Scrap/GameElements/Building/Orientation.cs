@@ -7,59 +7,23 @@ using System.Threading.Tasks;
 
 namespace Scrap.GameElements.Building
 {
+    
     public enum Direction { Up = 0, Right = 90, Down = 180, Left = 270};
     public class Orientation
     {
-
-        
-        /*
-        public static int UP = 0;
-        public static int Right = 0;
-        public static int Down = 0;
-        public static int Left = 0;
-        */
-        private Direction direction;
-
-        public Direction Direction
+        public const float OFFSET = 1.2f;
+        public static Direction AddDirectionsAsAntiClockwiseAngles(Direction directionA, Direction directionB)
         {
-            get { return direction; }
-            set { direction = value; }
-        }
-        private float rotationRadians;
-        private Point unitDirectionPoint;
-        public Direction AddDirectionsAsAntiClockwiseAngles(Direction direction)
-        {
-            int newDirection = ((int)direction - (int)this.direction) % 360;
+            int newDirection = ((int)directionA - (int)directionB) % 360;
             return (Direction)newDirection;
         }
-        public Direction AddDirectionsAsClockwiseAngles(Direction direction)
+        public static Direction AddDirectionsAsClockwiseAngles(Direction directionA, Direction directionB)
         {
-            int newDirection = ((int)direction + (int)this.direction) % 360;
+            int newDirection = ((int)directionA + (int)directionB) % 360;
             return (Direction)newDirection;
         }
-        public Orientation(Direction direction)
-        {
-            this.direction = direction;
-            switch (direction)
-            {
-                case Direction.Up:
-                    rotationRadians =  MathHelper.Pi;
-                    break;
-                case Direction.Right:
-                    rotationRadians = 3 * MathHelper.PiOver2;
-                    break;
-                case Direction.Down:
-                    rotationRadians = 0;
-                    break;
-                case Direction.Left:
-                    rotationRadians = MathHelper.PiOver2;
-                    break;
-                default:
-                    rotationRadians = 0;
-                    break;
-            }
-        }
-        public float ToRadians()
+
+        public static float ToRadians(Direction direction)
         {
             return DirectionToRadians(direction);
         }
@@ -81,7 +45,7 @@ namespace Scrap.GameElements.Building
                     return 0;
             }
         }
-        public const float OFFSET = 1.2f;
+        
         public static Vector2 GetRelativePositionOfADirection(Direction direction)
         {
             Vector2 offset = Vector2.Zero;
@@ -103,27 +67,7 @@ namespace Scrap.GameElements.Building
             }
             return offset;
         }
-        //public static Point DirectonToPoint(Direction direction)
-        //{
-        //    Point offset = Point.Zero;
-        //    if (direction == Direction.Right)
-        //    {
-        //        offset = new Point(1, 0);
-        //    }
-        //    if (direction == Direction.Left)
-        //    {
-        //        offset = new Point(-1, 0);
-        //    }
-        //    if (direction == Direction.Down)
-        //    {
-        //        offset = new Point(0, 1);
-        //    }
-        //    if (direction == Direction.Up)
-        //    {
-        //        offset = new Point(0, -1);
-        //    }
-        //    return offset;
-        //}
+
         public static Point DirectionToPoint(Direction direction)
         {
             switch (direction)

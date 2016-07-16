@@ -24,7 +24,7 @@ namespace Scrap.GameElements.Building
         ScrapGame game;
         public ConstructElement constructElement;
         float rotationRad;
-        private Orientation orientation;
+        private Direction orientation;
         public Sprite sprite;
 
         public Point GetOffsetRelativeToConstruct()
@@ -32,9 +32,9 @@ namespace Scrap.GameElements.Building
 
 
 
-            if (constructElement.orientation.Direction == Direction.Down)
+            if (constructElement.orientation == Direction.Down)
             {
-                switch (orientation.Direction)
+                switch (orientation)
                 {
                     case Direction.Up:
                         return Orientation.DirectionToPoint(Direction.Down);
@@ -48,9 +48,9 @@ namespace Scrap.GameElements.Building
                         return offSet;
                 }
             }
-            else if (constructElement.orientation.Direction == Direction.Left)
+            else if (constructElement.orientation == Direction.Left)
             {
-                switch (orientation.Direction)
+                switch (orientation)
                 {
                     case Direction.Up:
                         return Orientation.DirectionToPoint(Direction.Left);
@@ -64,9 +64,9 @@ namespace Scrap.GameElements.Building
                         return offSet;
                 }
             }
-            else if (constructElement.orientation.Direction == Direction.Right)
+            else if (constructElement.orientation == Direction.Right)
             {
-                switch (orientation.Direction)
+                switch (orientation)
                 {
                     case Direction.Up:
                         return Orientation.DirectionToPoint(Direction.Right);
@@ -82,7 +82,7 @@ namespace Scrap.GameElements.Building
             }
             else return offSet;
         }
-        public Orientation GetOrientationRelativeToSegment()
+        public Direction GetOrientationRelativeToSegment()
         {
             return orientation;
         }
@@ -113,7 +113,7 @@ namespace Scrap.GameElements.Building
             }
             this.constructElement = constructElement;
             this.game = game;
-            orientation = new Orientation(direction);
+            orientation = direction;
             offSet = Orientation.DirectionToPoint(direction);
             rotationRad = Orientation.DirectionToRadians(direction);
 
@@ -174,12 +174,12 @@ namespace Scrap.GameElements.Building
         {
             float cos = (float)Math.Cos(constructElement.segment.body.Rotation);
             float sin = (float)Math.Sin(constructElement.segment.body.Rotation);
-            Vector2 relativePosition = Orientation.GetRelativePositionOfADirection(this.orientation.Direction);
+            Vector2 relativePosition = Orientation.GetRelativePositionOfADirection(this.orientation);
             Vector2 rotationVector = relativePosition;
             rotationVector = new Vector2(rotationVector.X * cos - rotationVector.Y * sin, rotationVector.X * sin + rotationVector.Y * cos);
             //+ rotationVector
 
-            body.SetTransform(constructElement.segment.body.Position + rotationVector*.5f, orientation.ToRadians() + this.constructElement.segment.Rotation);
+            body.SetTransform(constructElement.segment.body.Position + rotationVector * .5f, Orientation.ToRadians(orientation) + this.constructElement.segment.Rotation);
         }
         //                float cos = (float)Math.Cos(body.Rotation - MathHelper.PiOver2);
         //float sin = (float)Math.Sin(body.Rotation - MathHelper.PiOver2);

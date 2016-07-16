@@ -74,7 +74,7 @@ namespace Scrap
         private void OnSegmentReleasedInSensor(ConstructElement constructElement, Sensor sensor)
         {
             Debug.WriteLine("OnConstructSensorTriggered by " + constructElement.segment.ToString());
-            Debug.WriteLine("OnConstructSensorTriggered on sensor " + sensor.GetOrientationRelativeToSegment().Direction.ToString());
+            Debug.WriteLine("OnConstructSensorTriggered on sensor " + sensor.GetOrientationRelativeToSegment().ToString());
             Debug.WriteLine("OnConstructSensorTriggered on segment:" + sensor.constructElement.offSet.ToString());
 
             //ToDo: Refactor- PlaceSegment is almost useless. 
@@ -139,7 +139,7 @@ namespace Scrap
             }
             foreach (Sensor item in contactList)
             {
-                Debug.WriteLine("Hover:" + item.GetOrientationRelativeToSegment().Direction.ToString());
+                Debug.WriteLine("Hover:" + item.GetOrientationRelativeToSegment().ToString());
             }
             contactList.Clear();
         }

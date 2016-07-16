@@ -149,7 +149,7 @@ namespace Scrap.GameElements.Entities
                 //this is the problem line
                 //recieving element direction + offset Direction
                 Direction relativeDirectionofJoint = Orientation.PointToDirection(relativeOffset);
-                switch (recievingSegment.constructElement.orientation.Direction)
+                switch (recievingSegment.constructElement.orientation)
                 {
                     case Direction.Up:
                         break;

@@ -22,7 +22,7 @@ namespace Scrap.GameElements.Entities
     public class ConstructElement
     {
         Linker linker;
-        public Orientation orientation = new Orientation(Direction.Up);
+        public Direction orientation = Direction.Up;
         public Segment segment;
         public Construct construct;
         ScrapGame game;
@@ -63,7 +63,7 @@ namespace Scrap.GameElements.Entities
         }
         public void AddToConstruct(Construct construct, Point offSet, Joint rootJoint,ConstructElement rootElement, Direction direction)
         {
-            orientation.Direction = direction;
+            orientation = direction;
             this.rootJoint = rootJoint;
             this.rootElement = rootElement;
             this.construct = construct;
@@ -123,7 +123,7 @@ namespace Scrap.GameElements.Entities
         private void OrientateSegmentAndSetStatusToAttached(Direction direction)
         {
             //Debug.WriteLine("PlaceSegment():" + direction.ToString());
-            orientation.Direction = direction;
+            orientation = direction;
             construct.SetSegmentDirection(segment, direction);
             SetStatus(ElementStatus.Attached);
         }
@@ -141,7 +141,7 @@ namespace Scrap.GameElements.Entities
             List<ConstructElement> matches = new List<ConstructElement>();
             foreach (Sensor item in sensors)
             {
-                Point itemRelativeOffset=  Orientation.DirectionToPoint(this.orientation.AddDirectionsAsClockwiseAngles(item.GetOrientationRelativeToSegment().Direction));
+                Point itemRelativeOffset=  Orientation.DirectionToPoint(Orientation.AddDirectionsAsClockwiseAngles(item.GetOrientationRelativeToSegment(), orientation));
                 //Point itemRelativeOffset =  Orientation.DirectionToPoint(item.GetOrientationRelativeToSegment().Direction);
                 if (!adjacentElements.Contains(item.constructElement.offSet + itemRelativeOffset))
                 {
