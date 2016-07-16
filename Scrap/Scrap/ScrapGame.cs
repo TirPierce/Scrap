@@ -108,6 +108,7 @@ namespace Scrap
         {
             
             playerController.Update();
+            if(!InputManager.GetManager().KeyState.IsKeyDown(Keys.Space)){
             foreach (Construct item in constructList)
             {
                 item.Update(gameTime);
@@ -119,6 +120,7 @@ namespace Scrap
             }
 
             world.Step(1f / 33f);
+            }
 
             camera.Update(gameTime);
 
@@ -179,7 +181,7 @@ namespace Scrap
             
             spriteBatch.End();
 
-            //debugView.RenderDebugData(camera.Projection, camera.Transformation);
+            debugView.RenderDebugData(camera.Projection, camera.Transformation);
             
 
             base.Draw(gameTime);

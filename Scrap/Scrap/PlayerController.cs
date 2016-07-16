@@ -71,10 +71,10 @@ namespace Scrap
 
             return false;
         }
-        private void OnConstructSensorTriggered(ConstructElement constructElement, Sensor sensor)
+        private void OnSegmentReleasedInSensor(ConstructElement constructElement, Sensor sensor)
         {
             Debug.WriteLine("OnConstructSensorTriggered by " + constructElement.segment.ToString());
-            Debug.WriteLine("OnConstructSensorTriggered on sensor " + sensor.GetOrientationRelativeToSegment().ToString());
+            Debug.WriteLine("OnConstructSensorTriggered on sensor " + sensor.GetOrientationRelativeToSegment().Direction.ToString());
             Debug.WriteLine("OnConstructSensorTriggered on segment:" + sensor.constructElement.offSet.ToString());
 
             //ToDo: Refactor- PlaceSegment is almost useless. 
@@ -172,7 +172,7 @@ namespace Scrap
 
             if (contactList.Count > 0)
             {//ToDo: join to each adjacet object
-                OnConstructSensorTriggered(selectedSegment.constructElement, contactList[0]);
+                OnSegmentReleasedInSensor(selectedSegment.constructElement, contactList[0]);
             }
             else 
             {

@@ -117,7 +117,7 @@ namespace Scrap.GameElements.Entities
         public void AddSegmentAtSensorPosition(Segment segment, Sensor sensor)
         {//Segment will point up until the user picks the orientation 
 
-            AddNewSegmentToConstruct(sensor.constructElement.segment, segment, Orientation.DirectionToPoint(sensor.GetOrientationRelativeToConstruct().Direction), Direction.Up);
+            AddNewSegmentToConstruct(sensor.constructElement.segment, segment, sensor.GetOffsetRelativeToConstruct(), Direction.Up);
             RecalculateAdjacentSegmentsAndActivateSensors();
         }
         public virtual void Draw(SpriteBatch batch)
@@ -131,24 +131,93 @@ namespace Scrap.GameElements.Entities
         {
             
             float rotation = Orientation.DirectionToRadians(direction);
-            //Debug.WriteLine("AddNewSegmentToConstruct recievingSegment:" + recievingSegment.constructElement.offSet.ToString());
-            //Debug.WriteLine("AddNewSegmentToConstruct newSegment offset: " + (recievingSegment.constructElement.offSet + relativeOffset).ToString());
-            //entities.Add(newSegment);
+
             Vector2 anchorOffset;
             Joint joint;
             
             newSegment.body.SetTransform(newSegment.Position, recievingSegment.Rotation + rotation);
-            Point offsetRelativeToOrientatedSegment =Orientation.DirectionToPoint(recievingSegment.constructElement.orientation.AddDirectionsAsClockwiseAngles((Direction)((((int)Orientation.PointToDirection(relativeOffset))+0)%360)));
+            Point offsetRelativeToOrientatedSegment = relativeOffset;//Orientation.DirectionToPoint(recievingSegment.constructElement.orientation.AddDirectionsAsClockwiseAngles((Direction)((((int)Orientation.PointToDirection(relativeOffset))+0)%360)));
             anchorOffset = new Vector2((offsetRelativeToOrientatedSegment).X * 1.2f, (offsetRelativeToOrientatedSegment).Y * 1.2f);
 
-            //Debug.WriteLine("AddNewSegmentToConstruct anchorOffset:" + anchorOffset.ToString());
-            //Debug.WriteLine("AddNewSegmentToConstruct new direction:" + Orientation.PointToDirection(relativeOffset).ToString());
-            if (!buildElements.ContainsKey(relativeOffset + recievingSegment.constructElement.offSet))
+            Debug.WriteLine("AddNewSegmentToConstruct() relative offset:" + relativeOffset.ToString());
+            Debug.WriteLine("AddNewSegmentToConstruct() relative anchorOffset:" + anchorOffset.ToString());
+            Debug.WriteLine("AddNewSegmentToConstruct() relative offsetRelativeToOrientatedSegment:" + offsetRelativeToOrientatedSegment.ToString());
+            Point newSegmentIndex = relativeOffset + recievingSegment.constructElement.offSet;
+            Debug.WriteLine("AddNewSegmentToConstruct() new index:" + newSegmentIndex.ToString());
+            if (!buildElements.ContainsKey(newSegmentIndex))
             {
-                joint = CreateJointBetweenAnchorsOnSegments(recievingSegment, newSegment, Orientation.PointToDirection(relativeOffset), anchorOffset);
-                newSegment.constructElement.AddToConstruct(this, relativeOffset + recievingSegment.constructElement.offSet, joint,recievingSegment.constructElement, direction);
-                recievingSegment.constructElement.branchJoints.Add(relativeOffset + recievingSegment.constructElement.offSet, joint);
-                buildElements.Add(recievingSegment.constructElement.offSet + relativeOffset, newSegment.constructElement);
+                //this is the problem line
+                //recieving element direction + offset Direction
+                Direction relativeDirectionofJoint = Orientation.PointToDirection(relativeOffset);
+                switch (recievingSegment.constructElement.orientation.Direction)
+                {
+                    case Direction.Up:
+                        break;
+                    case Direction.Right:
+                        switch (relativeDirectionofJoint)
+                        {
+                            case Direction.Up:
+                                relativeDirectionofJoint = Direction.Left;
+                                break;
+                            case Direction.Right:
+                                relativeDirectionofJoint = Direction.Up;
+                                break;
+                            case Direction.Down:
+                                relativeDirectionofJoint = Direction.Right;
+                                break;
+                            case Direction.Left:
+                                relativeDirectionofJoint = Direction.Down;
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    case Direction.Down:
+                        switch (relativeDirectionofJoint)
+	                    {
+                            case Direction.Up:
+                                relativeDirectionofJoint = Direction.Down;
+                                break;
+                            case Direction.Right:
+                                relativeDirectionofJoint = Direction.Left;
+                                break;
+                            case Direction.Down:
+                                relativeDirectionofJoint = Direction.Up;
+                                break;
+                            case Direction.Left:
+                                relativeDirectionofJoint = Direction.Right;
+                                break;
+                            default:
+                                break;
+	                    }
+                        break;
+                    case Direction.Left:
+                        switch (relativeDirectionofJoint)
+                        {
+                            case Direction.Up:
+                                relativeDirectionofJoint = Direction.Right;
+                                break;
+                            case Direction.Right:
+                                relativeDirectionofJoint = Direction.Down;
+                                break;
+                            case Direction.Down:
+                                relativeDirectionofJoint = Direction.Left;
+                                break;
+                            case Direction.Left:
+                                relativeDirectionofJoint = Direction.Up;
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                anchorOffset = Orientation.GetRelativePositionOfADirection(relativeDirectionofJoint);
+                joint = CreateJointBetweenAnchorsOnSegments(recievingSegment, newSegment, relativeDirectionofJoint, anchorOffset);
+                newSegment.constructElement.AddToConstruct(this, newSegmentIndex, joint, recievingSegment.constructElement, direction);
+                //recievingSegment.constructElement.branchJoints.Add(relativeOffset + recievingSegment.constructElement.offSet, joint);
+                buildElements.Add(newSegmentIndex, newSegment.constructElement);
                 newSegment.constructElement.EnableSensors();
                 recievingSegment.constructElement.construct = this;
             }

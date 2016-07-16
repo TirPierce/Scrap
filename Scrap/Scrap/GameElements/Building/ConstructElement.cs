@@ -31,7 +31,6 @@ namespace Scrap.GameElements.Entities
         public Joint rootJoint;
         public ConstructElement rootElement;
         
-        public Dictionary<Point,Joint> branchJoints;
         private List<GameButton> gameButtons = new List<GameButton>();
         public List<Point> adjacentElements = new List<Point>();
         List<Sensor> sensors = new List<Sensor>();
@@ -59,7 +58,6 @@ namespace Scrap.GameElements.Entities
         {
             this.segment = entity;
             this.game = game;
-            branchJoints = new Dictionary<Point,Joint>();
             GenerateGUIButtons();
             
         }
@@ -82,19 +80,13 @@ namespace Scrap.GameElements.Entities
             if (construct != null)
             {
                 
-                //foreach (Point branchElement in this.branchJoints.Keys)
-                //{
-                //    construct.buildElements[branchElement].RemoveFromConstruct();
-                //}
-                foreach (Point key in branchJoints.Keys)
+                foreach (Point key in construct.AdjacentElements(this.offSet))
                 {
-                    if (construct.buildElements.Keys.Contains(key))
+                    if (construct.buildElements.Keys.Contains(key)&& construct.buildElements[key].rootElement == this &&  key != rootElement.offSet)
                         construct.buildElements[key].RemoveFromConstruct();
                 }
-                this.branchJoints.Clear();
                 if (rootJoint != null)
                 {
-                    //rootElement.branchJoints.Remove(this.offSet);
                     game.world.RemoveJoint(rootJoint);
                     rootElement = null;
                 }

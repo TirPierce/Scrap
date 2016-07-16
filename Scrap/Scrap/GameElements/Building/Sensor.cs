@@ -27,9 +27,60 @@ namespace Scrap.GameElements.Building
         private Orientation orientation;
         public Sprite sprite;
 
-        public Orientation GetOrientationRelativeToConstruct()
+        public Point GetOffsetRelativeToConstruct()
         {
-            return new Orientation(orientation.AddDirectionsAsClockwiseAngles(constructElement.orientation.Direction));
+
+
+
+            if (constructElement.orientation.Direction == Direction.Down)
+            {
+                switch (orientation.Direction)
+                {
+                    case Direction.Up:
+                        return Orientation.DirectionToPoint(Direction.Down);
+                    case Direction.Right:
+                        return Orientation.DirectionToPoint(Direction.Left);
+                    case Direction.Down:
+                        return Orientation.DirectionToPoint(Direction.Up);
+                    case Direction.Left:
+                        return Orientation.DirectionToPoint(Direction.Right);
+                    default:
+                        return offSet;
+                }
+            }
+            else if (constructElement.orientation.Direction == Direction.Left)
+            {
+                switch (orientation.Direction)
+                {
+                    case Direction.Up:
+                        return Orientation.DirectionToPoint(Direction.Left);
+                    case Direction.Right:
+                        return Orientation.DirectionToPoint(Direction.Up);
+                    case Direction.Down:
+                        return Orientation.DirectionToPoint(Direction.Right);
+                    case Direction.Left:
+                        return Orientation.DirectionToPoint(Direction.Down);
+                    default:
+                        return offSet;
+                }
+            }
+            else if (constructElement.orientation.Direction == Direction.Right)
+            {
+                switch (orientation.Direction)
+                {
+                    case Direction.Up:
+                        return Orientation.DirectionToPoint(Direction.Right);
+                    case Direction.Right:
+                        return Orientation.DirectionToPoint(Direction.Down);
+                    case Direction.Down:
+                        return Orientation.DirectionToPoint(Direction.Left);
+                    case Direction.Left:
+                        return Orientation.DirectionToPoint(Direction.Up);
+                    default:
+                        return offSet;
+                }
+            }
+            else return offSet;
         }
         public Orientation GetOrientationRelativeToSegment()
         {
