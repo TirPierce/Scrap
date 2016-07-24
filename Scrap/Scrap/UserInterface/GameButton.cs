@@ -38,8 +38,8 @@ namespace Scrap.UserInterface
             {//ToDo: + MathHelper.PiOver2 is magic
                 batch.Draw(segment.sprite.Texture, Rotate(Orientation.DirectionToRadians(offsetDirection) + segment.body.Rotation + MathHelper.PiOver2 + MathHelper.Pi, 1.2f, segment.body.WorldCenter), null,
             Color.FromNonPremultiplied(150, 50, 150, 200), Orientation.DirectionToRadians(offsetDirection) + segment.body.Rotation,
-            new Vector2(segment.sprite.FrameWidth / 2f, segment.sprite.FrameHeight / 2f), .01f
-            * (100f / (float)segment.sprite.FrameWidth), SpriteEffects.None, 0);
+            new Vector2(segment.sprite.frameWidth / 2f, segment.sprite.frameHeight / 2f), .01f
+            * (100f / (float)segment.sprite.frameWidth), SpriteEffects.None, 0);
                 /*
                 batch.Draw(segment.sprite.Texture, segment.body.WorldCenter, null,
                     Color.FromNonPremultiplied(150, 50, 150, 200), segment.body.Rotation,

@@ -22,12 +22,15 @@ namespace Scrap
         public List<Segment> entityList = new List<Segment>();
         public List<Construct> constructList = new List<Construct>();
 
+        
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D background, foreground;
         DebugViewXNA debugView;
         Terrain terrain;
         ScrapBadger badger;
+        HUDConstruct hudConstruct;
         public PlayerController playerController;
         //Crate crate;replaced with Player
         //Player player; not need. crates added here are for the level
@@ -43,7 +46,8 @@ namespace Scrap
             FarseerPhysics.Settings.PositionIterations = 10;
             FarseerPhysics.Settings.VelocityIterations = 10;
             FarseerPhysics.Settings.MaxPolygonVertices = 1000;
-            
+
+           
             //XmlLoader loadLevel = new XmlLoader(this);
             // Just Checking! - Buggle
         }
@@ -84,9 +88,14 @@ namespace Scrap
             //XmlLoader loader = new XmlLoader();
             //loader.LoadLevel(ref entityList);
 
-
+            hudConstruct = new HUDConstruct(badger, this);
             terrain.LoadContent();
             terrain.CreateGround(world);
+
+
+
+
+
 
             //Init();
         }
@@ -108,7 +117,9 @@ namespace Scrap
         {
             
             playerController.Update();
-            if(!InputManager.GetManager().KeyState.IsKeyDown(Keys.Space)){
+            if (!InputManager.GetManager().KeyState.IsKeyDown(Keys.Space))
+            {
+                world.Step(1f / 33f);
             foreach (Construct item in constructList)
             {
                 item.Update(gameTime);
@@ -119,7 +130,7 @@ namespace Scrap
                 item.Update(gameTime);
             }
 
-            world.Step(1f / 33f);
+            
             }
 
             camera.Update(gameTime);
@@ -164,6 +175,7 @@ namespace Scrap
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, camera.Transformation);
             gui.Draw(spriteBatch);
+            
             foreach (Construct item in constructList)
             {
                 item.Draw(spriteBatch);
@@ -172,11 +184,11 @@ namespace Scrap
             {
                 item.Draw(spriteBatch);
             }
-
+            
             spriteBatch.End();
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, null);
-            
+            hudConstruct.Draw(spriteBatch);
             playerController.Draw(spriteBatch);
             
             spriteBatch.End();

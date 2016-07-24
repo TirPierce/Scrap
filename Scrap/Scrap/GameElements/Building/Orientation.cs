@@ -23,10 +23,7 @@ namespace Scrap.GameElements.Building
             return (Direction)newDirection;
         }
 
-        public static float ToRadians(Direction direction)
-        {
-            return DirectionToRadians(direction);
-        }
+
         public static float DirectionToRadians(Direction direction)
         {
             switch (direction)
@@ -67,7 +64,6 @@ namespace Scrap.GameElements.Building
             }
             return offset;
         }
-
         public static Point DirectionToPoint(Direction direction)
         {
             switch (direction)

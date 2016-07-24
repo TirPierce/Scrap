@@ -66,6 +66,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserInterface\GameButton.cs" />
+    <Compile Include="UserInterface\HUDConstruct.cs" />
     <Compile Include="UserInterface\UIButton.cs" />
     <Compile Include="UserInterface\GUI.cs" />
     <Compile Include="UserInterface\Menu.cs" />
@@ -82,6 +83,7 @@
     <Content Include="Content\background.png" />
     <Content Include="Content\crate.png" />
     <Content Include="Content\Down.png" />
+    <Content Include="Content\DriveWheel.png" />
     <Content Include="Content\Left.png" />
     <Content Include="Content\Linker.png" />
     <Content Include="Content\nearback.png">
@@ -121,6 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Content\Keys.spritefont" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Levels\" />

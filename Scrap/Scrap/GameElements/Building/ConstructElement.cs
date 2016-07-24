@@ -5,6 +5,7 @@ using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Scrap.GameElements.Building;
 using Scrap.GameElements.GameWorld;
 using Scrap.UserInterface;
@@ -27,7 +28,7 @@ namespace Scrap.GameElements.Entities
         public Construct construct;
         ScrapGame game;
         public Point offSet;
-
+        public Keys mappedKey;
         public Joint rootJoint;
         public ConstructElement rootElement;
         
@@ -61,8 +62,10 @@ namespace Scrap.GameElements.Entities
             GenerateGUIButtons();
             
         }
+
         public void AddToConstruct(Construct construct, Point offSet, Joint rootJoint,ConstructElement rootElement, Direction direction)
         {
+            mappedKey = Keys.A;
             orientation = direction;
             this.rootJoint = rootJoint;
             this.rootElement = rootElement;
@@ -175,16 +178,18 @@ namespace Scrap.GameElements.Entities
             }
         }
 
-        public virtual void Draw(SpriteBatch batch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             if (linker != null)
             {
-                linker.Draw(batch);
+                linker.Draw(spriteBatch);
             }
             foreach (Sensor sensor in sensors)
             {
-                sensor.Draw(batch);
+                sensor.Draw(spriteBatch);
             }
+            //spriteBatch.DrawString(font, mappedKey.ToString(), this.segment.Position, Color.Orange, 0, font.MeasureString(mappedKey.ToString()) * .5f, .0055f, SpriteEffects.None, 0);
+            //spriteBatch.DrawString(font, mappedKey.ToString(), this.segment.Position, Color.Purple, 0, font.MeasureString(mappedKey.ToString()) * .5f, .005f, SpriteEffects.None, .1f);
         }
         public bool Draggable() 
         {

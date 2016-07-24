@@ -19,7 +19,7 @@ namespace Scrap.GameElements.Entities
         public Crate(ScrapGame game)
             : base(game)
         {
-            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Crate"), 0, false, 1f);
+            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Crate"), 100,100, 1f);
             //texture = game.Content.Load<Texture2D>("Crate");
         }
         //Category
@@ -27,8 +27,8 @@ namespace Scrap.GameElements.Entities
         public Crate(ScrapGame game, Vector2 position)
             : base(game)
         {
-            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Crate"), 0, false, 1f);
-            body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 2f, this);
+            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Crate"), 100,100, 1f);
+            body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 10f, this);
             body.BodyType = BodyType.Dynamic;
             body.Position = position;
             body.Restitution = .1f;

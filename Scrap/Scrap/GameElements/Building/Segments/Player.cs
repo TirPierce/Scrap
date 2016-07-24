@@ -18,7 +18,7 @@ namespace Scrap.GameElements.Entities
         public Player(ScrapGame game)
             : base(game)
         {
-            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Player"), 0, false, 1f);
+            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Player"), 80,80, 1f);
             //texture = game.Content.Load<Texture2D>("Player");
         }
         //Category
@@ -26,7 +26,7 @@ namespace Scrap.GameElements.Entities
         public Player(ScrapGame game, Vector2 position)
             : base(game)
         {
-            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Player"), 0, false, 1f);
+            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Player"), 80,80, 1f);
             body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 2f, this);
             body.BodyType = BodyType.Dynamic;
             body.Position = position;

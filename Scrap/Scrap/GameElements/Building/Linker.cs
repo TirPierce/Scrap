@@ -31,7 +31,7 @@ namespace Scrap.GameElements.Building
         {
             this.joint = joint;
             this.game = game;
-            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Linker"), 0, false,.3f);
+            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Linker"),32, 32, .3f);
         }
         public virtual void Update()
         {

@@ -18,7 +18,7 @@ namespace Scrap.GameElements.Entities
         Crate torsoFront;
         Crate torsoFront2;
         Crate torsoFront3;
-        Wheel backWheel;
+        DriveWheel backWheel;
         Wheel frontWheel;
         Wheel frontWheel2;
         Wheel frontWheel3;
@@ -52,7 +52,7 @@ namespace Scrap.GameElements.Entities
             AddNewSegmentToConstruct(torsoMiddle, torsoBack, new Point(-1, 0), Direction.Up);
 
             //Wheels
-            backWheel = new Wheel(game, pos + new Vector2(-1.2f, 1.2f));
+            backWheel = new DriveWheel(game, pos + new Vector2(-1.2f, 1.2f));
             AddNewSegmentToConstruct(torsoBack, backWheel, new Point(0, 1), Direction.Up);
 
             frontWheel = new Wheel(game, pos + new Vector2(1.2f, 1.2f));
@@ -70,6 +70,13 @@ namespace Scrap.GameElements.Entities
 
             rocket2 = new Rocket(game, pos + new Vector2(0, -1.2f));
             AddNewSegmentToConstruct(torsoFront, rocket2, new Point(0, -1), Direction.Left);
+
+                        //ToDo:gameplay hack
+            this.game.playerController.leftTrigger.Add(rocket1.AnalogueInputCallback);
+            this.game.playerController.rightTrigger.Add(rocket2.AnalogueInputCallback);
+            this.game.playerController.leftTrigger.Add(backWheel.AnalogueInputCallback);
+            
+
 
             //init sensors
             foreach(var constructElement in this.buildElements)

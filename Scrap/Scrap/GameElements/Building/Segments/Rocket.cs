@@ -19,14 +19,15 @@ namespace Scrap.GameElements.Entities
         public Rocket(ScrapGame game)
             : base(game)
         {
-            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Rocket"), 0, false, 1f);
+            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Rocket"), 100,100, 1f);
         }
 
 
         public Rocket(ScrapGame game, Vector2 position)
             : base(game)
         {
-            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Rocket"), 0, false, 1f);
+            sprite = new Rendering.Sprite(game.Content.Load<Texture2D>("Rocket"), 100,100, 1f);
+            sprite.AddAnimation("fire", 1, 3, 1, true);
             body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 1f, (object)this);
             body.BodyType = BodyType.Dynamic;
             body.Position = position;
@@ -39,17 +40,27 @@ namespace Scrap.GameElements.Entities
             Direction[] validDirections = { Direction.Down, Direction.Right, Direction.Up, Direction.Left };
             return validDirections;
         }
-        public override void Update(GameTime gameTime)
+        public override void AnalogueInputCallback(float percentage)
         {
-            //ToDo:control hack
-            if (InputManager.GetManager().KeyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Up) && gameTime.TotalGameTime.Milliseconds % 60 > 50)
-            {//TODO: Extend Math or Vector2 to include rotation
+            if (percentage > 0)
+            {
+                percentage *= 50;
+
                 float cos = (float)Math.Cos(body.Rotation - MathHelper.PiOver2);
                 float sin = (float)Math.Sin(body.Rotation - MathHelper.PiOver2);
 
-                body.ApplyForce(new Vector2(cos, sin)*50f);
-                //body.ApplyForce(new Vector2(force * sin, -force * cos));
+                body.ApplyForce(new Vector2(cos, sin) * percentage);
+                sprite.SetCurrentAnimation("fire");
+
             }
+            else
+                sprite.SetCurrentAnimation("Default");
+
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            sprite.Update(gameTime);
         }
 
 

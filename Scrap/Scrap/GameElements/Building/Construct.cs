@@ -22,7 +22,6 @@ namespace Scrap.GameElements.Entities
     public abstract class Construct
     {
         protected List<Joint> joints;
-        //protected List<Segment> entities;
         private Segment keyObject;
         public Dictionary<Point, ConstructElement> buildElements;
 
@@ -35,16 +34,13 @@ namespace Scrap.GameElements.Entities
             set 
             {
                 keyObject = value;
-                //entities.Add(keyObject);
                 buildElements.Add(Point.Zero,keyObject.constructElement); 
-                
             }
         }
         public Construct(ScrapGame game)
         {
             this.game = game;
             joints = new List<Joint>();
-            //entities = new List<Segment>();
             buildElements = new Dictionary<Point,ConstructElement>();
             game.constructList.Add(this);
         }
@@ -53,7 +49,6 @@ namespace Scrap.GameElements.Entities
             foreach (var item in buildElements.Values)
             {
                 item.Update();
-                
             }
         }
         public void RecalculateAdjacentSegmentsAndActivateSensors()
@@ -62,17 +57,13 @@ namespace Scrap.GameElements.Entities
             {
                 item.EnableSensors();
             }
- 
         }
         public void SetSegmentDirection(Segment segment, Direction direction)
         {
-            //Debug.WriteLine("Construct.SetSegmentDirection Offset: " + segment.constructElement.offSet.ToString() + " Rotation: " + direction.ToString());
-
             var recievingSegment = this.buildElements[segment.constructElement.adjacentElements.First()].segment;
             var offset = segment.constructElement.offSet - recievingSegment.constructElement.offSet;
             this.FreeObject(segment);
             AddNewSegmentToConstruct(recievingSegment, segment, offset, direction);
-        
         }
         public bool ContainsFixture(Fixture a)
         {
@@ -87,7 +78,6 @@ namespace Scrap.GameElements.Entities
         }
         public List<Point> AdjacentElements(Point position)
         {
-            //Debug.WriteLine("Construct.AdjacentElements for position:" + position.ToString());
             List<Point> adjacentElements = new List<Point>();
             Point gridOffset = position + Orientation.DirectionToPoint(Direction.Up);
 
@@ -110,7 +100,6 @@ namespace Scrap.GameElements.Entities
             {
                 adjacentElements.Add(gridOffset);
             }
-            //Debug.WriteLine("Construct.AdjacentElements Adjacent count:" + adjacentElements.Count.ToString());
 
             return adjacentElements;
         }
@@ -129,14 +118,13 @@ namespace Scrap.GameElements.Entities
         }
         protected void AddNewSegmentToConstruct(Segment recievingSegment, Segment newSegment, Point relativeOffset, Direction direction)
         {
-            
             float rotation = Orientation.DirectionToRadians(direction);
 
             Vector2 anchorOffset;
             Joint joint;
             
             newSegment.body.SetTransform(newSegment.Position, recievingSegment.Rotation + rotation);
-            Point offsetRelativeToOrientatedSegment = relativeOffset;//Orientation.DirectionToPoint(recievingSegment.constructElement.orientation.AddDirectionsAsClockwiseAngles((Direction)((((int)Orientation.PointToDirection(relativeOffset))+0)%360)));
+            Point offsetRelativeToOrientatedSegment = relativeOffset;
             anchorOffset = new Vector2((offsetRelativeToOrientatedSegment).X * 1.2f, (offsetRelativeToOrientatedSegment).Y * 1.2f);
 
             Debug.WriteLine("AddNewSegmentToConstruct() relative offset:" + relativeOffset.ToString());
@@ -146,77 +134,12 @@ namespace Scrap.GameElements.Entities
             Debug.WriteLine("AddNewSegmentToConstruct() new index:" + newSegmentIndex.ToString());
             if (!buildElements.ContainsKey(newSegmentIndex))
             {
-                //this is the problem line
-                //recieving element direction + offset Direction
                 Direction relativeDirectionofJoint = Orientation.PointToDirection(relativeOffset);
-                switch (recievingSegment.constructElement.orientation)
-                {
-                    case Direction.Up:
-                        break;
-                    case Direction.Right:
-                        switch (relativeDirectionofJoint)
-                        {
-                            case Direction.Up:
-                                relativeDirectionofJoint = Direction.Left;
-                                break;
-                            case Direction.Right:
-                                relativeDirectionofJoint = Direction.Up;
-                                break;
-                            case Direction.Down:
-                                relativeDirectionofJoint = Direction.Right;
-                                break;
-                            case Direction.Left:
-                                relativeDirectionofJoint = Direction.Down;
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    case Direction.Down:
-                        switch (relativeDirectionofJoint)
-	                    {
-                            case Direction.Up:
-                                relativeDirectionofJoint = Direction.Down;
-                                break;
-                            case Direction.Right:
-                                relativeDirectionofJoint = Direction.Left;
-                                break;
-                            case Direction.Down:
-                                relativeDirectionofJoint = Direction.Up;
-                                break;
-                            case Direction.Left:
-                                relativeDirectionofJoint = Direction.Right;
-                                break;
-                            default:
-                                break;
-	                    }
-                        break;
-                    case Direction.Left:
-                        switch (relativeDirectionofJoint)
-                        {
-                            case Direction.Up:
-                                relativeDirectionofJoint = Direction.Right;
-                                break;
-                            case Direction.Right:
-                                relativeDirectionofJoint = Direction.Down;
-                                break;
-                            case Direction.Down:
-                                relativeDirectionofJoint = Direction.Left;
-                                break;
-                            case Direction.Left:
-                                relativeDirectionofJoint = Direction.Up;
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    default:
-                        break;
-                }
+                relativeDirectionofJoint = CombineDirections(recievingSegment, relativeDirectionofJoint);
                 anchorOffset = Orientation.GetRelativePositionOfADirection(relativeDirectionofJoint);
                 joint = CreateJointBetweenAnchorsOnSegments(recievingSegment, newSegment, relativeDirectionofJoint, anchorOffset);
                 newSegment.constructElement.AddToConstruct(this, newSegmentIndex, joint, recievingSegment.constructElement, direction);
-                //recievingSegment.constructElement.branchJoints.Add(relativeOffset + recievingSegment.constructElement.offSet, joint);
+                
                 buildElements.Add(newSegmentIndex, newSegment.constructElement);
                 newSegment.constructElement.EnableSensors();
                 recievingSegment.constructElement.construct = this;
@@ -225,6 +148,75 @@ namespace Scrap.GameElements.Entities
             {
                 Debug.WriteLine("AddNewSegmentToConstruct key exists: " + (relativeOffset + recievingSegment.constructElement.offSet).ToString());
             }
+        }
+
+        private static Direction CombineDirections(Segment recievingSegment, Direction relativeDirectionofJoint)
+        {
+            switch (recievingSegment.constructElement.orientation)
+            {
+                case Direction.Up:
+                    break;
+                case Direction.Right:
+                    switch (relativeDirectionofJoint)
+                    {
+                        case Direction.Up:
+                            relativeDirectionofJoint = Direction.Left;
+                            break;
+                        case Direction.Right:
+                            relativeDirectionofJoint = Direction.Up;
+                            break;
+                        case Direction.Down:
+                            relativeDirectionofJoint = Direction.Right;
+                            break;
+                        case Direction.Left:
+                            relativeDirectionofJoint = Direction.Down;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case Direction.Down:
+                    switch (relativeDirectionofJoint)
+                    {
+                        case Direction.Up:
+                            relativeDirectionofJoint = Direction.Down;
+                            break;
+                        case Direction.Right:
+                            relativeDirectionofJoint = Direction.Left;
+                            break;
+                        case Direction.Down:
+                            relativeDirectionofJoint = Direction.Up;
+                            break;
+                        case Direction.Left:
+                            relativeDirectionofJoint = Direction.Right;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case Direction.Left:
+                    switch (relativeDirectionofJoint)
+                    {
+                        case Direction.Up:
+                            relativeDirectionofJoint = Direction.Right;
+                            break;
+                        case Direction.Right:
+                            relativeDirectionofJoint = Direction.Down;
+                            break;
+                        case Direction.Down:
+                            relativeDirectionofJoint = Direction.Left;
+                            break;
+                        case Direction.Left:
+                            relativeDirectionofJoint = Direction.Up;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return relativeDirectionofJoint;
         }
         private Joint CreateJointBetweenAnchorsOnSegments(Segment entityA, Segment entityB, Direction direction, Vector2 anchorOffset)
         {
@@ -289,8 +281,7 @@ namespace Scrap.GameElements.Entities
             }
         }
         public void FreeObject(Segment entity)
-        {//ToDo: This function is rubbish. Rename and fix. Should remove an object from the construct. Might be dublicate. 
-            //Check how objct is fried when dragging away from construct
+        {
             entity.constructElement.RemoveFromConstruct();
         }
 

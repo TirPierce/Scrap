@@ -29,12 +29,27 @@ namespace Scrap
         Texture2D pointerClosed;
         Vector2 mouseWorld;
         Body courserVolume;
+
+        GamePadState gamePadState;
         //bool SegmentReleased = false;
         public Segment selectedSegment = null;
 
         List<Sensor> contactList = new List<Sensor>();
+
+        //Button callback lists
+        public List<Action<float>> leftTrigger;
+        public List<Action<float>> rightTrigger;
+
+        List<Action<bool>> aButton;
+        List<Action<bool>> bButton;
+        List<Action<bool>> xButton;
+        List<Action<bool>> yButton;
+
+
         public void LoadContent()
         {
+
+            
             pointer = game.Content.Load<Texture2D>("Pointer");
             pointerClosed = game.Content.Load<Texture2D>("PointerClosed");
             courserVolume = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 2f, this);
@@ -43,6 +58,13 @@ namespace Scrap
             courserVolume.CollidesWith = Category.Cat10;
             courserVolume.OnCollision += courserVolume_OnCollision;
             courserVolume.OnSeparation += courserVolume_OnSeparation;
+            leftTrigger = new List<Action<float>>();
+            rightTrigger = new List<Action<float>>();
+
+            aButton = new List<Action<bool>>();
+            bButton = new List<Action<bool>>();
+            xButton = new List<Action<bool>>();
+            yButton = new List<Action<bool>>();
 
         }
         
@@ -92,8 +114,20 @@ namespace Scrap
         }
         public void Update()
         {
+            gamePadState = GamePad.GetState(PlayerIndex.One);
+
             inputManager.Update();
 
+
+            leftTrigger.ForEach(o => o.Invoke(gamePadState.Triggers.Left));
+            rightTrigger.ForEach(o => o.Invoke(gamePadState.Triggers.Right));
+
+            //aButton = new List<Action<bool>>();
+            //bButton = new List<Action<bool>>();
+            //xButton = new List<Action<bool>>();
+            //yButton = new List<Action<bool>>();
+
+            
             if (inputManager.WasKeyReleased(Keys.Q)) game.camera.Rotate(-.005f);
             if (inputManager.WasKeyReleased(Keys.E)) game.camera.Rotate(+.005f);
             if (inputManager.WasKeyReleased(Keys.D)) game.camera.Position += new Vector2(1f, 0f);
@@ -169,7 +203,6 @@ namespace Scrap
         }
         protected void ReleaseSegment()
         {
-
             if (contactList.Count > 0)
             {//ToDo: join to each adjacet object
                 OnSegmentReleasedInSensor(selectedSegment.constructElement, contactList[0]);
@@ -179,8 +212,6 @@ namespace Scrap
                 selectedSegment.constructElement.Status = ElementStatus.Free;
                 selectedSegment = null;
             }
-
-            
         }
         public void PlaceSegment()
         {

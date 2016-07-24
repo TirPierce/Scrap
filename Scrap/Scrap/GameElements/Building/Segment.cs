@@ -43,9 +43,17 @@ namespace Scrap.GameElements.Entities
         }
         public virtual void Update(GameTime gameTime)
         {
-   
+            
         }
-        
+
+        public virtual void AnalogueInputCallback(float percentage)
+        {
+
+        }
+        public virtual void DigitalInputCallback(bool on)
+        {
+            
+        }
         public bool IsPointContained(ref Vector2 point)
         {
             Transform t = new Transform();
