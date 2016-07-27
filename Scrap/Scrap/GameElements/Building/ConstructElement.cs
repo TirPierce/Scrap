@@ -80,7 +80,7 @@ namespace Scrap.GameElements.Entities
         public void RemoveFromConstruct()
         {
             
-            if (construct != null)
+            if (construct != null && segment.GetType() != typeof(Player))
             {
                 
                 foreach (Point key in construct.AdjacentElements(this.offSet))

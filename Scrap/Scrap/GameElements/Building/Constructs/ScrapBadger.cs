@@ -72,9 +72,9 @@ namespace Scrap.GameElements.Entities
             AddNewSegmentToConstruct(torsoFront, rocket2, new Point(0, -1), Direction.Left);
 
                         //ToDo:gameplay hack
-            this.game.playerController.leftTrigger.Add(rocket1.AnalogueInputCallback);
-            this.game.playerController.rightTrigger.Add(rocket2.AnalogueInputCallback);
-            this.game.playerController.leftTrigger.Add(backWheel.AnalogueInputCallback);
+            this.game.playerController.leftTrigger.Add(rocket1.constructElement.offSet,rocket1.AnalogueInputCallback);
+            this.game.playerController.rightTrigger.Add(rocket2.constructElement.offSet, rocket2.AnalogueInputCallback);
+            this.game.playerController.leftTrigger.Add(backWheel.constructElement.offSet, backWheel.AnalogueInputCallback);
             
 
 

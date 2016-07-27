@@ -36,7 +36,7 @@ namespace Scrap.UserInterface
         {
             if (status == UIStatus.Active)
             {//ToDo: + MathHelper.PiOver2 is magic
-                batch.Draw(segment.sprite.Texture, Rotate(Orientation.DirectionToRadians(offsetDirection) + segment.body.Rotation + MathHelper.PiOver2 + MathHelper.Pi, 1.2f, segment.body.WorldCenter), null,
+                batch.Draw(segment.sprite.Texture, Rotate(Orientation.DirectionToRadians(offsetDirection) + segment.body.Rotation + MathHelper.PiOver2 + MathHelper.Pi, 1.2f, segment.body.WorldCenter), new Rectangle(0,0,100,100),
             Color.FromNonPremultiplied(150, 50, 150, 200), Orientation.DirectionToRadians(offsetDirection) + segment.body.Rotation,
             new Vector2(segment.sprite.frameWidth / 2f, segment.sprite.frameHeight / 2f), .01f
             * (100f / (float)segment.sprite.frameWidth), SpriteEffects.None, 0);

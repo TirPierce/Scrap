@@ -37,8 +37,8 @@ namespace Scrap
         List<Sensor> contactList = new List<Sensor>();
 
         //Button callback lists
-        public List<Action<float>> leftTrigger;
-        public List<Action<float>> rightTrigger;
+        public Dictionary<Point,Action<float>> leftTrigger;
+        public Dictionary<Point, Action<float>> rightTrigger;
 
         List<Action<bool>> aButton;
         List<Action<bool>> bButton;
@@ -58,8 +58,8 @@ namespace Scrap
             courserVolume.CollidesWith = Category.Cat10;
             courserVolume.OnCollision += courserVolume_OnCollision;
             courserVolume.OnSeparation += courserVolume_OnSeparation;
-            leftTrigger = new List<Action<float>>();
-            rightTrigger = new List<Action<float>>();
+            leftTrigger = new Dictionary<Point,Action<float>>();
+            rightTrigger = new Dictionary<Point,Action<float>>();
 
             aButton = new List<Action<bool>>();
             bButton = new List<Action<bool>>();
@@ -119,8 +119,8 @@ namespace Scrap
             inputManager.Update();
 
 
-            leftTrigger.ForEach(o => o.Invoke(gamePadState.Triggers.Left));
-            rightTrigger.ForEach(o => o.Invoke(gamePadState.Triggers.Right));
+            leftTrigger.Values.ToList().ForEach(o => o.Invoke(gamePadState.Triggers.Left));
+            rightTrigger.Values.ToList().ForEach(o => o.Invoke(gamePadState.Triggers.Right));
 
             //aButton = new List<Action<bool>>();
             //bButton = new List<Action<bool>>();

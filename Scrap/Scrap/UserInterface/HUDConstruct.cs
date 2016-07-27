@@ -17,8 +17,10 @@ namespace Scrap.UserInterface
         Texture2D texture;
         Construct construct;
         private SpriteFont font;
-        public HUDConstruct(Construct construct, Game game)
+        ScrapGame game;
+        public HUDConstruct(Construct construct, ScrapGame game)
         {
+            this.game = game;
             this.construct = construct;
             texture = game.Content.Load<Texture2D>("Player");
             font = game.Content.Load<SpriteFont>("Keys");
@@ -37,7 +39,12 @@ namespace Scrap.UserInterface
             foreach (Point index in construct.buildElements.Keys)
             {
                 currentSegment= construct.buildElements[index].segment;
-                spriteBatch.DrawString(font, currentSegment.constructElement.mappedKey.ToString(), new Vector2((index.X + xMin * -1) * 25 + 15, (index.Y + yMin * -1) * 25 + 15), Color.Cyan, 0, font.MeasureString(currentSegment.constructElement.mappedKey.ToString()) * .5f, .2f, SpriteEffects.None, 0);
+                String inputText = "";
+                if (this.game.playerController.leftTrigger.ContainsKey(index))
+                    inputText = "L";
+                else if (this.game.playerController.rightTrigger.ContainsKey(index))
+                    inputText = "R";
+                spriteBatch.DrawString(font, inputText, new Vector2((index.X + xMin * -1) * 25 + 15, (index.Y + yMin * -1) * 25 + 15), Color.Red, 0, font.MeasureString(currentSegment.constructElement.mappedKey.ToString()) * .5f, .3f, SpriteEffects.None, 0);
             
                 //spriteBatch.Draw(texture, new Rectangle((index.X + xMin * -1) * 25, (index.Y + yMin * -1) * 25, 20, 20), null, Color.White);
                 //spriteBatch.Draw(construct.buildElements[index].segment.sprite.Texture, new Rectangle((index.X + xMin * -1) * 25, (index.Y + yMin * -1) * 25, 20, 20), null, Color.White);

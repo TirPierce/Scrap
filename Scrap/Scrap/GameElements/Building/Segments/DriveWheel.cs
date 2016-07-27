@@ -84,8 +84,11 @@ namespace Scrap.GameElements.Entities
         }
         public override void AnalogueInputCallback(float percentage)
         {
-            percentage *= 10;
-            wheel.ApplyTorque(percentage);
+            if (constructElement.construct != null)
+            {
+                percentage *= 10;
+                wheel.ApplyTorque(percentage);
+            }
         }
 
     }

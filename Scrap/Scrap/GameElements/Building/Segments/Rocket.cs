@@ -41,21 +41,23 @@ namespace Scrap.GameElements.Entities
             return validDirections;
         }
         public override void AnalogueInputCallback(float percentage)
-        {
-            if (percentage > 0)
+        {//ToDo: this is a bit hacky
+            if (constructElement.construct != null)
             {
-                percentage *= 50;
+                if (percentage > 0)
+                {
+                    percentage *= 50;
 
-                float cos = (float)Math.Cos(body.Rotation - MathHelper.PiOver2);
-                float sin = (float)Math.Sin(body.Rotation - MathHelper.PiOver2);
+                    float cos = (float)Math.Cos(body.Rotation - MathHelper.PiOver2);
+                    float sin = (float)Math.Sin(body.Rotation - MathHelper.PiOver2);
 
-                body.ApplyForce(new Vector2(cos, sin) * percentage);
-                sprite.SetCurrentAnimation("fire");
+                    body.ApplyForce(new Vector2(cos, sin) * percentage);
+                    sprite.SetCurrentAnimation("fire");
 
+                }
+                else
+                    sprite.SetCurrentAnimation("Default");
             }
-            else
-                sprite.SetCurrentAnimation("Default");
-
         }
 
         public override void Update(GameTime gameTime)

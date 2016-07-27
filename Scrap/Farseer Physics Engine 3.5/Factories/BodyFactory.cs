@@ -71,7 +71,7 @@ namespace FarseerPhysics.Factories
 
             Vertices rectangleVertices = PolygonTools.CreateRectangle(width / 2, height / 2);
             PolygonShape rectangleShape = new PolygonShape(rectangleVertices, density);
-            newBody.CreateFixture(rectangleShape);
+            newBody.CreateFixture(rectangleShape,userData);
 
             return newBody;
         }
