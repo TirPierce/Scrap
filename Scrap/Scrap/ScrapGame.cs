@@ -21,7 +21,7 @@ namespace Scrap
         public GUI gui;
         public List<Segment> entityList = new List<Segment>();
         public List<Construct> constructList = new List<Construct>();
-
+        public bool buildMode = false;
         
 
         GraphicsDeviceManager graphics;
@@ -31,6 +31,7 @@ namespace Scrap
         Terrain terrain;
         ScrapBadger badger;
         HUDConstruct hudConstruct;
+        HUDButtonMapping hudButtonMapping;
         public PlayerController playerController;
         //Crate crate;replaced with Player
         //Player player; not need. crates added here are for the level
@@ -89,6 +90,7 @@ namespace Scrap
             //loader.LoadLevel(ref entityList);
 
             hudConstruct = new HUDConstruct(badger, this);
+            hudButtonMapping = new HUDButtonMapping(badger, this);
             terrain.LoadContent();
             terrain.CreateGround(world);
 
@@ -117,20 +119,18 @@ namespace Scrap
         {
             
             playerController.Update();
-            if (!InputManager.GetManager().KeyState.IsKeyDown(Keys.Space))
+            if (!InputManager.GetManager().KeyState.IsKeyDown(Keys.Space) && !buildMode)
             {
                 world.Step(1f / 33f);
-            foreach (Construct item in constructList)
-            {
-                item.Update(gameTime);
-            }
+                foreach (Construct item in constructList)
+                {
+                    item.Update(gameTime);
+                }
             
-            foreach (Segment item in entityList)
-            {
-                item.Update(gameTime);
-            }
-
-            
+                foreach (Segment item in entityList)
+                {
+                    item.Update(gameTime);
+                }
             }
 
             camera.Update(gameTime);
@@ -188,6 +188,7 @@ namespace Scrap
             spriteBatch.End();
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, null);
+            hudButtonMapping.Draw(spriteBatch);
             hudConstruct.Draw(spriteBatch);
             playerController.Draw(spriteBatch);
             

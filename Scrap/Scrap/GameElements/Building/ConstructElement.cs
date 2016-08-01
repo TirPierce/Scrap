@@ -128,6 +128,7 @@ namespace Scrap.GameElements.Entities
             //Debug.WriteLine("PlaceSegment():" + direction.ToString());
             orientation = direction;
             construct.SetSegmentDirection(segment, direction);
+            this.game.buildMode = false;
             SetStatus(ElementStatus.Attached);
         }
         public void EnableSensors()

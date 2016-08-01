@@ -66,6 +66,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserInterface\GameButton.cs" />
+    <Compile Include="UserInterface\HUDButtonMapping.cs" />
     <Compile Include="UserInterface\HUDConstruct.cs" />
     <Compile Include="UserInterface\UIButton.cs" />
     <Compile Include="UserInterface\GUI.cs" />
@@ -81,9 +82,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\background.png" />
+    <Content Include="Content\Buttons\ButtonA.png" />
+    <Content Include="Content\Buttons\ButtonB.png" />
+    <Content Include="Content\Buttons\ButtonX.png" />
+    <Content Include="Content\Buttons\ButtonY.png" />
     <Content Include="Content\crate.png" />
     <Content Include="Content\Down.png" />
     <Content Include="Content\DriveWheel.png" />
+    <Content Include="Content\HUDBackground.png" />
     <Content Include="Content\Left.png" />
     <Content Include="Content\Linker.png" />
     <Content Include="Content\nearback.png">
@@ -98,6 +104,10 @@
     <Content Include="Content\rocket.png" />
     <Content Include="Content\sky.png" />
     <Content Include="Content\soil.png" />
+    <Content Include="Content\Buttons\StickLeft.png" />
+    <Content Include="Content\Buttons\StickRight.png" />
+    <Content Include="Content\Buttons\TriggerLeft.png" />
+    <Content Include="Content\Buttons\TriggerRight.png" />
     <Content Include="Content\Up.png" />
     <Content Include="Content\wheel.png" />
     <Content Include="Icon.ico" />

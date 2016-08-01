@@ -101,9 +101,10 @@ namespace Scrap
 
             //ToDo: Refactor- PlaceSegment is almost useless. 
             this.selectedSegment.body.Rotation = sensor.body.Rotation;
-            this.selectedSegment.body.Position = sensor.body.Position;
+            this.selectedSegment.body.Position = sensor.constructElement.segment.Position - (sensor.constructElement.segment.Position -sensor.body.Position)*2;
             this.selectedSegment.body.LinearVelocity = sensor.body.LinearVelocity;
 
+            this.game.buildMode = true;
             sensor.constructElement.construct.AddSegmentAtSensorPosition(selectedSegment, sensor);
             PlaceSegment();
         }
@@ -215,6 +216,7 @@ namespace Scrap
         }
         public void PlaceSegment()
         {
+            
             selectedSegment.constructElement.Status = ElementStatus.Locked;
             selectedSegment = null;
         }
