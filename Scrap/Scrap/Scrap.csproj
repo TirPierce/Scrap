@@ -43,10 +43,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="GameElements\Building\BoolTile.cs" />
+    <Compile Include="GameElements\Building\BehaviourTile.cs" />
     <Compile Include="GameElements\Building\Construct.cs" />
     <Compile Include="GameElements\Building\ConstructElement.cs" />
     <Compile Include="GameElements\Building\Linker.cs" />
     <Compile Include="GameElements\Building\Orientation.cs" />
+    <Compile Include="GameElements\Building\AnalogueTile.cs" />
     <Compile Include="GameElements\Building\Segments\Player.cs" />
     <Compile Include="GameElements\Building\Segments\Crate.cs" />
     <Compile Include="GameElements\Building\Segments\DriveWheel.cs" />
@@ -67,7 +70,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserInterface\GameButton.cs" />
     <Compile Include="UserInterface\HUDButtonMapping.cs" />
-    <Compile Include="UserInterface\HUDConstruct.cs" />
+    <Compile Include="UserInterface\ConstructBuilder.cs" />
     <Compile Include="UserInterface\UIButton.cs" />
     <Compile Include="UserInterface\GUI.cs" />
     <Compile Include="UserInterface\Menu.cs" />

@@ -12,13 +12,14 @@ using System.Threading.Tasks;
 
 namespace Scrap.UserInterface
 {
-    class HUDConstruct
+    class ConstructBuilder
     {
+
         Texture2D texture;
         Construct construct;
         private SpriteFont font;
         ScrapGame game;
-        public HUDConstruct(Construct construct, ScrapGame game)
+        public ConstructBuilder(Construct construct, ScrapGame game)
         {
             this.game = game;
             this.construct = construct;
@@ -28,7 +29,27 @@ namespace Scrap.UserInterface
         public void Update()
         {
 
-            
+            if (game.buildMode)
+            {
+                int maxX = construct.buildElements.Keys.Max(point => point.X);
+                int maxY = construct.buildElements.Keys.Max(point => point.Y);
+                int minX = construct.buildElements.Keys.Min(point => point.X);
+                int minY = construct.buildElements.Keys.Min(point => point.Y);
+
+                if (InputManager.GetManager().WasKeyPressed(Keys.Left))
+                {
+                }
+                if (InputManager.GetManager().WasKeyPressed(Keys.Right))
+                {
+                }
+                if (InputManager.GetManager().WasKeyPressed(Keys.Up))
+                {
+                }
+                if (InputManager.GetManager().WasKeyPressed(Keys.Down))
+                {
+                }
+            }
+
         }
         public void Draw(SpriteBatch spriteBatch)
         {

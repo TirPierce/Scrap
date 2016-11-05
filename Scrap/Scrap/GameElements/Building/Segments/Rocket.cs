@@ -33,15 +33,22 @@ namespace Scrap.GameElements.Entities
             body.Position = position;
             body.Restitution = .1f;
             body.Friction = .9f;
-            
+
+            behaviourList.Add(new AnalogueTile(Thrust, game.Content.Load<Texture2D>("Thrust")));
+            behaviourList.Add(new AnalogueTile(Thrust, game.Content.Load<Texture2D>("Rotate")));
+
         }
         public override Direction[] JointDirections()
         {
             Direction[] validDirections = { Direction.Down, Direction.Right, Direction.Up, Direction.Left };
             return validDirections;
         }
-        public override void AnalogueInputCallback(float percentage)
-        {//ToDo: this is a bit hacky
+        public void Rotate(float input)
+        {
+            
+        }
+        public void Thrust(float percentage)
+        {
             if (constructElement.construct != null)
             {
                 if (percentage > 0)
@@ -59,6 +66,7 @@ namespace Scrap.GameElements.Entities
                     sprite.SetCurrentAnimation("Default");
             }
         }
+
 
         public override void Update(GameTime gameTime)
         {

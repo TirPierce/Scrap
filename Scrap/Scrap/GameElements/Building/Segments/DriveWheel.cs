@@ -38,8 +38,8 @@ namespace Scrap.GameElements.Entities
             body.Friction = .9f;
 
             bodyJoint = JointFactory.CreateRevoluteJoint(game.world, body, wheel, new Vector2(0, 0), new Vector2(0, 0));
-            
 
+            behaviourList.Add(new AnalogueTile(Drive, game.Content.Load<Texture2D>("Rotate")));
         }
         public override Direction[] JointDirections()
         {
@@ -82,7 +82,7 @@ namespace Scrap.GameElements.Entities
             //}
             sprite.Update(gameTime);
         }
-        public override void AnalogueInputCallback(float percentage)
+        public void Drive(float percentage)
         {
             if (constructElement.construct != null)
             {

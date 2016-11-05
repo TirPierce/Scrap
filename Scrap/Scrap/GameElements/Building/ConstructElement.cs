@@ -130,6 +130,8 @@ namespace Scrap.GameElements.Entities
             construct.SetSegmentDirection(segment, direction);
             this.game.buildMode = false;
             SetStatus(ElementStatus.Attached);
+            //this.game.hudButtonMapping.AddSegment(this.segment);
+            //ToDo: set draggable buttons
         }
         public void EnableSensors()
         {

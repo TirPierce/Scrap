@@ -105,6 +105,7 @@ namespace Scrap
             this.selectedSegment.body.LinearVelocity = sensor.body.LinearVelocity;
 
             this.game.buildMode = true;
+            this.game.hudButtonMapping.AddSegment(selectedSegment);
             sensor.constructElement.construct.AddSegmentAtSensorPosition(selectedSegment, sensor);
             PlaceSegment();
         }
@@ -128,7 +129,7 @@ namespace Scrap
             //xButton = new List<Action<bool>>();
             //yButton = new List<Action<bool>>();
 
-            
+
             if (inputManager.WasKeyReleased(Keys.Q)) game.camera.Rotate(-.005f);
             if (inputManager.WasKeyReleased(Keys.E)) game.camera.Rotate(+.005f);
             if (inputManager.WasKeyReleased(Keys.D)) game.camera.Position += new Vector2(1f, 0f);
@@ -136,6 +137,11 @@ namespace Scrap
             if (inputManager.WasKeyReleased(Keys.W)) game.camera.Position += new Vector2(0f, -1f);
             if (inputManager.WasKeyReleased(Keys.S)) game.camera.Position += new Vector2(0f, 1f);
             if (inputManager.WasKeyReleased(Keys.Space)) game.camera.Position = new Vector2(0f, 0f);
+
+            if (InputManager.GetManager().WasKeyPressed(Keys.Space))
+            {
+                this.game.buildMode = !this.game.buildMode;
+            }
 
             game.camera.Zoom(inputManager.ScroleWheelDelta() * .01f);//ToDo: Camera Controls need to be changed
             mouseWorld = (game.camera.MousePick(inputManager.MouseState.Position));

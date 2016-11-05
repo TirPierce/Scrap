@@ -49,9 +49,13 @@ namespace Scrap
             curMouseState = Mouse.GetState();
             
         }
+        public bool WasKeyPressed(Keys key)
+        {
+            return (curKeyState.IsKeyDown(key) && prevKeyState.IsKeyUp(key));
+        }
         public bool WasKeyReleased(Keys key)
         {
-            return (prevKeyState.IsKeyDown(key) && curKeyState.IsKeyDown(key));
+            return (prevKeyState.IsKeyDown(key) && curKeyState.IsKeyUp(key));
         }
         public int ScroleWheelDelta()
         {

@@ -10,6 +10,7 @@ using Scrap.GameElements.Building;
 using Scrap.Rendering;
 using Scrap.UserInterface;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
@@ -20,7 +21,9 @@ namespace Scrap.GameElements.Entities
         public Sprite sprite;
         protected string objectType;
         protected ScrapGame game;
-        
+        //ToDo:add list of actions with sprits and methods and pull this list to UI when in build mode
+
+        public ArrayList behaviourList;
         public Body body;
         public ConstructElement constructElement;
 
@@ -37,6 +40,7 @@ namespace Scrap.GameElements.Entities
         public Segment(ScrapGame game)
         {
             this.game = game;
+            behaviourList = new ArrayList();
             game.entityList.Add(this);
             constructElement = new ConstructElement(game, this);
             
@@ -46,14 +50,6 @@ namespace Scrap.GameElements.Entities
             
         }
 
-        public virtual void AnalogueInputCallback(float percentage)
-        {
-
-        }
-        public virtual void DigitalInputCallback(bool on)
-        {
-            
-        }
         public bool IsPointContained(ref Vector2 point)
         {
             Transform t = new Transform();

@@ -84,7 +84,7 @@ namespace Scrap.GameElements.GameWorld
             sourceVertices[5] = new Vector2(250f, 20f);
             sourceVertices[6] = new Vector2(420f, 30f);
             sourceVertices[7] = new Vector2(420f, 60f);
-            sourceVertices[8] = new Vector2(200f, 70f);
+            sourceVertices[8] = new Vector2(200f, 60f);
         }
 
         private void TriangulateVerts()

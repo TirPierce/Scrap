@@ -30,10 +30,10 @@ namespace Scrap
         DebugViewXNA debugView;
         Terrain terrain;
         ScrapBadger badger;
-        HUDConstruct hudConstruct;
-        HUDButtonMapping hudButtonMapping;
+        ConstructBuilder hudConstruct;
+        public HUDButtonMapping hudButtonMapping;
         public PlayerController playerController;
-        //Crate crate;replaced with Player
+        Crate crate;
         //Player player; not need. crates added here are for the level
         public ScrapGame()
             : base()
@@ -75,7 +75,7 @@ namespace Scrap
 
             playerController.LoadContent();
             badger = new ScrapBadger(this, new Vector2(375, 55));
-
+            crate = new Crate(this, new Vector2(365, 55));
             badger.Rotate(20f * 0.0174532925f);
             
             //Objects in the world. level 1
@@ -89,7 +89,7 @@ namespace Scrap
             //XmlLoader loader = new XmlLoader();
             //loader.LoadLevel(ref entityList);
 
-            hudConstruct = new HUDConstruct(badger, this);
+            hudConstruct = new ConstructBuilder(badger, this);
             hudButtonMapping = new HUDButtonMapping(badger, this);
             terrain.LoadContent();
             terrain.CreateGround(world);
@@ -119,7 +119,9 @@ namespace Scrap
         {
             
             playerController.Update();
-            if (!InputManager.GetManager().KeyState.IsKeyDown(Keys.Space) && !buildMode)
+            hudButtonMapping.Update();
+            hudConstruct.Update();
+            if (!buildMode)
             {
                 world.Step(1f / 33f);
                 foreach (Construct item in constructList)
