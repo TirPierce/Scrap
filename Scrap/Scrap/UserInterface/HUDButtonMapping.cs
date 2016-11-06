@@ -119,13 +119,15 @@ namespace Scrap.UserInterface
         }
         public void RemoveSegment(Segment segment)
         {
-            foreach (HUDDraggingTile tile in draggingTiles)
+            foreach (HUDDraggingTile tile in draggingTiles.Reverse<HUDDraggingTile>())
             {
                 if (tile.segment == segment)
                 {
                     draggingTiles.Remove(tile);
-                    tile.recievingTile.actions.Remove(tile.behaviour);
+                    if(tile.recievingTile != null)
+                        tile.recievingTile.actions.Remove(tile.behaviour);
                 }
+
             }
             //ToDo: remove action from tile
             

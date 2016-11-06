@@ -218,7 +218,10 @@ namespace Scrap
             else 
             {
                 selectedSegment.constructElement.Status = ElementStatus.Free;
+                this.game.hudButtonMapping.RemoveSegment(selectedSegment);
                 selectedSegment = null;
+                
+
             }
         }
         public void PlaceSegment()
