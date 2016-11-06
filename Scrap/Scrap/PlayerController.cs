@@ -120,9 +120,10 @@ namespace Scrap
 
             inputManager.Update();
 
-
-            leftTrigger.Values.ToList().ForEach(o => o.Invoke(gamePadState.Triggers.Left));
-            rightTrigger.Values.ToList().ForEach(o => o.Invoke(gamePadState.Triggers.Right));
+            this.game.hudButtonMapping.TriggerInput("TriggerLeft", gamePadState.Triggers.Left);
+            this.game.hudButtonMapping.TriggerInput("TriggerRight", gamePadState.Triggers.Right);
+            //leftTrigger.Values.ToList().ForEach(o => o.Invoke(gamePadState.Triggers.Left));
+            //rightTrigger.Values.ToList().ForEach(o => o.Invoke(gamePadState.Triggers.Right));
 
             //aButton = new List<Action<bool>>();
             //bButton = new List<Action<bool>>();

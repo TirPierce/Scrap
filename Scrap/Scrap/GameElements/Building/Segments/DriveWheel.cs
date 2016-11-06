@@ -39,7 +39,8 @@ namespace Scrap.GameElements.Entities
 
             bodyJoint = JointFactory.CreateRevoluteJoint(game.world, body, wheel, new Vector2(0, 0), new Vector2(0, 0));
 
-            behaviourList.Add(new AnalogueTile(Drive, game.Content.Load<Texture2D>("Rotate")));
+            behaviourList.Add(new AnalogueTile(DriveClockwise, game.Content.Load<Texture2D>("Rotate")));
+            behaviourList.Add(new AnalogueTile(DriveAnticlockwise, game.Content.Load<Texture2D>("Rotate")));
         }
         public override Direction[] JointDirections()
         {
@@ -82,11 +83,19 @@ namespace Scrap.GameElements.Entities
             //}
             sprite.Update(gameTime);
         }
-        public void Drive(float percentage)
+        public void DriveClockwise(float percentage)
         {
             if (constructElement.construct != null)
             {
                 percentage *= 10;
+                wheel.ApplyTorque(percentage);
+            }
+        }
+        public void DriveAnticlockwise(float percentage)
+        {
+            if (constructElement.construct != null)
+            {
+                percentage *= -10;
                 wheel.ApplyTorque(percentage);
             }
         }

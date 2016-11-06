@@ -22,7 +22,7 @@ namespace Scrap.GameElements.Entities
     public abstract class Construct
     {
         protected List<Joint> joints;
-        private Segment keyObject;
+        protected Segment keyObject;
         public Dictionary<Point, ConstructElement> buildElements;
 
         protected ScrapGame game;
@@ -43,6 +43,7 @@ namespace Scrap.GameElements.Entities
             joints = new List<Joint>();
             buildElements = new Dictionary<Point,ConstructElement>();
             game.constructList.Add(this);
+
         }
         public virtual void Update(GameTime gameTime)
         {
@@ -50,6 +51,7 @@ namespace Scrap.GameElements.Entities
             {
                 item.Update();
             }
+
         }
         public void RecalculateAdjacentSegmentsAndActivateSensors()
         {

@@ -11,8 +11,9 @@ using System.Threading.Tasks;
 namespace Scrap.GameElements.Entities
 {
     [Serializable]
-    class ScrapBadger : Construct
+    class PlayerConstruct:Construct
     {
+        private Body attachmentArea;
         //load Level objects
         Player torsoMiddle;
 
@@ -30,7 +31,7 @@ namespace Scrap.GameElements.Entities
         Rocket rocket2;
         Nozzle face;
 
-        public ScrapBadger(ScrapGame game, Vector2 pos):base(game)
+        public PlayerConstruct(ScrapGame game, Vector2 pos):base(game)
         {
             //Define joins, Define Join side, Define joined srap direction//
 
@@ -92,10 +93,17 @@ namespace Scrap.GameElements.Entities
 
             game.camera.Follow(torsoMiddle, game.camera.Magnification);
 
+            attachmentArea = BodyFactory.CreateCircle(game.world, 4f, 1f, (object)this);
+            attachmentArea.IsSensor = true;
+
         }
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+            if (keyObject != null)
+            {
+                attachmentArea.SetTransform(keyObject.body.Position, 0);
+            }
         }
     }
 }

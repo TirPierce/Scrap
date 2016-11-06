@@ -29,7 +29,7 @@ namespace Scrap
         Texture2D background, foreground;
         DebugViewXNA debugView;
         Terrain terrain;
-        ScrapBadger badger;
+        PlayerConstruct playerConstruct;
         ConstructBuilder hudConstruct;
         public HUDButtonMapping hudButtonMapping;
         public PlayerController playerController;
@@ -74,9 +74,9 @@ namespace Scrap
             debugView.LoadContent(GraphicsDevice, Content);
 
             playerController.LoadContent();
-            badger = new ScrapBadger(this, new Vector2(375, 55));
+            playerConstruct = new PlayerConstruct(this, new Vector2(375, 55));
             crate = new Crate(this, new Vector2(365, 55));
-            badger.Rotate(20f * 0.0174532925f);
+            playerConstruct.Rotate(20f * 0.0174532925f);
             
             //Objects in the world. level 1
            // var rocket1 = new Rocket(this, new Vector2(380, 55));
@@ -89,8 +89,8 @@ namespace Scrap
             //XmlLoader loader = new XmlLoader();
             //loader.LoadLevel(ref entityList);
 
-            hudConstruct = new ConstructBuilder(badger, this);
-            hudButtonMapping = new HUDButtonMapping(badger, this);
+            hudConstruct = new ConstructBuilder(playerConstruct, this);
+            hudButtonMapping = new HUDButtonMapping(playerConstruct, this);
             terrain.LoadContent();
             terrain.CreateGround(world);
 
@@ -169,9 +169,9 @@ namespace Scrap
             //Todo: Idealy pick a Foregrounds Image that has a good Y-Axis height and determine the highest & lowest points of each level in order to make it look good 
             // Background does not scroll, Foreground only scrolls on the X-Axis
             float paralaxBackgroundMultiplier = 1f;
-            spriteBatch.Draw(background, -(badger.Position * paralaxBackgroundMultiplier), new Rectangle(0, 0, background.Width /*800*/, background.Height/* 480*/), Color.White);
+            spriteBatch.Draw(background, -(playerConstruct.Position * paralaxBackgroundMultiplier), new Rectangle(0, 0, background.Width /*800*/, background.Height/* 480*/), Color.White);
             float paralaxForegroundMultiplier = 2f;
-            spriteBatch.Draw(foreground, new Vector2(0, /*arbitrary offset*/foreground.Height / 2f - (badger.Position.Y * paralaxForegroundMultiplier)), new Rectangle((int)(badger.Position.X * paralaxForegroundMultiplier), 0, foreground.Width, foreground.Height), Color.White);
+            spriteBatch.Draw(foreground, new Vector2(0, /*arbitrary offset*/foreground.Height / 2f - (playerConstruct.Position.Y * paralaxForegroundMultiplier)), new Rectangle((int)(playerConstruct.Position.X * paralaxForegroundMultiplier), 0, foreground.Width, foreground.Height), Color.White);
             terrain.Draw(spriteBatch);
             spriteBatch.End();
 
@@ -196,7 +196,7 @@ namespace Scrap
             
             spriteBatch.End();
 
-            //debugView.RenderDebugData(camera.Projection, camera.Transformation);
+            debugView.RenderDebugData(camera.Projection, camera.Transformation);
             
 
             base.Draw(gameTime);

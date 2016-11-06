@@ -19,12 +19,18 @@ namespace Scrap.UserInterface
             this.buttonFace = buttonFace;
             actions = new List<BehaviourTile>();
         }
-        List<BehaviourTile> actions;
+        public List<BehaviourTile> actions;
 
         public bool AddAction(HUDDraggingTile draggedTile)
         {
             if (actions.Count < 4)
             {
+                if (draggedTile.recievingTile != null)
+                {
+                    draggedTile.recievingTile.actions.Remove(draggedTile.behaviour);
+                }
+
+                draggedTile.recievingTile = this;
                 draggedTile.area.Location = placementArea.Location + new Point((actions.Count / 2)*25, (actions.Count % 2)*25);
                 actions.Add(draggedTile.behaviour);
                 return true;
@@ -43,6 +49,7 @@ namespace Scrap.UserInterface
             this.segment= segment;
             this.behaviour= behaviour;
         }
+        public HUDRecievingTile recievingTile;
         public Rectangle area;
         public Segment segment;
         public BehaviourTile behaviour;
@@ -106,8 +113,31 @@ namespace Scrap.UserInterface
                 Point position = new Point(game.GraphicsDevice.Viewport.Width - 160, 20 + tileVerticalOffset);
                 draggingTiles.Add(new HUDDraggingTile(new Rectangle(position.X, position.Y, 20, 20),segment, tile));
                 tileVerticalOffset += 30;
+
             }
 
+        }
+        public void RemoveSegment(Segment segment)
+        {
+            foreach (HUDDraggingTile tile in draggingTiles)
+            {
+                if (tile.segment == segment)
+                {
+                    draggingTiles.Remove(tile);
+                    tile.recievingTile.actions.Remove(tile.behaviour);
+                }
+            }
+            //ToDo: remove action from tile
+            
+        }
+        public void TriggerInput(String input, float value)
+        {
+            recievingTiles[input].actions.Cast<AnalogueTile>().ToList().ForEach(o => o.action(value));
+
+        }
+        public void TriggerInput(String input, bool value)
+        {
+            recievingTiles[input].actions.Cast<BoolTile>().ToList().ForEach(o => o.action(value));
         }
         public void Update()
         {
