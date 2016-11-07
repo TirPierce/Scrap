@@ -33,6 +33,8 @@ namespace Scrap.GameElements.Entities
             body.Position = position;
             body.Restitution = .1f;
             body.Friction = .9f;
+
+            body.SleepingAllowed = false;
             
         }
         public override Direction[] JointDirections()

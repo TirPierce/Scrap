@@ -24,7 +24,7 @@ namespace Scrap.GameElements.Entities
         protected List<Joint> joints;
         protected Segment keyObject;
         public Dictionary<Point, ConstructElement> buildElements;
-
+        public Dictionary<Point, Sensor> validPositions;
         protected ScrapGame game;
         
 
@@ -43,6 +43,7 @@ namespace Scrap.GameElements.Entities
             joints = new List<Joint>();
             buildElements = new Dictionary<Point,ConstructElement>();
             game.constructList.Add(this);
+            validPositions = new Dictionary<Point, Sensor>();
 
         }
         public virtual void Update(GameTime gameTime)
@@ -78,6 +79,15 @@ namespace Scrap.GameElements.Entities
             }
             return false;
         }
+        public bool ContainsSegment(Segment segment)
+        {
+            foreach (ConstructElement element in this.buildElements.Values)
+            {
+                if (element.segment == segment)
+                    return true;
+            }
+            return false;
+        }
         public List<Point> AdjacentElements(Point position)
         {
             List<Point> adjacentElements = new List<Point>();
@@ -105,12 +115,22 @@ namespace Scrap.GameElements.Entities
 
             return adjacentElements;
         }
+        public Dictionary<Point, Sensor> GetValidJoinPositions()
+        {
+            Dictionary<Point, Sensor> validLocations = new Dictionary<Point, Sensor>();
+            foreach(ConstructElement element in this.buildElements.Values)
+            {
+                element.GetValidJoinPositions().ToList().ForEach(x => validLocations[x.Key] = x.Value);
+            }
+            return validLocations;
+        }
         public void AddSegmentAtSensorPosition(Segment segment, Sensor sensor)
         {//Segment will point up until the user picks the orientation 
 
             AddNewSegmentToConstruct(sensor.constructElement.segment, segment, sensor.GetOffsetRelativeToConstruct(), Direction.Up);
             RecalculateAdjacentSegmentsAndActivateSensors();
         }
+
         public virtual void Draw(SpriteBatch batch)
         {
             foreach (ConstructElement item in this.buildElements.Values)

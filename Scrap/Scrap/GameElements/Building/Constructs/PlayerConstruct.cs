@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 namespace Scrap.GameElements.Entities
 {
     [Serializable]
-    class PlayerConstruct:Construct
+    public class PlayerConstruct:Construct
     {
-        private Body attachmentArea;
+        public Body attachmentArea;
         //load Level objects
         Player torsoMiddle;
 

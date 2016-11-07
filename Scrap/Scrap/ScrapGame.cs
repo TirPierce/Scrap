@@ -30,7 +30,7 @@ namespace Scrap
         DebugViewXNA debugView;
         Terrain terrain;
         PlayerConstruct playerConstruct;
-        ConstructBuilder hudConstruct;
+        public ConstructBuilder hudConstruct;
         public HUDButtonMapping hudButtonMapping;
         public PlayerController playerController;
         Crate crate;

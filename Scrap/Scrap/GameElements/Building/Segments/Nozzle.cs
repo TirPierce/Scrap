@@ -28,7 +28,7 @@ namespace Scrap.GameElements.Entities
             body = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 1f, (object)this);
             body.BodyType = BodyType.Dynamic;
             body.Position = position;
-            
+            body.SleepingAllowed = false;
         }
         public override void Update(GameTime gameTime)
         {

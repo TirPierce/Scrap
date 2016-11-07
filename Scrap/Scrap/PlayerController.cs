@@ -116,7 +116,7 @@ namespace Scrap
         }
         public void Update()
         {
-            gamePadState = GamePad.GetState(PlayerIndex.One);
+            
 
             inputManager.Update();
 
@@ -129,7 +129,32 @@ namespace Scrap
             //bButton = new List<Action<bool>>();
             //xButton = new List<Action<bool>>();
             //yButton = new List<Action<bool>>();
+            if (inputManager.PrevGamePadState.DPad.Left == ButtonState.Released 
+                && inputManager.GamePadState.DPad.Left == ButtonState.Pressed)
+            {
+                game.hudConstruct.MoveSelection(Direction.Left);
+            }
+            if (inputManager.PrevGamePadState.DPad.Right == ButtonState.Released 
+                && inputManager.GamePadState.DPad.Right == ButtonState.Pressed)
+            {
+                game.hudConstruct.MoveSelection(Direction.Right);
+            }
+            if (inputManager.PrevGamePadState.DPad.Up == ButtonState.Released 
+                && inputManager.GamePadState.DPad.Up == ButtonState.Pressed)
+            {
+                game.hudConstruct.MoveSelection(Direction.Up);
+            }
+            if (inputManager.PrevGamePadState.DPad.Down == ButtonState.Released 
+                && inputManager.GamePadState.DPad.Down == ButtonState.Pressed)
+            {
+                game.hudConstruct.MoveSelection(Direction.Down);
+            }
 
+            if (inputManager.PrevGamePadState.Buttons.A == ButtonState.Released
+                && inputManager.GamePadState.Buttons.A == ButtonState.Pressed)
+            {
+                game.hudConstruct.SelectOrPlace();
+            }
 
             if (inputManager.WasKeyReleased(Keys.Q)) game.camera.Rotate(-.005f);
             if (inputManager.WasKeyReleased(Keys.E)) game.camera.Rotate(+.005f);
@@ -139,7 +164,9 @@ namespace Scrap
             if (inputManager.WasKeyReleased(Keys.S)) game.camera.Position += new Vector2(0f, 1f);
             if (inputManager.WasKeyReleased(Keys.Space)) game.camera.Position = new Vector2(0f, 0f);
 
-            if (InputManager.GetManager().WasKeyPressed(Keys.Space))
+
+            if (inputManager.PrevGamePadState.Buttons.B == ButtonState.Released
+    && inputManager.GamePadState.Buttons.B == ButtonState.Pressed)
             {
                 this.game.buildMode = !this.game.buildMode;
             }

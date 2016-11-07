@@ -35,6 +35,8 @@ namespace Scrap.GameElements.Entities
             body.Restitution = .5f;
             body.Friction = .9f;
 
+            wheel.SleepingAllowed = body.SleepingAllowed = false;
+
             bodyJoint = JointFactory.CreateRevoluteJoint(game.world, body, wheel, new Vector2(0, 0), new Vector2(0, 0));
             
         }

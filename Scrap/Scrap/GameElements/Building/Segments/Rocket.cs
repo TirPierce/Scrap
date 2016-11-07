@@ -33,6 +33,7 @@ namespace Scrap.GameElements.Entities
             body.Position = position;
             body.Restitution = .1f;
             body.Friction = .9f;
+            body.SleepingAllowed = false;
 
             behaviourList.Add(new AnalogueTile(Thrust, game.Content.Load<Texture2D>("Thrust")));
             behaviourList.Add(new AnalogueTile(Thrust, game.Content.Load<Texture2D>("Rotate")));

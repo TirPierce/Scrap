@@ -34,9 +34,8 @@ namespace Scrap.GameElements.Entities
         
         private List<GameButton> gameButtons = new List<GameButton>();
         public List<Point> adjacentElements = new List<Point>();
-        List<Sensor> sensors = new List<Sensor>();
+        public List<Sensor> sensors = new List<Sensor>();
         ElementStatus status = ElementStatus.Free;
-        private bool sensorsAdded = false; //ToDo: fix hack to solve issue where body is not initialised when addSensors is called.
         public ElementStatus Status
         {
             get { return status; }
@@ -62,7 +61,18 @@ namespace Scrap.GameElements.Entities
             GenerateGUIButtons();
             
         }
-
+        public Dictionary<Point, Sensor> GetValidJoinPositions()
+        {
+            Dictionary<Point, Sensor> validJoinPositions = new Dictionary<Point, Sensor>();
+            foreach(Sensor sensor in this.sensors)
+            {
+                if (sensor.Enabled)
+                {
+                    validJoinPositions.Add(sensor.GetOffsetRelativeToConstruct()+ this.offSet, sensor);
+                }
+            }
+            return validJoinPositions;
+        }
         public void AddToConstruct(Construct construct, Point offSet, Joint rootJoint,ConstructElement rootElement, Direction direction)
         {
             mappedKey = Keys.A;
@@ -104,10 +114,7 @@ namespace Scrap.GameElements.Entities
             adjacentElements.Clear();
         }
 
-        public void SetValidAdjacentElements(List<ConstructElement> validElements)
-        {
 
-        }
         public void EnableButtons()
         {
             foreach (GameButton button in gameButtons)
@@ -131,7 +138,6 @@ namespace Scrap.GameElements.Entities
             this.game.buildMode = false;
             SetStatus(ElementStatus.Attached);
             //this.game.hudButtonMapping.AddSegment(this.segment);
-            //ToDo: set draggable buttons
         }
         public void EnableSensors()
         {

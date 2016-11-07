@@ -174,14 +174,14 @@ namespace Scrap.GameElements.Building
 
         public void Update()
         {
-            if (enabled)
+            if (Enabled)
             {
                 MoveSensor();
             }
         }
         public virtual void Draw(SpriteBatch batch)
         {
-            if (enabled && this.game.playerController.selectedSegment != null)
+            if (Enabled && this.game.playerController.selectedSegment != null)
             {
                 sprite.Draw(batch, body.Position,body.Rotation+MathHelper.Pi, Color.White);
             }
@@ -190,6 +190,11 @@ namespace Scrap.GameElements.Building
         {
             get { return body; }
             set { body = value; }
+        }
+
+        public bool Enabled
+        {
+            get{return enabled;}
         }
     }
 }

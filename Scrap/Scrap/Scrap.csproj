@@ -85,6 +85,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\AvailableOutline.png" />
     <Content Include="Content\background.png" />
     <Content Include="Content\Buttons\ButtonA.png" />
     <Content Include="Content\Buttons\ButtonB.png" />
@@ -106,6 +107,7 @@
     <Content Include="Content\PointerClosed.png" />
     <Content Include="Content\Right.png" />
     <Content Include="Content\rocket.png" />
+    <Content Include="Content\SelectionOutline.png" />
     <Content Include="Content\sky.png" />
     <Content Include="Content\soil.png" />
     <Content Include="Content\Buttons\StickLeft.png" />
