@@ -98,17 +98,14 @@ namespace Scrap
             Debug.WriteLine("OnConstructSensorTriggered by " + constructElement.segment.ToString());
             Debug.WriteLine("OnConstructSensorTriggered on sensor " + sensor.GetOrientationRelativeToSegment().ToString());
             Debug.WriteLine("OnConstructSensorTriggered on segment:" + sensor.constructElement.offSet.ToString());
-
-            //ToDo: Refactor- PlaceSegment is almost useless. 
-            this.selectedSegment.body.Rotation = sensor.body.Rotation;
-            this.selectedSegment.body.Position = sensor.constructElement.segment.Position - (sensor.constructElement.segment.Position -sensor.body.Position)*2;
-            this.selectedSegment.body.LinearVelocity = sensor.body.LinearVelocity;
-
+            
             this.game.buildMode = true;
-            this.game.hudButtonMapping.AddSegment(selectedSegment);
-            sensor.constructElement.construct.AddSegmentAtSensorPosition(selectedSegment, sensor);
-            PlaceSegment();
+            selectedSegment = null;
+            sensor.constructElement.construct.AttachSegmenAtSensorAndOrientateCorrectly(constructElement,sensor);
         }
+
+
+
         public PlayerController(ScrapGame game)
         {
             inputManager = InputManager.GetManager();
@@ -251,12 +248,7 @@ namespace Scrap
 
             }
         }
-        public void PlaceSegment()
-        {
-            
-            selectedSegment.constructElement.Status = ElementStatus.Locked;
-            selectedSegment = null;
-        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             if (selectedSegment != null)

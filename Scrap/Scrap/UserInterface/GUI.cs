@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 namespace Scrap.UserInterface
 {
     public enum UIStatus { Active, Inactive };
-    public class GUI
+    public class DirectionSelectionUI
     {
         protected ScrapGame game;
         protected List<GameButton> buttons= new List<GameButton>();
 
         //buttons order by layer variable
-        public GUI(ScrapGame game) 
+        public DirectionSelectionUI(ScrapGame game) 
         {
             this.game = game;
         }

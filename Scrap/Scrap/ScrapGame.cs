@@ -18,7 +18,7 @@ namespace Scrap
         //public InputManager inputManager;
         public World world;
         public Camera camera;
-        public GUI gui;
+        public DirectionSelectionUI gui;
         public List<Segment> entityList = new List<Segment>();
         public List<Construct> constructList = new List<Construct>();
         public bool buildMode = false;
@@ -42,7 +42,7 @@ namespace Scrap
             
             Content.RootDirectory = "Content";
             playerController = new PlayerController(this);
-            gui = new GUI(this);
+            gui = new DirectionSelectionUI(this);
             terrain = new Terrain(this);
             FarseerPhysics.Settings.PositionIterations = 10;
             FarseerPhysics.Settings.VelocityIterations = 10;

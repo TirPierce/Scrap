@@ -130,7 +130,20 @@ namespace Scrap.GameElements.Entities
             AddNewSegmentToConstruct(sensor.constructElement.segment, segment, sensor.GetOffsetRelativeToConstruct(), Direction.Up);
             RecalculateAdjacentSegmentsAndActivateSensors();
         }
+        public void AttachSegmenAtSensorAndOrientateCorrectly(ConstructElement constructElement, Sensor sensor)
+        {
+            constructElement.segment.body.Rotation = sensor.body.Rotation;
+            constructElement.segment.body.Position = sensor.constructElement.segment.Position - (sensor.constructElement.segment.Position - sensor.body.Position) * 2;
+            constructElement.segment.body.LinearVelocity = sensor.body.LinearVelocity;
 
+
+            this.game.hudButtonMapping.AddSegment(constructElement.segment);
+            sensor.constructElement.construct.AddSegmentAtSensorPosition(constructElement.segment, sensor);
+
+            constructElement.Status = ElementStatus.Locked;
+
+
+        }
         public virtual void Draw(SpriteBatch batch)
         {
             foreach (ConstructElement item in this.buildElements.Values)

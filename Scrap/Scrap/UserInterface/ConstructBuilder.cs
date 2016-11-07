@@ -68,7 +68,8 @@ namespace Scrap.UserInterface
                 }
                 if(construct.GetValidJoinPositions().Keys.Contains(outlinePosition))
                 {
-                    construct.AddSegmentAtSensorPosition(selectedSegment, construct.GetValidJoinPositions()[outlinePosition]);
+                    
+                    construct.AttachSegmenAtSensorAndOrientateCorrectly(selectedSegment.constructElement, construct.GetValidJoinPositions()[outlinePosition]);
 
                 }
                 //construct.AddSegmentAtSensorPosition
