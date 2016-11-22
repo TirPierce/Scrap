@@ -12,7 +12,6 @@ using Scrap.GameElements.Building;
 
 namespace Scrap.GameElements.Entities
 {
-    [Serializable]
     public class Wheel : Segment
     {
         Body wheel;
@@ -53,6 +52,11 @@ namespace Scrap.GameElements.Entities
         {
             //if direction.up has anchorable point return it
             return body;
+        }
+        public override void SetTransform(Vector2 position, float rotation)
+        {
+            this.wheel.SetTransform(position, rotation);
+            body.SetTransform(position, rotation);
         }
         public override void Draw(SpriteBatch batch)
         {

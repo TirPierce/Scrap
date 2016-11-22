@@ -150,14 +150,31 @@ namespace Scrap.GameElements.Building
             body.CollisionCategories = Category.Cat10;
             enabled = true;
         }
-        private void MoveSensor()
+        private void CalculateSensorPositionInWorld(ref Vector2 position, ref float rotation)//This can't really be great can it?
         {
-            float cos = (float)Math.Cos(constructElement.segment.body.Rotation);
-            float sin = (float)Math.Sin(constructElement.segment.body.Rotation);
+            float cos = (float)Math.Cos(constructElement.segment.Rotation);
+            float sin = (float)Math.Sin(constructElement.segment.Rotation);
             Vector2 relativePosition = Orientation.GetRelativePositionOfADirection(this.orientation);
             Vector2 rotationVector = relativePosition;
-            rotationVector = new Vector2(rotationVector.X * cos - rotationVector.Y * sin, rotationVector.X * sin + rotationVector.Y * cos);
-            body.SetTransform(constructElement.segment.body.Position + rotationVector * .5f, Orientation.DirectionToRadians(orientation) + this.constructElement.segment.Rotation);
+            position = (constructElement.segment.Position + new Vector2(rotationVector.X * cos - rotationVector.Y * sin, rotationVector.X * sin + rotationVector.Y * cos) * .5f);
+            rotation = Orientation.DirectionToRadians(orientation) + this.constructElement.segment.Rotation;
+        }
+        public Vector2 CalculateSensorTileCentreInWorld()
+        {
+            float cos = (float)Math.Cos(constructElement.segment.Rotation);
+            float sin = (float)Math.Sin(constructElement.segment.Rotation);
+            Vector2 relativePosition = Orientation.GetRelativePositionOfADirection(this.orientation);
+            Vector2 rotationVector = relativePosition;
+            return (constructElement.segment.Position + new Vector2(rotationVector.X * cos - rotationVector.Y * sin, rotationVector.X * sin + rotationVector.Y * cos));
+            
+        }
+
+        private void MoveSensor()
+        {
+            Vector2 position= Vector2.Zero;
+            float rotation = 0;
+            CalculateSensorPositionInWorld(ref position, ref rotation);
+            body.SetTransform(position, rotation);
         }
 
         private Vector2 Rotate(float angle, float distance, Vector2 centre)

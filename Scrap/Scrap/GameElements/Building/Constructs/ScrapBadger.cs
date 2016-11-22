@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace Scrap.GameElements.Entities
 {
-    [Serializable]
     class ScrapBadger : Construct
     {
         //load Level objects

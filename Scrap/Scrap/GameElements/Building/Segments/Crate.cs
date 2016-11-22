@@ -12,7 +12,6 @@ using System.Xml.Serialization;
 
 namespace Scrap.GameElements.Entities
 {
-    [Serializable]
     public class Crate : Segment
     {
         

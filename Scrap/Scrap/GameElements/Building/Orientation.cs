@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 namespace Scrap.GameElements.Building
 {
     
-    public enum Direction { Up = 0, Right = 90, Down = 180, Left = 270};
+    public enum Direction { Up = 0, Right = 90, Down = 180, Left = 270, None=360};
+
     public class Orientation
     {
         public const float OFFSET = 1.2f;
@@ -22,7 +23,27 @@ namespace Scrap.GameElements.Building
             int newDirection = ((int)directionA + (int)directionB) % 360;
             return (Direction)newDirection;
         }
-
+        public static int DirectionToAngle(Direction direction)
+        {
+            switch (direction)
+            {
+                case Direction.Up:
+                    return 0;
+                    break;
+                case Direction.Right:
+                    return 90;
+                    break;
+                case Direction.Down:
+                    return 180;
+                    break;
+                case Direction.Left:
+                    return 270;
+                    break;
+                default:
+                    return 0;
+                    break;
+            }
+        }
 
         public static float DirectionToRadians(Direction direction)
         {

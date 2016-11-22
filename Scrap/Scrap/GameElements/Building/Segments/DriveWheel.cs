@@ -13,7 +13,6 @@ using System.Text;
 
 namespace Scrap.GameElements.Entities
 {
-    [Serializable]
     class DriveWheel : Segment
     {
 
@@ -49,7 +48,11 @@ namespace Scrap.GameElements.Entities
             Direction[] validDirections = { Direction.Down, Direction.Right, Direction.Up, Direction.Left };
             return validDirections;
         }
-
+        public override void SetTransform(Vector2 position, float rotation)
+        {
+            this.wheel.SetTransform(position, rotation);
+            body.SetTransform(position, rotation);
+        }
         public override Body GetJointAnchor(Direction direction)
         {
             //if direction.up has anchorable point return it

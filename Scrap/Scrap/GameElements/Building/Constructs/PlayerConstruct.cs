@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace Scrap.GameElements.Entities
 {
-    [Serializable]
     public class PlayerConstruct:Construct
     {
         public Body attachmentArea;
@@ -31,7 +30,12 @@ namespace Scrap.GameElements.Entities
         Rocket rocket2;
         Nozzle face;
 
-        public PlayerConstruct(ScrapGame game, Vector2 pos):base(game)
+        public PlayerConstruct(ScrapGame game):base(game)
+        {
+            
+
+        }
+        public void LoadContent(Vector2 pos)
         {
             //Define joins, Define Join side, Define joined srap direction//
 
@@ -44,8 +48,8 @@ namespace Scrap.GameElements.Entities
              /-11/01/11/
              ***********************/
             //Crates
-            torsoFront = new Crate(game, pos +  new Vector2(1.2f, 0));
-            AddNewSegmentToConstruct(torsoMiddle, torsoFront, new Point(1, 0), Direction.Up);            
+            torsoFront = new Crate(game, pos + new Vector2(1.2f, 0));
+            AddNewSegmentToConstruct(torsoMiddle, torsoFront, new Point(1, 0), Direction.Up);
 
             torsoFront2 = new Crate(game, pos + new Vector2(1.2f, 0));
             AddNewSegmentToConstruct(torsoFront, torsoFront2, new Point(1, 0), Direction.Up);
@@ -76,15 +80,15 @@ namespace Scrap.GameElements.Entities
             rocket2 = new Rocket(game, pos + new Vector2(0, -1.2f));
             AddNewSegmentToConstruct(torsoFront, rocket2, new Point(0, -1), Direction.Left);
 
-                        //ToDo:gameplay hack
+            //ToDo:gameplay hack
             //this.game.playerController.leftTrigger.Add(rocket1.constructElement.offSet,rocket1.AnalogueInputCallback);
             //this.game.playerController.rightTrigger.Add(rocket2.constructElement.offSet, rocket2.AnalogueInputCallback);
             //this.game.playerController.leftTrigger.Add(backWheel.constructElement.offSet, backWheel.AnalogueInputCallback);
-            
+
 
 
             //init sensors
-            foreach(var constructElement in this.buildElements)
+            foreach (var constructElement in this.buildElements)
             {
 
                 constructElement.Value.DisableSensors();
@@ -93,16 +97,15 @@ namespace Scrap.GameElements.Entities
 
             game.camera.Follow(torsoMiddle, game.camera.Magnification);
 
-            attachmentArea = BodyFactory.CreateCircle(game.world, 4f, 1f, (object)this);
+            attachmentArea = BodyFactory.CreateCircle(game.world, 8f, 1f, (object)this);
             attachmentArea.IsSensor = true;
-
         }
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
             if (keyObject != null)
             {
-                attachmentArea.SetTransform(keyObject.body.Position, 0);
+                attachmentArea.SetTransform(keyObject.Position, 0);
             }
         }
     }

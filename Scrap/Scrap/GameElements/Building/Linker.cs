@@ -1,14 +1,8 @@
-﻿using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Joints;
+﻿using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Scrap.GameElements.Entities;
 using Scrap.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Scrap.GameElements.Building
 {

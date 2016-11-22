@@ -20,8 +20,8 @@ namespace Scrap.GameElements.GameWorld
 
         BasicEffect effect;
         VertexDeclaration vertDecl;
-        VertexBuffer vertBuffer;
-        IndexBuffer indexBuffer;
+        DynamicVertexBuffer vertBuffer;
+        DynamicIndexBuffer indexBuffer;
         int numVertices, numPrimitives;
         Vector2[] sourceVertices = new Vector2[14];
 
@@ -115,7 +115,7 @@ namespace Scrap.GameElements.GameWorld
             for (int i = 0; i < targetVertices.Length; i++)
                 verts[i] = new VertexPositionNormalTexture(new Vector3(targetVertices[i], 0f), Vector3.Backward,
                     new Vector2(targetVertices[i].X / 10f, targetVertices[i].Y / 10f));
-            vertBuffer = new VertexBuffer(
+            vertBuffer = new DynamicVertexBuffer(
                 game.GraphicsDevice,
                 typeof(VertexPositionNormalTexture),
                 verts.Length * VertexPositionNormalTexture.VertexDeclaration.VertexStride,
@@ -128,7 +128,7 @@ namespace Scrap.GameElements.GameWorld
                 short[] indices = new short[sourceIndices.Length];
                 for (int i = 0; i < sourceIndices.Length; i++)
                     indices[i] = (short)sourceIndices[i];
-                indexBuffer = new IndexBuffer(
+                indexBuffer = new DynamicIndexBuffer(
                     game.GraphicsDevice,
                     IndexElementSize.SixteenBits,
                     indices.Length * sizeof(short),
@@ -137,7 +137,7 @@ namespace Scrap.GameElements.GameWorld
             }
             else
             {
-                indexBuffer = new IndexBuffer(
+                indexBuffer = new DynamicIndexBuffer(
                     game.GraphicsDevice,
                     IndexElementSize.ThirtyTwoBits,
                     sourceIndices.Length * sizeof(int),
@@ -178,6 +178,8 @@ namespace Scrap.GameElements.GameWorld
                     numVertices,
                     0,
                     numPrimitives);
+
+
 
             }
             game.GraphicsDevice.SetRenderTarget(null);

@@ -88,7 +88,7 @@ namespace Scrap
         {
             if (cameraMode == CameraMode.FixedFollow)
             {
-                Position = entityToFollow.body.Position;
+                Position = entityToFollow.Position;
                 
             }
             UpdateTransform();

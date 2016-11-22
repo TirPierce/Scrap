@@ -11,8 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Scrap
 {
-
-    [Serializable]
+    
     //[System.Xml.Serialization.XmlRootAttribute("Level", Namespace = "", IsNullable = false)]
     public class Level
     {

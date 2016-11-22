@@ -43,14 +43,6 @@ namespace Scrap.GameElements.Entities
         }
         private void SetStatus(ElementStatus status)
         {
-            if (status == ElementStatus.Locked)
-            {
-                EnableButtons();
-            }
-            else
-            {
-                DisableButtons();
-            }
             this.status = status;
         }
 
@@ -89,7 +81,8 @@ namespace Scrap.GameElements.Entities
 
         public void RemoveFromConstruct()
         {
-            
+            DisableSensors();
+            game.constructBuilder.hudButtonMapping.RemoveSegment(segment);
             if (construct != null && segment.GetType() != typeof(Player))
             {
                 
@@ -109,33 +102,18 @@ namespace Scrap.GameElements.Entities
                 construct = null;
 
             }
-            DisableSensors();
             this.SetStatus(ElementStatus.Free);
             adjacentElements.Clear();
         }
 
 
-        public void EnableButtons()
-        {
-            foreach (GameButton button in gameButtons)
-            {
-                button.status = UIStatus.Active;
-            }
-        }
-        public void DisableButtons()
-        {
-            foreach (GameButton button in gameButtons)
-            {
-                button.status = UIStatus.Inactive;
-            }
-        }
+
 
         private void OrientateSegmentAndSetStatusToAttached(Direction direction)
         {
             //Debug.WriteLine("PlaceSegment():" + direction.ToString());
             orientation = direction;
             construct.SetSegmentDirection(segment, direction);
-            this.game.buildMode = false;
             SetStatus(ElementStatus.Attached);
             //this.game.hudButtonMapping.AddSegment(this.segment);
         }
@@ -183,7 +161,7 @@ namespace Scrap.GameElements.Entities
         {
             foreach (Direction direction in segment.JointDirections())
             {
-                gameButtons.Add(this.game.gui.AddButton(this.segment, direction, new Action<Direction>(OrientateSegmentAndSetStatusToAttached)));
+                gameButtons.Add(this.game.constructBuilder.AddButton(this.segment, direction, new Action<Direction>(OrientateSegmentAndSetStatusToAttached)));
             }
         }
 

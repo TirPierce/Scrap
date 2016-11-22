@@ -17,22 +17,22 @@ namespace Scrap.UserInterface
         {
             this.placementArea = placementArea;
             this.buttonFace = buttonFace;
-            actions = new List<BehaviourTile>();
+            actions = new List<HUDDraggingTile>();
         }
-        public List<BehaviourTile> actions;
-
+        public List<HUDDraggingTile> actions;
+        
         public bool AddAction(HUDDraggingTile draggedTile)
         {
             if (actions.Count < 4)
             {
                 if (draggedTile.recievingTile != null)
                 {
-                    draggedTile.recievingTile.actions.Remove(draggedTile.behaviour);
+                    draggedTile.recievingTile.actions.Remove(draggedTile);
                 }
 
                 draggedTile.recievingTile = this;
                 draggedTile.area.Location = placementArea.Location + new Point((actions.Count / 2)*25, (actions.Count % 2)*25);
-                actions.Add(draggedTile.behaviour);
+                actions.Add(draggedTile);
                 return true;
             }
             return false;
@@ -54,7 +54,6 @@ namespace Scrap.UserInterface
         public Segment segment;
         public BehaviourTile behaviour;
     }
-
     public class HUDButtonMapping
     {
         Dictionary<string, HUDRecievingTile> recievingTiles = new Dictionary<string, HUDRecievingTile>();
@@ -63,12 +62,13 @@ namespace Scrap.UserInterface
         Texture2D backgroundTexture;
         Construct construct;
         private SpriteFont font;
-        Segment placedSegment;
         ScrapGame game;
         InputManager inputManager;
         HUDDraggingTile draggedTile;
-
+        bool isActive = false;
         Point draggingOldPosition;
+
+        Segment currentSegment;
 
         public HUDButtonMapping(Construct construct, ScrapGame game)
         {
@@ -103,20 +103,7 @@ namespace Scrap.UserInterface
             texture = game.Content.Load<Texture2D>("Buttons/TriggerRight");
             recievingTiles.Add("TriggerRight", new HUDRecievingTile(new Rectangle(game.GraphicsDevice.Viewport.Width - 50, 230, 50, 50), texture));
         }
-        public void AddSegment(Segment segment)
-        {
-            placedSegment = segment;
-            int tileVerticalOffset = 0;
-            foreach (BehaviourTile tile in placedSegment.behaviourList)
-            {
 
-                Point position = new Point(game.GraphicsDevice.Viewport.Width - 160, 20 + tileVerticalOffset);
-                draggingTiles.Add(new HUDDraggingTile(new Rectangle(position.X, position.Y, 20, 20),segment, tile));
-                tileVerticalOffset += 30;
-
-            }
-
-        }
         public void RemoveSegment(Segment segment)
         {
             foreach (HUDDraggingTile tile in draggingTiles.Reverse<HUDDraggingTile>())
@@ -125,16 +112,71 @@ namespace Scrap.UserInterface
                 {
                     draggingTiles.Remove(tile);
                     if(tile.recievingTile != null)
-                        tile.recievingTile.actions.Remove(tile.behaviour);
+                        tile.recievingTile.actions.Remove(tile);
+                }
+            }
+        }
+
+        public void EnableForSegment(Segment segment)
+        {
+            foreach (HUDDraggingTile tile in draggingTiles.Reverse<HUDDraggingTile>())
+            {
+                if (tile.segment == currentSegment)
+                {
+                    draggingTiles.Remove(tile);
+                    if (tile.recievingTile == null)
+                        draggingTiles.Remove(tile);
+                }
+            }
+            var previousSegment = currentSegment;
+            currentSegment = segment;
+            int tileVerticalOffset = -30;
+
+            var behaviours = segment.behaviourList;
+            foreach(HUDDraggingTile tile in draggingTiles)
+            {
+                if(behaviours.Contains(tile.behaviour))
+                {
+                    behaviours.Remove(tile.behaviour);
                 }
 
             }
-            //ToDo: remove action from tile
-            
+
+            foreach (BehaviourTile tile in behaviours)
+            {
+                tileVerticalOffset += 30;
+                Point position = new Point(game.GraphicsDevice.Viewport.Width - 160, 20 + tileVerticalOffset);
+                draggingTiles.Add(new HUDDraggingTile(new Rectangle(position.X, position.Y, 20, 20), segment, tile));
+            }
+        }
+        public bool BindInput(Segment segment, bool left)
+        {
+
+           // HUDRecievingTile 
+            foreach (HUDDraggingTile tile in draggingTiles)
+            {
+                if(tile.recievingTile == null)
+                {
+                    if (!left)
+                    {
+                        recievingTiles["TriggerRight"].AddAction(tile);
+                    }
+                    else
+                    {
+                        recievingTiles["TriggerLeft"].AddAction(tile);
+                    }
+                    return true;
+                }
+            }
+
+            return false;
         }
         public void TriggerInput(String input, float value)
         {
-            recievingTiles[input].actions.Cast<AnalogueTile>().ToList().ForEach(o => o.action(value));
+            foreach(HUDDraggingTile tile in recievingTiles[input].actions)
+            {
+                ((AnalogueTile)tile.behaviour).action.Invoke(value);
+            }
 
         }
         public void TriggerInput(String input, bool value)
@@ -144,65 +186,30 @@ namespace Scrap.UserInterface
         public void Update()
         {
 
-            if (draggedTile != null)
-            {
-                if (inputManager.MouseState.LeftButton == ButtonState.Pressed)
-                {
-                    draggedTile.area.Location = inputManager.MouseState.Position;
-                }
-                else
-                {
-                    bool placed = false;
-                    foreach (HUDRecievingTile recievingTile in recievingTiles.Values)
-                    {
-                        if (recievingTile.placementArea.Contains(draggedTile.area.Location))
-                        {
-                            if (recievingTile.AddAction(draggedTile)) 
-                            { 
-                                placed = true;
-                            }
-                        }
-                    }
-                    if(!placed)
-                    {
-                        draggedTile.area.Location = draggingOldPosition;
-                    }
-                    
-                    draggedTile = null;
-                }
-            }
-            else
-            {
-                if (inputManager.MouseState.LeftButton == ButtonState.Pressed && inputManager.PrevMouseState.LeftButton == ButtonState.Released)
-                {
-                    foreach (HUDDraggingTile tile in draggingTiles)
-                    {
-                        if (tile.area.Contains(inputManager.MouseState.Position))
-                        {
-                            draggingOldPosition = tile.area.Location;
-                            draggedTile = tile;
-                            break;
-                        }
-                    }
-                }
-
-            }
+            
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (HUDDraggingTile tile in draggingTiles)
-            {
-                spriteBatch.Draw(tile.behaviour.TileTexture,tile.area,null, Color.White,0, Vector2.Zero, SpriteEffects.None, .5f);
 
-                
-            }
             foreach (HUDRecievingTile tile in recievingTiles.Values)
             {
-                spriteBatch.Draw(this.backgroundTexture,tile.placementArea, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 1);
-                spriteBatch.Draw(tile.buttonFace, new Rectangle(tile.placementArea.X-20, tile.placementArea.Y-20, 20, 20), null, Color.White, 0, Vector2.Zero, SpriteEffects.None, .9f);
+                spriteBatch.Draw(this.backgroundTexture, tile.placementArea, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 1);
+                spriteBatch.Draw(tile.buttonFace, new Rectangle(tile.placementArea.X - 20, tile.placementArea.Y - 20, 20, 20), null, Color.White, 0, Vector2.Zero, SpriteEffects.None, .9f);
                 //spriteBatch.Draw(tile.buttonFace, tile.placementArea., null, Color.White, 0, tile.placementArea.Center.ToVector2(), SpriteEffects.None, .9f);
+                foreach (HUDDraggingTile tileAction in tile.actions)
+                {
+                    spriteBatch.Draw(tileAction.behaviour.TileTexture, tileAction.area, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, .5f);
+                }
+            }
+
+            foreach (HUDDraggingTile tile in draggingTiles)
+            {
+                spriteBatch.Draw(tile.behaviour.TileTexture, tile.area, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, .5f);
+
 
             }
+
+
 
         }
     }

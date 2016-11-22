@@ -15,10 +15,6 @@ using System.Threading.Tasks;
 
 namespace Scrap.GameElements.Entities
 {
-
-    
-
-    [Serializable]
     public abstract class Construct
     {
         protected List<Joint> joints;
@@ -72,7 +68,7 @@ namespace Scrap.GameElements.Entities
         {
             foreach (ConstructElement entity in buildElements.Values)
             {
-                if (entity.segment.body.FixtureList.Contains(a))
+                if (entity.segment.ContainsFixture(a))
                 {
                     return true;
                 }
@@ -124,23 +120,23 @@ namespace Scrap.GameElements.Entities
             }
             return validLocations;
         }
-        public void AddSegmentAtSensorPosition(Segment segment, Sensor sensor)
+        public void AddSegmentAtSensorPosition(Segment segment, Sensor sensor, Direction direction)
         {//Segment will point up until the user picks the orientation 
 
-            AddNewSegmentToConstruct(sensor.constructElement.segment, segment, sensor.GetOffsetRelativeToConstruct(), Direction.Up);
+            AddNewSegmentToConstruct(sensor.constructElement.segment, segment, sensor.GetOffsetRelativeToConstruct(), direction);
             RecalculateAdjacentSegmentsAndActivateSensors();
         }
-        public void AttachSegmenAtSensorAndOrientateCorrectly(ConstructElement constructElement, Sensor sensor)
+        
+        public void AttachSegmenAtSensorAndOrientateCorrectly(ConstructElement constructElement, Sensor sensor, Direction direction)
         {
-            constructElement.segment.body.Rotation = sensor.body.Rotation;
-            constructElement.segment.body.Position = sensor.constructElement.segment.Position - (sensor.constructElement.segment.Position - sensor.body.Position) * 2;
-            constructElement.segment.body.LinearVelocity = sensor.body.LinearVelocity;
 
+            constructElement.segment.SetTransform(sensor.CalculateSensorTileCentreInWorld(), sensor.constructElement.construct.keyObject.Rotation + (int)direction);
 
-            this.game.hudButtonMapping.AddSegment(constructElement.segment);
-            sensor.constructElement.construct.AddSegmentAtSensorPosition(constructElement.segment, sensor);
+            constructElement.segment.SetLinearVelocity(sensor.body.LinearVelocity);
 
-            constructElement.Status = ElementStatus.Locked;
+            sensor.constructElement.construct.AddSegmentAtSensorPosition(constructElement.segment, sensor, direction);
+
+            constructElement.Status = ElementStatus.Attached;
 
 
         }
@@ -158,7 +154,7 @@ namespace Scrap.GameElements.Entities
             Vector2 anchorOffset;
             Joint joint;
             
-            newSegment.body.SetTransform(newSegment.Position, recievingSegment.Rotation + rotation);
+            newSegment.SetTransform(newSegment.Position, keyObject.Rotation + rotation);
             Point offsetRelativeToOrientatedSegment = relativeOffset;
             anchorOffset = new Vector2((offsetRelativeToOrientatedSegment).X * 1.2f, (offsetRelativeToOrientatedSegment).Y * 1.2f);
 

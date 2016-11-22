@@ -29,8 +29,7 @@ namespace Scrap
         Texture2D pointerClosed;
         Vector2 mouseWorld;
         Body courserVolume;
-
-        GamePadState gamePadState;
+        
         //bool SegmentReleased = false;
         public Segment selectedSegment = null;
 
@@ -48,16 +47,6 @@ namespace Scrap
 
         public void LoadContent()
         {
-
-            
-            pointer = game.Content.Load<Texture2D>("Pointer");
-            pointerClosed = game.Content.Load<Texture2D>("PointerClosed");
-            courserVolume = BodyFactory.CreateRoundedRectangle(((ScrapGame)game).world, 1f, 1f, .2f, .2f, 5, 2f, this);
-            courserVolume.IsSensor = true;
-            courserVolume.CollisionCategories = Category.Cat10;
-            courserVolume.CollidesWith = Category.Cat10;
-            courserVolume.OnCollision += courserVolume_OnCollision;
-            courserVolume.OnSeparation += courserVolume_OnSeparation;
             leftTrigger = new Dictionary<Point,Action<float>>();
             rightTrigger = new Dictionary<Point,Action<float>>();
 
@@ -67,162 +56,180 @@ namespace Scrap
             yButton = new List<Action<bool>>();
 
         }
-        
-        void courserVolume_OnSeparation(Fixture fixtureA, Fixture fixtureB)
-        {
-            //if (selectedSegment != null && fixtureB.Body.UserData as Sensor != null)
-            //{
-             //   wasInPlace = true;
-                Debug.WriteLine("courserVolume_OnSeparation: Triggered");
-            //}
-
-        }
-
-        public bool courserVolume_OnCollision(Fixture a, Fixture b, Contact contact)
-        {
-            if (selectedSegment != null)
-            {
-                contactList.Add(b.UserData as Sensor);
-            }
-
-            //if (selectedSegment != null && !SegmentReleased)
-            //{
-            //    //OnConstructSensorTriggered(selectedSegment.constructElement, b.UserData as Sensor);
-            //    Debug.WriteLine("courserVolume_OnCollision: Triggered");
-            //}
-
-            return false;
-        }
-        private void OnSegmentReleasedInSensor(ConstructElement constructElement, Sensor sensor)
-        {
-            Debug.WriteLine("OnConstructSensorTriggered by " + constructElement.segment.ToString());
-            Debug.WriteLine("OnConstructSensorTriggered on sensor " + sensor.GetOrientationRelativeToSegment().ToString());
-            Debug.WriteLine("OnConstructSensorTriggered on segment:" + sensor.constructElement.offSet.ToString());
-            
-            this.game.buildMode = true;
-            selectedSegment = null;
-            sensor.constructElement.construct.AttachSegmenAtSensorAndOrientateCorrectly(constructElement,sensor);
-        }
-
-
-
         public PlayerController(ScrapGame game)
         {
             inputManager = InputManager.GetManager();
             this.game = game;
         }
-        public void Update()
+        const float Deadzone = 0.8f;
+        const float DiagonalAvoidance = 0.2f;
+
+        public static Direction GetThumbStickDirection(Vector2 gamepadThumbStick)
         {
-            
+            // Get the length and prevent something from happening
+            // if it's in our deadzone.
+            var length = gamepadThumbStick.Length();
+            if (length < Deadzone)
+                return Direction.None;
 
-            inputManager.Update();
+            var absX = Math.Abs(gamepadThumbStick.X);
+            var absY = Math.Abs(gamepadThumbStick.Y);
+            var absDiff = Math.Abs(absX - absY);
 
-            this.game.hudButtonMapping.TriggerInput("TriggerLeft", gamePadState.Triggers.Left);
-            this.game.hudButtonMapping.TriggerInput("TriggerRight", gamePadState.Triggers.Right);
-            //leftTrigger.Values.ToList().ForEach(o => o.Invoke(gamePadState.Triggers.Left));
-            //rightTrigger.Values.ToList().ForEach(o => o.Invoke(gamePadState.Triggers.Right));
+            // We don't like values that are too close to each other
+            // i.e. borderline diagonal.
+            if (absDiff < length * DiagonalAvoidance)
+                return Direction.None;
 
-            //aButton = new List<Action<bool>>();
-            //bButton = new List<Action<bool>>();
-            //xButton = new List<Action<bool>>();
-            //yButton = new List<Action<bool>>();
-            if (inputManager.PrevGamePadState.DPad.Left == ButtonState.Released 
-                && inputManager.GamePadState.DPad.Left == ButtonState.Pressed)
+            if (absX > absY)
             {
-                game.hudConstruct.MoveSelection(Direction.Left);
+                if (gamepadThumbStick.X > 0)
+                    return Direction.Right;
+                else
+                    return Direction.Left;
             }
-            if (inputManager.PrevGamePadState.DPad.Right == ButtonState.Released 
+            else
+            {
+                if (gamepadThumbStick.Y > 0)
+                    return Direction.Up;
+                else
+                    return Direction.Down;
+            }
+        }
+        private Direction GetDpadDirection()
+        {
+            if (inputManager.PrevGamePadState.DPad.Left == ButtonState.Released
+                    && inputManager.GamePadState.DPad.Left == ButtonState.Pressed)
+            {
+                return Direction.Left;
+            }
+            else if (inputManager.PrevGamePadState.DPad.Right == ButtonState.Released
                 && inputManager.GamePadState.DPad.Right == ButtonState.Pressed)
             {
-                game.hudConstruct.MoveSelection(Direction.Right);
+                return Direction.Right;
             }
-            if (inputManager.PrevGamePadState.DPad.Up == ButtonState.Released 
+            else if (inputManager.PrevGamePadState.DPad.Up == ButtonState.Released
                 && inputManager.GamePadState.DPad.Up == ButtonState.Pressed)
             {
-                game.hudConstruct.MoveSelection(Direction.Up);
+                return Direction.Up;
             }
-            if (inputManager.PrevGamePadState.DPad.Down == ButtonState.Released 
+            else if (inputManager.PrevGamePadState.DPad.Down == ButtonState.Released
                 && inputManager.GamePadState.DPad.Down == ButtonState.Pressed)
             {
-                game.hudConstruct.MoveSelection(Direction.Down);
+                return Direction.Down;
             }
+            else return Direction.None;
+        }
+        public void Update()
+        {
+            inputManager.Update();
 
-            if (inputManager.PrevGamePadState.Buttons.A == ButtonState.Released
-                && inputManager.GamePadState.Buttons.A == ButtonState.Pressed)
+
+            
+
+            switch (game.constructBuilder.BuildMode)
             {
-                game.hudConstruct.SelectOrPlace();
-            }
+                case UserInterface.BuildMode.Seek:
+                    #region seek
+                    game.constructBuilder.MoveSeek(GetDpadDirection());
 
-            if (inputManager.WasKeyReleased(Keys.Q)) game.camera.Rotate(-.005f);
-            if (inputManager.WasKeyReleased(Keys.E)) game.camera.Rotate(+.005f);
-            if (inputManager.WasKeyReleased(Keys.D)) game.camera.Position += new Vector2(1f, 0f);
-            if (inputManager.WasKeyReleased(Keys.A)) game.camera.Position += new Vector2(-1f, 0f);
-            if (inputManager.WasKeyReleased(Keys.W)) game.camera.Position += new Vector2(0f, -1f);
-            if (inputManager.WasKeyReleased(Keys.S)) game.camera.Position += new Vector2(0f, 1f);
-            if (inputManager.WasKeyReleased(Keys.Space)) game.camera.Position = new Vector2(0f, 0f);
-
-
-            if (inputManager.PrevGamePadState.Buttons.B == ButtonState.Released
-    && inputManager.GamePadState.Buttons.B == ButtonState.Pressed)
-            {
-                this.game.buildMode = !this.game.buildMode;
-            }
-
-            game.camera.Zoom(inputManager.ScroleWheelDelta() * .01f);//ToDo: Camera Controls need to be changed
-            mouseWorld = (game.camera.MousePick(inputManager.MouseState.Position));
-            courserVolume.Position = mouseWorld;
-            if (inputManager.MouseState.LeftButton == ButtonState.Pressed && inputManager.PrevMouseState.LeftButton == ButtonState.Released)
-            {
-                if (!game.gui.MouseClick(mouseWorld))
-                {
-                    foreach (var entity in this.game.entityList)
+                    if (inputManager.PrevGamePadState.Buttons.A == ButtonState.Released
+                        && inputManager.GamePadState.Buttons.A == ButtonState.Pressed)
                     {
-                        if (entity.IsPointContained(ref mouseWorld))
+                        game.constructBuilder.SetSelectedSegmentAndSetBuildModeToSelect();
+                    }
+
+                    if (inputManager.PrevGamePadState.Buttons.X == ButtonState.Released
+                    && inputManager.GamePadState.Buttons.X == ButtonState.Pressed)
+                    {
+                        this.game.constructBuilder.BuildMode = UserInterface.BuildMode.ControlBind;
+                    }
+
+                    if (inputManager.PrevGamePadState.Buttons.LeftShoulder == ButtonState.Released
+                        && inputManager.GamePadState.Buttons.LeftShoulder == ButtonState.Pressed)
+                    {
+                        game.constructBuilder.BuildMode = UserInterface.BuildMode.Inactive;
+
+                    }
+
+                    break;
+                #endregion
+                case UserInterface.BuildMode.Selected:
+                    #region Selected
+                    game.constructBuilder.MoveSelection(GetDpadDirection());
+
+                    if (GetThumbStickDirection(inputManager.GamePadState.ThumbSticks.Right) != Direction.None)
+                    {
+                        if (GetThumbStickDirection(inputManager.GamePadState.ThumbSticks.Right) != GetThumbStickDirection(inputManager.PrevGamePadState.ThumbSticks.Right))
                         {
-                            if ((entity.constructElement != null && entity.constructElement.Draggable()))
-                            {
-                                if (entity.constructElement.construct != null && entity.constructElement.construct.KeyObject != entity) 
-                                {
-                                    List<Point> adjacentElements = entity.constructElement.adjacentElements;
-                                    entity.constructElement.RemoveFromConstruct();
-                                    //SegmentReleased = true;
-                                }
-                                SetSelectedSegment(entity);
-                                break;
-                            }
+                            this.game.constructBuilder.SelectedObjectDirection = GetThumbStickDirection(inputManager.GamePadState.ThumbSticks.Right);
+                            //.SelectDirection(());
                         }
                     }
-                }
-            }
-            else if (selectedSegment != null && inputManager.MouseState.LeftButton == ButtonState.Released && inputManager.PrevMouseState.LeftButton == ButtonState.Pressed)
-            {
-                ReleaseSegment();
+                    if (inputManager.PrevGamePadState.Buttons.A == ButtonState.Released
+                        && inputManager.GamePadState.Buttons.A == ButtonState.Pressed)
+                    {
+                        game.constructBuilder.PlaceSelectedSegmentAtCurrentPositionAndSetModeToSeek();
+
+                    }
+                    if (inputManager.PrevGamePadState.Buttons.LeftShoulder == ButtonState.Released
+                        && inputManager.GamePadState.Buttons.LeftShoulder == ButtonState.Pressed)
+                    {
+                        game.constructBuilder.BuildMode = UserInterface.BuildMode.Inactive;
+
+                    }
+
+                    break;
+                #endregion
+                case UserInterface.BuildMode.ControlBind:
+                    #region ControlBind
+                    if (inputManager.PrevGamePadState.Buttons.LeftShoulder == ButtonState.Released
+                        && inputManager.GamePadState.Buttons.LeftShoulder == ButtonState.Pressed)
+                    {
+                        this.game.constructBuilder.BuildMode = UserInterface.BuildMode.Seek;
+                    }
+
+                    if (inputManager.GamePadState.Triggers.Right > .5f)
+                    {
+                        if(inputManager.PrevGamePadState.Triggers.Right <= .5f)
+                            game.constructBuilder.BindInput(false);
+                    }
+                    else if (inputManager.GamePadState.Triggers.Left > .5f )
+                    {
+                        if(inputManager.PrevGamePadState.Triggers.Left <= .5f)
+                            game.constructBuilder.BindInput(true);
+                    }
+
+                    break;
+                #endregion
+                case UserInterface.BuildMode.Inactive:
+                    if (inputManager.GamePadState.Triggers.Left > .1f)
+                    {
+                        //ToDo: this should be replaced with event queue
+                        this.game.constructBuilder.hudButtonMapping.TriggerInput("TriggerLeft", inputManager.GamePadState.Triggers.Left);
+                    }
+                    if (inputManager.GamePadState.Triggers.Right > .1f)
+                    {
+
+                        this.game.constructBuilder.hudButtonMapping.TriggerInput("TriggerRight", inputManager.GamePadState.Triggers.Right);
+                    }
+                    if (inputManager.PrevGamePadState.Buttons.LeftShoulder == ButtonState.Released
+    && inputManager.GamePadState.Buttons.LeftShoulder == ButtonState.Pressed)
+                    {
+                        game.constructBuilder.BuildMode = UserInterface.BuildMode.Seek;
+
+                    }
+                    break;
+                default:
+                    break;
             }
 
-            if (selectedSegment != null)
-            {
-                DragSelectedSegment();
-            }
+            
             foreach (Sensor item in contactList)
             {
                 Debug.WriteLine("Hover:" + item.GetOrientationRelativeToSegment().ToString());
             }
             contactList.Clear();
-        }
-        private void SetSelectedSegment(Segment segment)
-        {
-            selectedSegment = segment;
-            selectedSegment.constructElement.Status = ElementStatus.Selected;
-            selectedSegment.constructElement.DisableSensors();
-        }
-        protected void DragSelectedSegment()
-        {
-            //float length = (mouseWorld - selectedSegment.body.Position).Length();
-            //Vector2 direction = (mouseWorld - selectedSegment.body.Position) / length;
-
-            //selectedSegment.body.ApplyLinearImpulse(direction);
-            //Mouse.SetPosition((int)game.camera.ProjectPoint(selectedSegment.body.Position).X, (int)game.camera.ProjectPoint(selectedSegment.body.Position).Y);
-            selectedSegment.Position = mouseWorld;
         }
 
         public void GetAvailableJoins()
@@ -233,35 +240,20 @@ namespace Scrap
         {
             //Lock Segment in position until orientation is selected
         }
-        protected void ReleaseSegment()
-        {
-            if (contactList.Count > 0)
-            {//ToDo: join to each adjacet object
-                OnSegmentReleasedInSensor(selectedSegment.constructElement, contactList[0]);
-            }
-            else 
-            {
-                selectedSegment.constructElement.Status = ElementStatus.Free;
-                this.game.hudButtonMapping.RemoveSegment(selectedSegment);
-                selectedSegment = null;
-                
-
-            }
-        }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (selectedSegment != null)
-            {
-                spriteBatch.Draw(pointerClosed, new Rectangle((int)game.camera.ProjectPoint(selectedSegment.body.Position).X - 10, (int)game.camera.ProjectPoint(selectedSegment.body.Position).Y - 10, 20, 20), Color.BlanchedAlmond);
-            }
-            else
-            {
-                if (inputManager.MouseState.LeftButton == ButtonState.Released)
-                    spriteBatch.Draw(pointer, new Rectangle((int)inputManager.MouseState.Position.X - 10, (int)inputManager.MouseState.Position.Y - 10, 20, 20), Color.BlanchedAlmond);
-                else
-                    spriteBatch.Draw(pointerClosed, new Rectangle((int)inputManager.MouseState.Position.X - 10, (int)inputManager.MouseState.Position.Y - 10, 20, 20), Color.BlanchedAlmond);
-            }
+            //if (selectedSegment != null)
+            //{
+            //    spriteBatch.Draw(pointerClosed, new Rectangle((int)game.camera.ProjectPoint(selectedSegment.body.Position).X - 10, (int)game.camera.ProjectPoint(selectedSegment.body.Position).Y - 10, 20, 20), Color.BlanchedAlmond);
+            //}
+            //else
+            //{
+            //    if (inputManager.MouseState.LeftButton == ButtonState.Released)
+            //        spriteBatch.Draw(pointer, new Rectangle((int)inputManager.MouseState.Position.X - 10, (int)inputManager.MouseState.Position.Y - 10, 20, 20), Color.BlanchedAlmond);
+            //    else
+            //        spriteBatch.Draw(pointerClosed, new Rectangle((int)inputManager.MouseState.Position.X - 10, (int)inputManager.MouseState.Position.Y - 10, 20, 20), Color.BlanchedAlmond);
+            //}
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Scrap.GameElements.Entities
         //ToDo:add list of actions with sprits and methods and pull this list to UI when in build mode
 
         public ArrayList behaviourList;
-        public Body body;
+        protected Body body;
         public ConstructElement constructElement;
 
         public virtual Vector2 Position
@@ -57,7 +57,26 @@ namespace Scrap.GameElements.Entities
             return body.FixtureList[0].Shape.TestPoint(ref t, ref point);
 
         }
-        
+        public virtual void SetLinearVelocity(Vector2 velocity)
+        {
+            body.LinearVelocity = velocity;
+        }
+        public virtual void SetTransform(Vector2 position, float rotation)
+        {
+
+            body.SetTransform(position, rotation);
+        }
+
+
+        public bool ContainsFixture(Fixture a)
+        {
+            if (body.FixtureList.Contains(a))
+            {
+                return true;
+            }
+            
+            return false;
+        }
         public virtual Direction[] JointDirections()
         {
             Direction[] validDirections = { Direction.Up, Direction.Down, Direction.Left, Direction.Right };
