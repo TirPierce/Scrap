@@ -4,16 +4,21 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics;
 using System;
-
+using System.IO;
 using Triangulator;
 using Microsoft.Xna.Framework.Input;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Factories;
+using Newtonsoft.Json;
 
 namespace LevelEditor
 {
+    class MapFile
+    {
+        public Vector2[] terrainVertices;// = new Vector2[14];
+    }
     class Terrain
     {
 
@@ -22,7 +27,7 @@ namespace LevelEditor
         DynamicVertexBuffer vertBuffer;
         DynamicIndexBuffer indexBuffer;
         int numVertices, numPrimitives;
-        Vector2[] sourceVertices = new Vector2[14];
+        MapFile mapfile = new MapFile();
 
         Vector2[] targetVertices;
         int[] sourceIndices;
@@ -62,7 +67,7 @@ namespace LevelEditor
             GenerateVerts();
             TriangulateVerts();
             CreateGeometry();
-            List<Vertices> vertList = FarseerPhysics.Common.Decomposition.Triangulate.ConvexPartition(new Vertices(sourceVertices), FarseerPhysics.Common.Decomposition.TriangulationAlgorithm.Bayazit);
+            List<Vertices> vertList = FarseerPhysics.Common.Decomposition.Triangulate.ConvexPartition(new Vertices(mapfile.terrainVertices), FarseerPhysics.Common.Decomposition.TriangulationAlgorithm.Bayazit);
             Body groundBody = BodyFactory.CreateCompoundPolygon(world, vertList, 1f, this);
             groundBody.BodyType = BodyType.Static;
             groundBody.IgnoreGravity = true;
@@ -70,20 +75,38 @@ namespace LevelEditor
             groundBody.Friction = .9f;
         }
 
-
+        public void Save()
+        {
+            string imagesDirectory = System.IO.Path.Combine(Environment.CurrentDirectory,"");
+            string json = JsonConvert.SerializeObject(mapfile.terrainVertices, Formatting.Indented);
+            using (StreamWriter file = File.CreateText(imagesDirectory+"/maps.json"))
+                {
+                   JsonSerializer serializer = new JsonSerializer();
+                   serializer.Serialize(file, mapfile);
+                }
+            Console.WriteLine(json);
+        }
+        public void Load()
+        {
+            string imagesDirectory = System.IO.Path.Combine(Environment.CurrentDirectory, "");
+            string json = System.IO.File.ReadAllText(imagesDirectory + "/maps.json");
+            mapfile = JsonConvert.DeserializeObject<MapFile>(json);
+        }
         private void GenerateVerts()
         {
+            Load();
 
+            //mapfile.terrainVertices[0] = new Vector2(0f, 50f);
+            //mapfile.terrainVertices[1] = new Vector2(0f, 100f);
+            //mapfile.terrainVertices[2] = new Vector2(500f, 100f);
+            //mapfile.terrainVertices[3] = new Vector2(500f, 00f);
+            //mapfile.terrainVertices[4] = new Vector2(250f, 00f);
+            //mapfile.terrainVertices[5] = new Vector2(250f, 20f);
+            //mapfile.terrainVertices[6] = new Vector2(420f, 30f);
+            //mapfile.terrainVertices[7] = new Vector2(420f, 60f);
+            //mapfile.terrainVertices[8] = new Vector2(200f, 60f);
 
-            sourceVertices[0] = new Vector2(0f, 50f);
-            sourceVertices[1] = new Vector2(0f, 100f);
-            sourceVertices[2] = new Vector2(500f, 100f);
-            sourceVertices[3] = new Vector2(500f, 00f);
-            sourceVertices[4] = new Vector2(250f, 00f);
-            sourceVertices[5] = new Vector2(250f, 20f);
-            sourceVertices[6] = new Vector2(420f, 30f);
-            sourceVertices[7] = new Vector2(420f, 60f);
-            sourceVertices[8] = new Vector2(200f, 60f);
+            //Save();
         }
 
         private void TriangulateVerts()
@@ -91,7 +114,7 @@ namespace LevelEditor
 
             sourceIndices = new int[0];
             Triangulator.Triangulator.Triangulate(
-                sourceVertices,
+                mapfile.terrainVertices,
                 Triangulator.WindingOrder.CounterClockwise,
                 out targetVertices,
                 out sourceIndices);
